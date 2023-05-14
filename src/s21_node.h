@@ -11,6 +11,13 @@ public:
     explicit Node(value_type value) : prev_(nullptr), next_(nullptr), data_(value) {}
     Node(Node *prev, value_type value) : prev_(prev), next_(nullptr), data_(value) {}
     Node(Node *prev, Node *next, value_type value) : prev_(prev), next_(next), data_(value) {}
+
+    void insert_node (bool mode, Node* other) {
+        if (mode) { // Forward (arg = true)
+            other->prev_ = this;
+            this->next_ = other
+        }
+    }
 private:
     Node *prev_;
     Node *next_;

@@ -16,7 +16,8 @@ public:
 
     ListIterator() : iterator_(nullptr) {};
     ListIterator(n_pointer p) : iterator_(p) {};
-
+    ListIterator(const ListIterator &i) : iterator_(i.iterator_) {}
+    n_pointer GetPointer() { return iterator_; }
 private:
     n_pointer iterator_;
 

@@ -16,11 +16,20 @@ namespace s21 {
         using size_type = std::size_t; //ok
         using reference = value_type &; //ok
         using const_reference = const value_type &; //ok
-
-
+        using iterator = ListIterator<T>;
+        using node = Node<T>;
+        using node_ptr = node*;
+        /**
+         * default constructor, creates empty list 
+         */
         list() : begin_(new Node<value_type>), end_(new Node<value_type>), size_(0) {
-            std::cout << "Started" << std::endl;
+            std::cout << "Started def" << std::endl;
         };
+        /**
+         * parameterized constructor
+         * @param creates the list of size n
+         */
+//        explicit list(size_type n) : begin_()
 //    list(std::initializer_list<value_type> const &items);
 //    list(const list &l);
 //    list(list &&l);
@@ -32,6 +41,51 @@ namespace s21 {
             end_ = nullptr;
         }
 //    operator=(list &&l);
+        /**
+         * returns an iterator to the beginning
+         */
+        iterator begin() const {
+            return iterator(begin_);
+        }
+        /**
+         * returns an iterator to the end (next from the last element)
+         */
+        iterator end() const {
+            return iterator(end_);
+        }
+        /**
+         * adds an element to the end
+         * @param value additional element
+         */
+        void push_back(const_reference value) {
+
+        }
+        /**
+        * adds an element to the head
+        * @param value additional element
+        */
+        void push_front(const_reference value) {
+
+        }
+        /**
+         * removes the last element
+         */
+        void pop_back() {
+
+        }
+        /**
+         * removes the first element
+         */
+        void pop_front() {
+
+        }
+
+        iterator insert(iterator pos, const_reference value) {
+            node_ptr curr_node = new node(value);
+            node_ptr next_node = pos.GetPointer();
+
+
+        }
 
 
     private:
