@@ -1,20 +1,15 @@
 #include <list>
 #include <iostream>
+#include <string>
 #include "./s21_list.h"
 
 using namespace s21;
 
 int main() {
-//    list<int> mylist = {1, 2, 2, 3, 2};
-//    mylist.push_back(5);
-//    mylist.push_back(567);
-//    mylist.sort();
-//    mylist.unique();
-//    mylist.reverse();
-//    auto i = mylist.begin();
-//    for (i; i != mylist.end(); ++i)
-//        cout << *i << endl;
-    list<int> a;
+    list<int> test;
+    test.push_back(5);
+    test.push_back(10);
+    std::cout << *(++test.begin()) << std::endl;
     return 0;
 }
 

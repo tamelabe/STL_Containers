@@ -11,7 +11,7 @@ namespace s21 {
     class list {
     friend class s21::ListIterator<T>;
     public:
-        // Объявление псевдонимов
+        // Aliases declaration
         using value_type = T;  //ok
         using size_type = std::size_t; //ok
         using reference = value_type &; //ok
@@ -20,9 +20,12 @@ namespace s21 {
         using node = Node<T>;
         using node_ptr = node*;
         /**
-         * default constructor, creates empty list 
+         * default constructor, creates empty list and "fake" node
          */
-        list() : begin_(new Node<value_type>), end_(new Node<value_type>), size_(0) {
+        list() : begin_(nullptr), end_(new Node<value_type>), size_(0) {
+            end_->rNext() = end_;
+            end_->rPrev() = end_;
+            begin_ = end_;
             std::cout << "Started def" << std::endl;
         };
         /**
@@ -35,16 +38,13 @@ namespace s21 {
 //    list(list &&l);
         ~list() {
             std::cout << "Destructor" << std::endl;
-            delete begin_;
-            delete end_;
-            begin_ = nullptr;
-            end_ = nullptr;
+            deallocate(true);
         }
 //    operator=(list &&l);
         /**
          * returns an iterator to the beginning
          */
-        iterator begin() const {
+        iterator begin() {
             return iterator(begin_);
         }
         /**
@@ -58,7 +58,18 @@ namespace s21 {
          * @param value additional element
          */
         void push_back(const_reference value) {
-
+            node_ptr new_node = new node(value);
+            if (end_ == begin_) {
+                new_node->rNext() = new_node->rPrev() = end_;
+                end_->rPrev() = end_->rNext() = new_node;
+                begin_ = new_node;
+            } else {
+                new_node->rPrev() = end_->rPrev();
+                new_node->rNext() = end_;
+                end_->rPrev()->rNext() = new_node;
+                end_->rPrev() = new_node;
+            }
+            size_++;
         }
         /**
         * adds an element to the head
@@ -80,18 +91,35 @@ namespace s21 {
 
         }
 
-        iterator insert(iterator pos, const_reference value) {
-            node_ptr curr_node = new node(value);
-            node_ptr next_node = pos.GetPointer();
-
-
-        }
+//
+//        iterator insert(iterator pos, const_reference value) {
+//            node_ptr curr_node = new node(value);
+//            node_ptr next_node = pos.GetPointer();
+//
+//
+//        }
 
 
     private:
-    Node<value_type> *begin_;
-    Node<value_type> *end_;
+    node_ptr begin_;
+    node_ptr end_;
     size_type size_;
+
+    /**
+     * Deallocator
+     * @param mode false - deallocate all non fake nodes,
+     *             true - fully deallocation
+     */
+    void deallocate(bool mode) {
+        if (begin_ != end_)
+            for (auto i = begin(); i != end(); ++i) {
+                delete i.iterPtr();
+//                i.iterPtr() = nullptr;
+            }
+        if (mode)
+            delete end_;
+            end_ = begin_ = nullptr;
+    }
 };
 } // namespace s21
 #endif // SRC_S21_LIST_H_
