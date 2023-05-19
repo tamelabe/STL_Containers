@@ -18,6 +18,8 @@ namespace s21 {
         using iterator = ListIterator<T>;
         using node = Node<T>;
         using node_ptr = node*;
+
+        // Constructors and destructor
         /**
          * default constructor, creates empty list and "fake" node
          */
@@ -31,17 +33,43 @@ namespace s21 {
          * parameterized constructor
          * @param creates the list of size n
          */
-//        explicit list(size_type n) : list() {
-//
-//        }
-//    list(std::initializer_list<value_type> const &items);
-//    list(const list &l);
-//    list(list &&l);
+        explicit list(size_type n) : list() {
+            for(auto i = 0; i < n; ++i)
+                push_back(value_type{});
+        }
+        /**
+         * initializer list constructor, creates list initizialized using std::initializer_list
+         * @param items
+         */
+        list(std::initializer_list<value_type> const &items) : list() {
+            for(auto i = items.begin(); i < items.end(); ++i)
+                push_back(*i);
+        }
+        /**
+         * copy constructor
+         * @param l - list to copy
+         */
+        list(const list &l) : list() {
+            for (auto i = l.begin_; i < l.end_; i++)
+                push_back(*i);
+        }
+        /**
+         * move constructor
+         * @param l - rvalue reference
+         */
+        list(list &&l) : begin_(l.begin_), end_(l.end_), size_(l.size_) {
+            l.begin_ = l.end_ = nullptr;
+            l.size_ = 0;
+        }
+        /**
+         * destructor
+         */
         ~list() {
             std::cout << "Destructor" << std::endl;
             deallocate(true);
         }
 //    operator=(list &&l);
+        //Methods
         /**
          * returns an iterator to the beginning
          */
@@ -132,35 +160,37 @@ namespace s21 {
         }
 
     private:
-    node_ptr begin_;
-    node_ptr end_;
-    size_type size_;
+        // Variables
+        node_ptr begin_;
+        node_ptr end_;
+        size_type size_;
 
-    /**
-     * Deallocator
-     * @param mode false - deallocate all non fake nodes,
-     *             true - fully deallocation
-     */
-    void deallocate(bool mode) {
-        if (begin_ != end_)
-            for (auto i = begin(); i != end(); ++i) {
-                delete i.iterPtr();
-                --size_;
-            }
-        if (mode)
-            delete end_;
-            end_ = begin_ = nullptr;
-    }
-    /**
-     * Using when pushing node in empty list
-     * @param value pushing value in data_ field
-     */
-    void pushFirstNode(const_reference value) {
-        node_ptr new_node = new node(value);
-        new_node->rNext() = new_node->rPrev() = end_;
-        end_->rPrev() = end_->rNext() = new_node;
-        begin_ = new_node;
-    }
+        // Methods
+        /**
+         * Deallocator
+         * @param mode false - deallocate all non fake nodes,
+         *             true - fully deallocation
+         */
+        void deallocate(bool mode) {
+            if (begin_ != end_)
+                for (auto i = begin(); i != end(); ++i) {
+                    delete i.iterPtr();
+                    --size_;
+                }
+            if (mode)
+                delete end_;
+                end_ = begin_ = nullptr;
+        }
+        /**
+         * Using when pushing node in empty list
+         * @param value pushing value in data_ field
+         */
+        void pushFirstNode(const_reference value) {
+            node_ptr new_node = new node(value);
+            new_node->rNext() = new_node->rPrev() = end_;
+            end_->rPrev() = end_->rNext() = new_node;
+            begin_ = new_node;
+        }
 };
 } // namespace s21
 #endif // SRC_S21_LIST_H_
