@@ -24,9 +24,7 @@ namespace s21 {
          * default constructor, creates empty list and "fake" node
          */
         list() : begin_(nullptr), end_(new Node<value_type>), size_(0) {
-            end_->rNext() = end_;
-            end_->rPrev() = end_;
-            begin_ = end_;
+            initList();
             std::cout << "Started def" << std::endl;
         };
         /**
@@ -118,7 +116,7 @@ namespace s21 {
         /**
          * removes the last element
          */
-        void pop_back() {
+        void pop_back() noexcept {
             node_ptr tmp = end_->rPrev();
             tmp->rPrev()->rNext() = end_;
             end_->rPrev() = tmp->rPrev();
@@ -128,14 +126,20 @@ namespace s21 {
         /**
          * removes the first element
          */
-        void pop_front() {
+        void pop_front() noexcept {
             end_->rNext() = begin_->rNext();
             begin_->rNext()->rPrev() = end_;
             delete begin_;
             begin_ = end_->rNext();
             --size_;
         }
-
+        /**
+         * clears the contents
+         */
+        void clear() {
+            deallocate(false);
+            initList();
+        }
         /**
          * inserts element into concrete pos and returns the iterator that points to the new element
          * @param pos position of iterator to push new element
@@ -158,7 +162,29 @@ namespace s21 {
             }
             return ret_iter;
         }
+        /**
+         * erases element at pos
+         * @param pos - position of iterator
+         */
+        void erase(iterator pos) {
+            if (pos == begin()) {
+                pop_front();
+            } else if (pos != end()) {
+                node_ptr temp = pos.iterPtr()->rPrev();
+                temp->rNext() = pos.iterPtr()->rNext();
+                pos.iterPtr()->rNext()->rPrev() = temp;
+                delete pos.iterPtr();
+            }
+        }
 
+        // in progress...
+        void swap(list& other) {
+            if (this != &other) {
+                list temp(other);
+            }
+
+
+        }
     private:
         // Variables
         node_ptr begin_;
@@ -166,6 +192,14 @@ namespace s21 {
         size_type size_;
 
         // Methods
+        /**
+         * Create connection of empty list nodes from end_ to begin_
+         */
+        void initList() {
+            end_->rNext() = end_;
+            end_->rPrev() = end_;
+            begin_ = end_;
+        }
         /**
          * Deallocator
          * @param mode false - deallocate all non fake nodes,
@@ -177,9 +211,10 @@ namespace s21 {
                     delete i.iterPtr();
                     --size_;
                 }
-            if (mode)
+            if (mode) {
                 delete end_;
                 end_ = begin_ = nullptr;
+            }
         }
         /**
          * Using when pushing node in empty list
