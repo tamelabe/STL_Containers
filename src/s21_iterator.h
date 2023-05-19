@@ -30,6 +30,12 @@ public:
     bool operator!=(const ListIterator &other) {
         return iterator_ != other.iterator_;
     }
+    bool operator==(const ListIterator &other) {
+        return iterator_ == other.iterator_;
+    }
+    void operator=(const ListIterator &other) {
+        iterator_ = other.iterator_;
+    }
 
 
     ListIterator operator++() {

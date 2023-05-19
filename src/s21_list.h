@@ -9,7 +9,6 @@
 namespace s21 {
     template<class T>
     class list {
-    friend class s21::ListIterator<T>;
     public:
         // Aliases declaration
         using value_type = T;  //ok
@@ -32,7 +31,9 @@ namespace s21 {
          * parameterized constructor
          * @param creates the list of size n
          */
-//        explicit list(size_type n) : begin_()
+//        explicit list(size_type n) : list() {
+//
+//        }
 //    list(std::initializer_list<value_type> const &items);
 //    list(const list &l);
 //    list(list &&l);
@@ -58,47 +59,77 @@ namespace s21 {
          * @param value additional element
          */
         void push_back(const_reference value) {
-            node_ptr new_node = new node(value);
             if (end_ == begin_) {
-                new_node->rNext() = new_node->rPrev() = end_;
-                end_->rPrev() = end_->rNext() = new_node;
-                begin_ = new_node;
+                pushFirstNode(value);
             } else {
+                node_ptr new_node = new node(value);
                 new_node->rPrev() = end_->rPrev();
                 new_node->rNext() = end_;
                 end_->rPrev()->rNext() = new_node;
                 end_->rPrev() = new_node;
             }
-            size_++;
+            ++size_;
         }
         /**
         * adds an element to the head
         * @param value additional element
         */
         void push_front(const_reference value) {
-
+            if (end_ == begin_) {
+                pushFirstNode(value);
+            } else {
+                node_ptr new_node = new node(value);
+                new_node->rPrev() = end_;
+                new_node->rNext() = begin_;
+                end_->rNext() = new_node;
+                begin_->rPrev() = new_node;
+                begin_ = new_node;
+            }
+            ++size_;
         }
         /**
          * removes the last element
          */
         void pop_back() {
-
+            node_ptr tmp = end_->rPrev();
+            tmp->rPrev()->rNext() = end_;
+            end_->rPrev() = tmp->rPrev();
+            delete tmp;
+            --size_;
         }
         /**
          * removes the first element
          */
         void pop_front() {
-
+            end_->rNext() = begin_->rNext();
+            begin_->rNext()->rPrev() = end_;
+            delete begin_;
+            begin_ = end_->rNext();
+            --size_;
         }
 
-//
-//        iterator insert(iterator pos, const_reference value) {
-//            node_ptr curr_node = new node(value);
-//            node_ptr next_node = pos.GetPointer();
-//
-//
-//        }
-
+        /**
+         * inserts element into concrete pos and returns the iterator that points to the new element
+         * @param pos position of iterator to push new element
+         * @param value value to push in data field
+         * @return iterator that points to the new element
+         */
+        iterator insert(iterator pos, const_reference value) {
+            iterator ret_iter;
+            if (pos == begin()) {
+                push_front(value);
+                ret_iter = begin();
+            } else {
+                node_ptr new_node = new node(value);
+                new_node->rPrev() = pos.iterPtr()->rPrev();
+                new_node->rNext() = pos.iterPtr();
+                pos.iterPtr()->rPrev()->rNext() = new_node;
+                pos.iterPtr()->rPrev() = new_node;
+                ret_iter = iterator(new_node);
+                ++size_;
+            }
+            return ret_iter;
+        }
 
     private:
     node_ptr begin_;
@@ -114,11 +145,21 @@ namespace s21 {
         if (begin_ != end_)
             for (auto i = begin(); i != end(); ++i) {
                 delete i.iterPtr();
-//                i.iterPtr() = nullptr;
+                --size_;
             }
         if (mode)
             delete end_;
             end_ = begin_ = nullptr;
+    }
+    /**
+     * Using when pushing node in empty list
+     * @param value pushing value in data_ field
+     */
+    void pushFirstNode(const_reference value) {
+        node_ptr new_node = new node(value);
+        new_node->rNext() = new_node->rPrev() = end_;
+        end_->rPrev() = end_->rNext() = new_node;
+        begin_ = new_node;
     }
 };
 } // namespace s21

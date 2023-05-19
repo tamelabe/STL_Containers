@@ -1,8 +1,9 @@
 #ifndef S21_NODE_H
 #define S21_NODE_H
 
-namespace s21 {
+#include "./s21_list.h"
 
+namespace s21 {
 template<class T>
 class Node {
 public:
@@ -16,7 +17,7 @@ public:
     Node(Node *prev, value_type value) : prev_(prev), next_(nullptr), data_(value) {}
     Node(Node *prev, Node *next, value_type value) : prev_(prev), next_(next), data_(value) {}
     ~Node() {}
-    // Reference-Type Functions (Accessors and Mutators alternative)
+    // Reference-Type functions for accessing private fields from another classes
     node_ptr &rPrev() { return prev_; }
     node_ptr &rNext() { return next_; }
     value_type &rData() { return data_; }
