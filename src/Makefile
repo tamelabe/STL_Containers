@@ -1,25 +1,25 @@
 FLAGS=-Wall -Werror -Wextra -lstdc++ -std=c++17
 
-VECTOR_TEST_SOURCE=s21_Vector_test.cc
-VECTOR_TEST_OUTPUT=s21_Vector_test.o
-VECTOR_SOURCE=s21_Vector.cc
-VECTOR_OUTPUT=s21_Vector.a
-VECTOR_O=s21_Vector.o
+VECTOR_TEST_SOURCE=s21_vector_test.cc
+VECTOR_TEST_OUTPUT=s21_vector_test.o
+VECTOR_SOURCE=s21_vector.cc
+VECTOR_OUTPUT=s21_vector.a
+VECTOR_O=s21_vector.o
 
 # main: main.cc
 # 	@gcc main.cc -o main.o -lstdc++
 
 # all: build check test leaks gcov_report 
-all: build test
+all: clean test
 
-build: $(VECTOR_OUTPUT)
+# build: $(VECTOR_OUTPUT)
 
-rebuild: clean build
+# rebuild: clean build
 
-$(VECTOR_OUTPUT):
-	gcc $(FLAGS) -c $(VECTOR_SOURCE)
-	@ar rc $(VECTOR_OUTPUT) $(VECTOR_O)
-	@ranlib $(VECTOR_OUTPUT)
+# $(VECTOR_OUTPUT):
+# 	gcc $(FLAGS) -c $(VECTOR_SOURCE)
+# 	@ar rc $(VECTOR_OUTPUT) $(VECTOR_O)
+# 	@ranlib $(VECTOR_OUTPUT)
 
 check:
 	cp ../materials/linters/.clang-format . && clang-format *.cc *.h
@@ -27,7 +27,7 @@ check:
 	cppcheck --std=c++17 --language=c++ --enable=all --suppress=missingIncludeSystem *.cc *.h
 
 test: $(VECTOR_TEST_SOURCE)
-	@gcc $(FLAGS) --coverage $(VECTOR_TEST_SOURCE) $(VECTOR_SOURCE) $(VECTOR_OUTPUT) -o $(VECTOR_TEST_OUTPUT) -lgtest
+	@gcc $(FLAGS) --coverage $(VECTOR_TEST_SOURCE) -o $(VECTOR_TEST_OUTPUT) -lgtest
 	@./$(VECTOR_TEST_OUTPUT)
 
 leaks:
