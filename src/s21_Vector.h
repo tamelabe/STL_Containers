@@ -29,15 +29,16 @@ class Vector
         explicit Vector(size_type);
         Vector(std::initializer_list<value_type> const &items);
         Vector(const Vector &v);
-        // Vector(Vector &&v) : size_(v.size_), capacity_(v.capacity_), arr(v.arr) {v.arr = nullptr; v.size_ = 0;}
+        Vector(Vector &&v) noexcept;
 
         // DESTRUCTORS
         ~Vector() { delete[] storage_; }
 
-        // // OPERATOR OVERLOADS
-        // Vector<T>& operator=(std::initializer_list<value_type> const &items);
-        // operator=(vector &&v)
-        
+        // OPERATOR OVERLOADS
+        Vector<T> &operator=(std::initializer_list<value_type> const &items);
+        Vector<T> &operator=(const Vector<T> &origin);
+        Vector<T> &operator=(Vector<T> &&origin);
+
         // // ELEMENT ACCESS METHODS
         T* data();  // T*
         // size_type size();
@@ -67,12 +68,13 @@ class Vector
         // void swap(vector& other);
 
     private:
-        size_t size_;
-        size_t capacity_;
-        T * storage_;
+        size_type size_;
+        size_type capacity_;
+        iterator storage_;
     
     private:
         // void reserve_more_capacity(size_type size);
+        void swap(Vector &);
 };
 
 // IMPLEMENTATION
@@ -111,6 +113,32 @@ s21::Vector<T>::Vector(const Vector &v) : size_(v.size_), capacity_(v.capacity_)
         storage_[i] = v.storage_[i];
 };
 
+template <class T>
+s21::Vector<T>::Vector(Vector &&origin) noexcept {
+    swap(origin);
+}
+
+
+// OPERATOR OVERLOADS
+template <class T>
+inline s21::Vector<T> &s21::Vector<T>::operator=(std::initializer_list<value_type> const &items) {
+    swap(s21::Vector<T>(items));
+    return *this;
+}
+
+template <class T>
+inline s21::Vector<T> &s21::Vector<T>::operator=(const s21::Vector<T> &origin)
+{
+    swap(s21::Vector<T>(origin));
+    return *this;
+}
+
+template <class T>
+inline s21::Vector<T> &s21::Vector<T>::operator=(s21::Vector<T> &&origin) {
+    swap(origin);
+    return *this;
+}
+
 
 // CAPACITY METHODS
 template <class T>
@@ -120,7 +148,7 @@ s21::Vector<T>::size() const noexcept {
 }
 
 template <class T>
-T * s21::Vector<T>::data() {
+T *s21::Vector<T>::data() {
     return storage_;
 }
 
@@ -130,6 +158,16 @@ s21::Vector<T>::capacity() const noexcept {
     return capacity_;
 }
 
+
+// HELPER METHODS
+template<typename T>
+void s21::Vector<T>::swap(s21::Vector<T>& v) {
+    std::swap(size_, v.size_);
+    std::swap(capacity_, v.capacity_);
+    std::swap(storage_, v.storage_);
+}
+
 };
+
 
 #endif  // S21_VECTOR_H
