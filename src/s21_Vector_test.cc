@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 #include <vector>
 #include <iostream>
+#include <cstring>
 
 TEST(Constructors, base) {
   s21::Vector<int> vec;
@@ -12,9 +13,24 @@ TEST(Constructors, base) {
   EXPECT_TRUE(vec.data() == nullptr);
 }
 
-TEST(Constructors, with_parameter) {
-    s21::Vector<int> vec(2);
-    std::vector<int> vec2(2);
+TEST(Constructors, size_n) {
+  s21::Vector<int> vec(2);
+  EXPECT_TRUE(vec.capacity() == 2);
+  EXPECT_TRUE(vec.size() == 2);
+}
+
+TEST(Constructors, items) {
+  s21::Vector<int> vec{10,8,6,4,2};
+  EXPECT_TRUE(vec.capacity() == 5);
+  EXPECT_TRUE(vec.size() == 5);
+  // TODO: add assert for values
+}
+
+TEST(Constructors, copy) {
+  s21::Vector<int> vec{10,8,6,4,2};
+  s21::Vector<int> vec2(vec);
+  EXPECT_TRUE(vec2.capacity() == 5);
+  EXPECT_TRUE(vec2.size() == 5);
 }
 
 int main(int argc, char** argv)

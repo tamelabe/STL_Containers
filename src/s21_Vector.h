@@ -27,14 +27,15 @@ class Vector
         Vector();
 
         explicit Vector(size_type);
-        // s21_vector(std::initializer_list<value_type> const &items);
-        // s21_vector(const s21_vector &v) : m_size(v.m_size), m_capacity(v.m_capacity), arr(v.arr) {};
-        // s21_vector(s21_vector &&v) : m_size(v.m_size), m_capacity(v.m_capacity), arr(v.arr) {v.arr = nullptr; v.m_size = 0;}
+        Vector(std::initializer_list<value_type> const &items);
+        Vector(const Vector &v);
+        // Vector(Vector &&v) : size_(v.size_), capacity_(v.capacity_), arr(v.arr) {v.arr = nullptr; v.size_ = 0;}
 
         // DESTRUCTORS
-        ~Vector() { delete[] storage; }
+        ~Vector() { delete[] storage_; }
 
         // // OPERATOR OVERLOADS
+        // Vector<T>& operator=(std::initializer_list<value_type> const &items);
         // operator=(vector &&v)
         
         // // ELEMENT ACCESS METHODS
@@ -53,9 +54,9 @@ class Vector
         // bool empty();
         // void reserve(size_type size);
         // void shrink_to_fir();
-        size_type size() const noexcept;;
-        size_type max_size() const noexcept;;
-        size_type capacity() const noexcept;;
+        size_type size() const noexcept;
+        // size_type max_size() const noexcept;
+        size_type capacity() const noexcept;
 
         // // MODIFIER METHODS
         // iterator insert(iterator pos, const_reference value);
@@ -66,15 +67,69 @@ class Vector
         // void swap(vector& other);
 
     private:
-        size_t m_size;
-        size_t m_capacity;
-        T * storage;
+        size_t size_;
+        size_t capacity_;
+        T * storage_;
     
     private:
         // void reserve_more_capacity(size_type size);
 };
+
+// IMPLEMENTATION
+
+// CONSTRUCTORS
+template <class T>
+s21::Vector<T>::Vector() : 
+    size_(0U), 
+    capacity_(0U), 
+    storage_(nullptr) 
+{}
+
+template <class T>
+s21::Vector<T>::Vector(size_type n) : 
+    size_(n), capacity_(n), storage_(n ? new T[n] : nullptr) 
+{
+    for (size_type i = 0; i < n; i++)
+        storage_[i] = T();
 }
 
-#include "s21_vector.cc"
+template <class T>
+s21::Vector<T>::Vector(std::initializer_list<T> const &items) {
+    size_type count = items.size();
+    size_ = 0;
+    capacity_ = count;
+    storage_ = new T[capacity_];
+    
+    for (const T& item : items)
+        storage_[size_++] = item;
+}
+
+template <class T>
+s21::Vector<T>::Vector(const Vector &v) : size_(v.size_), capacity_(v.capacity_) {
+    storage_ = new T[capacity_];
+    for (size_type i = 0; i < size_; i++)
+        storage_[i] = v.storage_[i];
+};
+
+
+// CAPACITY METHODS
+template <class T>
+typename s21::Vector<T>::size_type 
+s21::Vector<T>::size() const noexcept {
+    return size_;
+}
+
+template <class T>
+T * s21::Vector<T>::data() {
+    return storage_;
+}
+
+template <class T>
+typename s21::Vector<T>::size_type 
+s21::Vector<T>::capacity() const noexcept {
+    return capacity_;
+}
+
+};
 
 #endif  // S21_VECTOR_H
