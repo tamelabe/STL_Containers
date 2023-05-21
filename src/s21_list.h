@@ -66,7 +66,12 @@ namespace s21 {
             std::cout << "Destructor" << std::endl;
             deallocate(true);
         }
-//    operator=(list &&l);
+        operator=(list &&l) {
+            clear();
+            for (auto i = l.begin_; i != l.end(); ++i)
+                push_back(*i);
+            return *this;
+        }
         //Methods
         /**
          * returns an iterator to the beginning
@@ -177,12 +182,17 @@ namespace s21 {
             }
         }
 
-        // in progress...
+        /**
+         * swaps the contents
+         */
         void swap(list& other) {
             if (this != &other) {
                 list temp(other);
+                other = *this;
+                *this = temp;
             }
-
+        }
+        void sort() {
 
         }
     private:
