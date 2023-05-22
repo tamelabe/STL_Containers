@@ -7,7 +7,7 @@
   HEADER FILE
 */
 
-
+namespace s21 {
 template <class T1, class T2>
 class BSTree
 {   
@@ -35,17 +35,24 @@ class BSTree
         T2 find(T1 key);
         // Структура узла дерева
     private:
-        struct TreeNode
+        template <class key_type, class data_type>
+        class Node
         {
             key_type key_;
             data_type data_;
-            TreeNode *left_, *right_;
-            TreeNode(key_type key, data_type data) {
+            size_type size_;
+            Node<key_type, data_type> *left_;
+            Node<key_type, data_type> *right_;
+            Node<key_type, data_type> *parent_;
+
+            Node(key_type key, data_type data) {
                 key_ = key;
                 data_ = data;
                 left_ = right_ = nullptr;
             }
         }
 };
+
+}
 
 #endif  //  S21_TREE_H
