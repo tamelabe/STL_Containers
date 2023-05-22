@@ -147,12 +147,23 @@ TEST(Capacity, capacity) {
 TEST(Capacity, reserve) {
   s21::Vector<int> vec{1,2,3};
   vec.reserve(5);
+  EXPECT_TRUE(vec.size() == 3);
+  EXPECT_TRUE(vec.capacity() == 5);
   for (size_t i = 0; i < vec.size(); i++) {
     EXPECT_TRUE(vec.data()[i] == (int)i+1);
   }
-  
+}
+
+TEST(Capacity, shrink_to_fit) {
+  s21::Vector<int> vec{1,2,3};
+  vec.reserve(5);
   EXPECT_TRUE(vec.size() == 3);
   EXPECT_TRUE(vec.capacity() == 5);
+  vec.shrink_to_fit();
+  EXPECT_TRUE(vec.capacity() == 3);
+  for (size_t i = 0; i < vec.size(); i++) {
+    EXPECT_TRUE(vec.data()[i] == (int)i+1);
+  }
 }
 
 
