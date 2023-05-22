@@ -85,6 +85,12 @@ TEST(ElementAccess, at) {
   EXPECT_TRUE(a == 3);
 }
 
+TEST(ElementAccess, at_operator) {
+  s21::Vector<int> vec{1,2,3};
+  int a = vec[2];
+  EXPECT_TRUE(a == 3);
+}
+
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);

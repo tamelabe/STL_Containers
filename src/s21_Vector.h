@@ -39,9 +39,9 @@ class Vector
 
         // // ELEMENT ACCESS METHODS
         reference at(size_type pos);
-        // value_type& operator[](size_type pos);
-        // const value_type& front();
-        // const value_type& back();
+        reference operator[](size_type pos);
+        // const reference front();
+        // const reference back();
         T* data();
 
         // // ITERATOR METHODS
@@ -184,12 +184,17 @@ s21::Vector<T>::at(size_type pos)
 }
 
 template <class T>
-T *
-s21::Vector<T>::data()
+T * s21::Vector<T>::data()
 {
     return storage_;
 }
 
+template <class T>
+typename s21::Vector<T>::reference
+s21::Vector<T>::operator[](size_type pos)
+{
+    return storage_[pos];
+}
 
 // CAPACITY METHODS
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = //
