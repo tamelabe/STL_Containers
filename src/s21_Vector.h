@@ -23,16 +23,14 @@ class Vector
 
     public:
         // CONSTRUCTORS
-        
         Vector();
-
         explicit Vector(size_type);
         Vector(std::initializer_list<value_type> const &items);
         Vector(const Vector &v);
         Vector(Vector &&v) noexcept;
 
         // DESTRUCTORS
-        ~Vector() { delete[] storage_; }
+        ~Vector();
 
         // OPERATOR OVERLOADS
         Vector<T> &operator=(std::initializer_list<value_type> const &items);
@@ -77,7 +75,10 @@ class Vector
         void swap(Vector &);
 };
 
-// IMPLEMENTATION
+
+// = = = = = = = = = = = = =  = = = = = //
+// = = = = =  IMPLEMENTATION  = = = = = //
+// = = = = = = = = = = = = =  = = = = = //
 
 // CONSTRUCTORS
 template <class T>
@@ -89,7 +90,9 @@ s21::Vector<T>::Vector() :
 
 template <class T>
 s21::Vector<T>::Vector(size_type n) : 
-    size_(n), capacity_(n), storage_(n ? new T[n] : nullptr) 
+    size_(n), 
+    capacity_(n), 
+    storage_(new T[capacity_]) 
 {
     for (size_type i = 0; i < n; i++)
         storage_[i] = T();
@@ -114,27 +117,35 @@ s21::Vector<T>::Vector(const Vector &v) : size_(v.size_), capacity_(v.capacity_)
 };
 
 template <class T>
-s21::Vector<T>::Vector(Vector &&origin) noexcept {
+s21::Vector<T>::Vector(Vector &&origin) noexcept : Vector() {
     swap(origin);
+}
+
+// DESTRUCTOR
+template <class T>
+s21::Vector<T>::~Vector()
+{
+    delete[] storage_; 
 }
 
 
 // OPERATOR OVERLOADS
 template <class T>
-inline s21::Vector<T> &s21::Vector<T>::operator=(std::initializer_list<value_type> const &items) {
+s21::Vector<T> &s21::Vector<T>::operator=(std::initializer_list<value_type> const &items)
+{
     swap(s21::Vector<T>(items));
     return *this;
 }
 
 template <class T>
-inline s21::Vector<T> &s21::Vector<T>::operator=(const s21::Vector<T> &origin)
+s21::Vector<T> &s21::Vector<T>::operator=(const s21::Vector<T> &origin)
 {
     swap(s21::Vector<T>(origin));
     return *this;
 }
 
 template <class T>
-inline s21::Vector<T> &s21::Vector<T>::operator=(s21::Vector<T> &&origin) {
+s21::Vector<T> &s21::Vector<T>::operator=(s21::Vector<T> &&origin) {
     swap(origin);
     return *this;
 }
@@ -162,12 +173,13 @@ s21::Vector<T>::capacity() const noexcept {
 // HELPER METHODS
 template<typename T>
 void s21::Vector<T>::swap(s21::Vector<T>& v) {
-    std::swap(size_, v.size_);
-    std::swap(capacity_, v.capacity_);
-    std::swap(storage_, v.storage_);
+    using std::swap;
+    swap(size_, v.size_);
+    swap(capacity_, v.capacity_);
+    swap(storage_, v.storage_);
 }
 
-};
+};  // namespace s21
 
 
 #endif  // S21_VECTOR_H
