@@ -25,28 +25,28 @@ class Vector
         // CONSTRUCTORS
         Vector();
         explicit Vector(size_type);
-        Vector(std::initializer_list<value_type> const &items);
-        Vector(const Vector &v);
+        Vector(std::initializer_list<value_type> const &);
+        Vector(const Vector &);
         Vector(Vector &&v) noexcept;
 
         // DESTRUCTORS
         ~Vector();
 
         // OPERATOR OVERLOADS
-        Vector<T> &operator=(std::initializer_list<value_type> const &items);
-        Vector<T> &operator=(const Vector<T> &origin);
-        Vector<T> &operator=(Vector<T> &&origin);
+        Vector<T> &operator=(std::initializer_list<value_type> const &);
+        Vector<T> &operator=(const Vector<T> &);
+        Vector<T> &operator=(Vector<T> &&);
 
-        // // ELEMENT ACCESS METHODS
-        reference at(size_type pos);
-        reference operator[](size_type pos);
+        // ELEMENT ACCESS METHODS
+        reference at(size_type);
+        reference operator[](size_type); // OPERATOR OVERLOAD
         const_reference front();
         const_reference back();
         T* data();
 
         // // ITERATOR METHODS
-        // iterator begin();
-        // iterator end();
+        iterator begin();
+        iterator end();
 
         // // CAPACITY METHODS
         // bool empty();
@@ -80,7 +80,7 @@ class Vector
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = //
 
 // CONSTRUCTORS
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = //
+// ==========================================================
 // default constructor, creates empty vector
 template <class T>
 s21::Vector<T>::Vector()
@@ -141,7 +141,7 @@ s21::Vector<T>::~Vector()
 
 
 // OPERATOR OVERLOADS
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = //
+// ==========================================================
 // assignment operator overload for vector initizialized list
 template <class T>
 s21::Vector<T> &
@@ -171,7 +171,7 @@ s21::Vector<T>::operator=(s21::Vector<T> &&origin)
 
 
 // ELEMENT ACCESS METHODS
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = //
+// ==========================================================
 // access specified element with bounds checking
 template <class T>
 typename s21::Vector<T>::reference
@@ -210,8 +210,26 @@ s21::Vector<T>::back()
     return storage_[size_ - 1];
 }
 
+
+// ITERATOR METHODS
+// ==========================================================
+template <class T>
+typename s21::Vector<T>::iterator
+s21::Vector<T>::begin()
+{
+    return storage_;
+}
+
+template <class T>
+typename s21::Vector<T>::iterator
+s21::Vector<T>::end()
+{
+    return storage_ + size_;
+}
+
+
 // CAPACITY METHODS
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = //
+// ==========================================================
 // returns the number of elements
 template <class T>
 typename s21::Vector<T>::size_type 

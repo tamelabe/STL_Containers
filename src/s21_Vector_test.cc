@@ -106,6 +106,20 @@ TEST(ElementAccess, back) {
   EXPECT_TRUE(a == 3);
 }
 
+// Iterators
+TEST(Iterator, begin) {
+  s21::Vector<int> vec{1,2,3};
+  int * a = vec.begin();
+  EXPECT_TRUE(*a == 1);
+}
+
+TEST(Iterator, end) {
+  s21::Vector<int> vec{1,2,3};
+  int * a = vec.end();
+  int * b = vec.begin();
+  std::advance(b, 3);
+  EXPECT_TRUE(a == b);
+}
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
