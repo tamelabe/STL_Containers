@@ -56,7 +56,7 @@ class Vector {
   reference operator[](size_type); // OPERATOR OVERLOAD
   const_reference front();
   const_reference back();
-  T* data();
+  iterator data();
 
   // ITERATOR METHODS
   iterator begin();
@@ -71,8 +71,8 @@ class Vector {
   void shrink_to_fit();
 
   // // MODIFIER METHODS
+  void clear() noexcept;
   // iterator insert(iterator pos, const_reference value);
-  // void clear();
   // void erase(iterator pos);
   // void push_back(const_reference value);
   // void pop_back();
@@ -83,7 +83,6 @@ class Vector {
   size_type capacity_;
   iterator storage_;
 
-  // void reserve_more_capacity(size_type size);
   void swap(Vector &);
   Vector<T> reallocate(size_type, size_type, iterator);
 };
@@ -180,7 +179,8 @@ s21::Vector<T>::at(size_type pos) {
 }
 
 template <class T>
-T * s21::Vector<T>::data() {
+typename s21::Vector<T>::iterator
+s21::Vector<T>::data() {
   return storage_;
 }
 
@@ -269,6 +269,16 @@ void Vector<T>::shrink_to_fit() {
   s21::Vector<T> tmp(size_);
   tmp.reallocate(size_, size_, storage_);
   tmp.swap(*this);
+}
+
+// MODIFIER METHODS
+// clears the contents
+template <class T>
+void Vector<T>::clear() noexcept {
+  for (size_type i = 0; i < size_; i++) {
+    storage_[i].~T();
+  }
+  size_ = 0;
 }
 
 // HELPER METHODS

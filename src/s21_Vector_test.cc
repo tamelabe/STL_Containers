@@ -166,6 +166,13 @@ TEST(Capacity, shrink_to_fit) {
   }
 }
 
+TEST(Modifier, clear) {
+  s21::Vector<int> vec{1,2,3};
+  vec.clear();
+  EXPECT_TRUE(vec.size() == 0);
+  EXPECT_TRUE(vec.capacity() == 3);
+}
+
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
