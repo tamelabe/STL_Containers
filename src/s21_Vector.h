@@ -49,12 +49,12 @@ class Vector
         iterator end();
 
         // // CAPACITY METHODS
-        // bool empty();
-        // void reserve(size_type size);
-        // void shrink_to_fir();
+        bool empty();
         size_type size() const noexcept;
-        // size_type max_size() const noexcept;
+        size_type max_size() const noexcept;
+        void reserve(size_type size);
         size_type capacity() const noexcept;
+        // void shrink_to_fir();
 
         // // MODIFIER METHODS
         // iterator insert(iterator pos, const_reference value);
@@ -230,12 +230,27 @@ s21::Vector<T>::end()
 
 // CAPACITY METHODS
 // ==========================================================
+// checks whether the container is empty
+template <class T>
+bool s21::Vector<T>::empty()
+{
+    return size_ == 0;
+}
+
 // returns the number of elements
 template <class T>
 typename s21::Vector<T>::size_type 
 s21::Vector<T>::size() const noexcept
 {
     return size_;
+}
+
+// returns the maximum possible number of elements
+template <class T>
+typename s21::Vector<T>::size_type 
+s21::Vector<T>::max_size() const noexcept
+{
+    return MAX_VECTOR_SIZE;
 }
 
 // returns the number of elements that can be held in currently allocated storage
@@ -246,11 +261,35 @@ s21::Vector<T>::capacity() const noexcept
     return capacity_;
 }
 
+// allocate storage of size elements and copies current 
+// array elements to a newely allocated array
+template <class T>
+void s21::Vector<T>::reserve(size_type size)
+{
+    if (size > MAX_VECTOR_SIZE){
+        throw std::length_error{"Requesting size is larger than max_size."};
+    }
+
+    if (size <= capacity_) {
+        return;
+    }
+
+    s21::Vector<T> tmp(0);
+    tmp.storage_ = new T[size];
+    tmp.capacity_ = size;
+
+    for (size_type i = 0; i < size_; i++) {
+        tmp.storage_[i] = storage_[i];
+        tmp.size_ = i + 1;
+    }
+
+    tmp.swap(*this);
+}
+
 
 // HELPER METHODS
 template<typename T>
-void 
-s21::Vector<T>::swap(s21::Vector<T>& v)
+void s21::Vector<T>::swap(s21::Vector<T>& v)
 {
     using std::swap;
     swap(size_, v.size_);

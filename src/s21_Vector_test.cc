@@ -121,6 +121,41 @@ TEST(Iterator, end) {
   EXPECT_TRUE(a == b);
 }
 
+// Capacity
+TEST(Capacity, empty) {
+  s21::Vector<int> vec;
+  s21::Vector<int> vec2{1,2};
+  EXPECT_TRUE(vec.empty());
+  EXPECT_FALSE(vec2.empty());
+}
+
+TEST(Capacity, size) {
+  s21::Vector<int> vec{1,2};
+  EXPECT_TRUE(vec.size() == 2);
+}
+
+TEST(Capacity, max_size) {
+  s21::Vector<int> vec;
+  EXPECT_TRUE(vec.max_size() == 1073741824U);
+}
+
+TEST(Capacity, capacity) {
+  s21::Vector<int> vec{1,2,3};
+  EXPECT_TRUE(vec.capacity() == 3);
+}
+
+TEST(Capacity, reserve) {
+  s21::Vector<int> vec{1,2,3};
+  vec.reserve(5);
+  for (size_t i = 0; i < vec.size(); i++) {
+    EXPECT_TRUE(vec.data()[i] == (int)i+1);
+  }
+  
+  EXPECT_TRUE(vec.size() == 3);
+  EXPECT_TRUE(vec.capacity() == 5);
+}
+
+
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
