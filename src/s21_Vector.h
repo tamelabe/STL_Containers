@@ -38,7 +38,7 @@ class Vector
         Vector<T> &operator=(Vector<T> &&origin);
 
         // // ELEMENT ACCESS METHODS
-        // value_type& at(size_type pos);
+        reference at(size_type pos);
         // value_type& operator[](size_type pos);
         // const value_type& front();
         // const value_type& back();
@@ -170,6 +170,27 @@ s21::Vector<T>::operator=(s21::Vector<T> &&origin)
 }
 
 
+// ELEMENT ACCESS METHODS
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = //
+// access specified element with bounds checking
+template <class T>
+typename s21::Vector<T>::reference
+s21::Vector<T>::at(size_type pos)
+{
+    if (pos >= size_)
+        throw std::out_of_range{"Accessed position is out of range!"};
+
+    return storage_[pos];
+}
+
+template <class T>
+T *
+s21::Vector<T>::data()
+{
+    return storage_;
+}
+
+
 // CAPACITY METHODS
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = //
 // returns the number of elements
@@ -186,15 +207,6 @@ typename s21::Vector<T>::size_type
 s21::Vector<T>::capacity() const noexcept
 {
     return capacity_;
-}
-
-// ELEMENT ACCESS METHODS
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = //
-template <class T>
-T *
-s21::Vector<T>::data()
-{
-    return storage_;
 }
 
 
