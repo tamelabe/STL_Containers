@@ -9,9 +9,12 @@
 // Constructors
 TEST(Constructor, base) {
   s21::Vector<int> vec;
-  EXPECT_TRUE(vec.size() == 0);
-  EXPECT_TRUE(vec.capacity() == 0);
+  EXPECT_TRUE(vec.size() == 0 && vec.capacity() == 0);
   EXPECT_TRUE(vec.data() == nullptr);
+
+  s21::Vector<double> vec2;
+  EXPECT_TRUE(vec2.size() == 0 && vec2.capacity() == 0);
+  EXPECT_TRUE(vec2.data() == nullptr);
 }
 
 TEST(Constructor, size_n) {
@@ -88,6 +91,18 @@ TEST(ElementAccess, at) {
 TEST(ElementAccess, at_operator) {
   s21::Vector<int> vec{1,2,3};
   int a = vec[2];
+  EXPECT_TRUE(a == 3);
+}
+
+TEST(ElementAccess, front) {
+  s21::Vector<int> vec{1,2,3};
+  int a = vec.front();
+  EXPECT_TRUE(a == 1);
+}
+
+TEST(ElementAccess, back) {
+  s21::Vector<int> vec{1,2,3};
+  int a = vec.back();
   EXPECT_TRUE(a == 3);
 }
 

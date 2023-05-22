@@ -40,8 +40,8 @@ class Vector
         // // ELEMENT ACCESS METHODS
         reference at(size_type pos);
         reference operator[](size_type pos);
-        // const reference front();
-        // const reference back();
+        const_reference front();
+        const_reference back();
         T* data();
 
         // // ITERATOR METHODS
@@ -178,7 +178,7 @@ typename s21::Vector<T>::reference
 s21::Vector<T>::at(size_type pos)
 {
     if (pos >= size_)
-        throw std::out_of_range{"Accessed position is out of range!"};
+        throw std::out_of_range{"Position is out of range."};
 
     return storage_[pos];
 }
@@ -194,6 +194,20 @@ typename s21::Vector<T>::reference
 s21::Vector<T>::operator[](size_type pos)
 {
     return storage_[pos];
+}
+
+template <class T>
+typename s21::Vector<T>::const_reference
+s21::Vector<T>::front()
+{
+    return storage_[0];
+}
+
+template <class T>
+typename s21::Vector<T>::const_reference
+s21::Vector<T>::back()
+{
+    return storage_[size_ - 1];
 }
 
 // CAPACITY METHODS
