@@ -20,11 +20,12 @@ TEST(Constructors, size_n) {
 }
 
 TEST(Constructors, items) {
-  s21::Vector<int> vec{10,8,6,4,2};
+  s21::Vector<int> vec{1,2,3,4,5};
   EXPECT_TRUE(vec.capacity() == 5);
   EXPECT_TRUE(vec.size() == 5);
-  
-  // TODO: add assert for values
+  for (size_t i = 0; i < vec.capacity(); i++) {
+    EXPECT_TRUE((int)(i + 1) == vec.data()[i]);
+  }
 }
 
 TEST(Constructors, copy) {
@@ -40,7 +41,7 @@ TEST(Constructors, copy) {
   }
 }
 
-TEST(Constructor, move) {
+TEST(Constructors, move) {
   s21::Vector<int> vec{1,2,3};
   s21::Vector<int> vec2(std::move(vec));
 
@@ -52,8 +53,30 @@ TEST(Constructor, move) {
   EXPECT_TRUE(vec.data() == nullptr);
 }
 
-int main(int argc, char** argv)
-{
+TEST(OperatorOverloads, move) {
+  s21::Vector<int> vec{1,2,3};
+  s21::Vector<int> vec2 = std::move(vec);
+
+  EXPECT_TRUE(vec2.capacity() == 3);
+  EXPECT_TRUE(vec2.size() == 3);
+  for (size_t i = 0; i < vec2.capacity(); i++) {
+    EXPECT_TRUE((int)(i + 1) == vec2.data()[i]);
+  }
+  EXPECT_TRUE(vec.data() == nullptr);
+}
+
+TEST(OperatorOverloads, copy) {
+  s21::Vector<int> vec{1,2,3};
+  s21::Vector<int> vec2 = vec;
+
+  EXPECT_TRUE(vec2.capacity() == 3);
+  EXPECT_TRUE(vec2.size() == 3);
+  for (size_t i = 0; i < vec2.capacity(); i++) {
+    EXPECT_TRUE(vec.data()[i] == vec2.data()[i]);
+  }
+}
+
+int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }

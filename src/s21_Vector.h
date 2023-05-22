@@ -38,12 +38,11 @@ class Vector
         Vector<T> &operator=(Vector<T> &&origin);
 
         // // ELEMENT ACCESS METHODS
-        T* data();  // T*
-        // size_type size();
         // value_type& at(size_type pos);
         // value_type& operator[](size_type pos);
         // const value_type& front();
         // const value_type& back();
+        T* data();
 
         // // ITERATOR METHODS
         // iterator begin();
@@ -76,30 +75,35 @@ class Vector
 };
 
 
-// = = = = = = = = = = = = =  = = = = = //
-// = = = = =  IMPLEMENTATION  = = = = = //
-// = = = = = = = = = = = = =  = = = = = //
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = //
+// = = = = = = = = = = = = = =  IMPLEMENTATION = = = = = = = = = = = = = = //
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = //
 
 // CONSTRUCTORS
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = //
+// default constructor, creates empty vector
 template <class T>
-s21::Vector<T>::Vector() : 
-    size_(0U), 
-    capacity_(0U), 
-    storage_(nullptr) 
+s21::Vector<T>::Vector()
+    : size_(0U)
+    , capacity_(0U)
+    , storage_(nullptr) 
 {}
 
+// parameterized constructor, creates the vector of size n
 template <class T>
-s21::Vector<T>::Vector(size_type n) : 
-    size_(n), 
-    capacity_(n), 
-    storage_(new T[capacity_]) 
+s21::Vector<T>::Vector(size_type n) 
+    : size_(n)
+    , capacity_(n)
+    , storage_(new T[capacity_]) 
 {
     for (size_type i = 0; i < n; i++)
         storage_[i] = T();
 }
 
+// initializer list constructor, creates vector initizialized using std::initializer_list
 template <class T>
-s21::Vector<T>::Vector(std::initializer_list<T> const &items) {
+s21::Vector<T>::Vector(std::initializer_list<T> const &items)
+{
     size_type count = items.size();
     size_ = 0;
     capacity_ = count;
@@ -109,19 +113,26 @@ s21::Vector<T>::Vector(std::initializer_list<T> const &items) {
         storage_[size_++] = item;
 }
 
+// copy constructor
 template <class T>
-s21::Vector<T>::Vector(const Vector &v) : size_(v.size_), capacity_(v.capacity_) {
-    storage_ = new T[capacity_];
+s21::Vector<T>::Vector(const Vector &v)
+    : size_(v.size_)
+    , capacity_(v.capacity_)
+    , storage_(new T[capacity_])
+{
     for (size_type i = 0; i < size_; i++)
         storage_[i] = v.storage_[i];
 };
 
+// move constructor
 template <class T>
-s21::Vector<T>::Vector(Vector &&origin) noexcept : Vector() {
+s21::Vector<T>::Vector(Vector &&origin) noexcept 
+    : Vector() 
+{
     swap(origin);
 }
 
-// DESTRUCTOR
+// destructor
 template <class T>
 s21::Vector<T>::~Vector()
 {
@@ -130,49 +141,68 @@ s21::Vector<T>::~Vector()
 
 
 // OPERATOR OVERLOADS
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = //
+// assignment operator overload for vector initizialized list
 template <class T>
-s21::Vector<T> &s21::Vector<T>::operator=(std::initializer_list<value_type> const &items)
+s21::Vector<T> &
+s21::Vector<T>::operator=(std::initializer_list<value_type> const &items)
 {
     swap(s21::Vector<T>(items));
     return *this;
 }
 
+// assignment operator overload for copy object
 template <class T>
-s21::Vector<T> &s21::Vector<T>::operator=(const s21::Vector<T> &origin)
+s21::Vector<T> &
+s21::Vector<T>::operator=(const s21::Vector<T> &origin)
 {
     swap(s21::Vector<T>(origin));
     return *this;
 }
 
+// assignment operator overload for moving object
 template <class T>
-s21::Vector<T> &s21::Vector<T>::operator=(s21::Vector<T> &&origin) {
+s21::Vector<T> &
+s21::Vector<T>::operator=(s21::Vector<T> &&origin)
+{
     swap(origin);
     return *this;
 }
 
 
 // CAPACITY METHODS
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = //
+// returns the number of elements
 template <class T>
 typename s21::Vector<T>::size_type 
-s21::Vector<T>::size() const noexcept {
+s21::Vector<T>::size() const noexcept
+{
     return size_;
 }
 
-template <class T>
-T *s21::Vector<T>::data() {
-    return storage_;
-}
-
+// returns the number of elements that can be held in currently allocated storage
 template <class T>
 typename s21::Vector<T>::size_type 
-s21::Vector<T>::capacity() const noexcept {
+s21::Vector<T>::capacity() const noexcept
+{
     return capacity_;
+}
+
+// ELEMENT ACCESS METHODS
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = //
+template <class T>
+T *
+s21::Vector<T>::data()
+{
+    return storage_;
 }
 
 
 // HELPER METHODS
 template<typename T>
-void s21::Vector<T>::swap(s21::Vector<T>& v) {
+void 
+s21::Vector<T>::swap(s21::Vector<T>& v)
+{
     using std::swap;
     swap(size_, v.size_);
     swap(capacity_, v.capacity_);
