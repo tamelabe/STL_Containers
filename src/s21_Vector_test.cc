@@ -202,7 +202,14 @@ TEST(Modifier, push_back) {
   EXPECT_TRUE(vec.data()[3] == 777);
 }
 
-// TODO NEED MORE TESTS FOR INSERT
+TEST(Modifier, pop_back) {
+  s21::Vector<int> vec{100,200,300};
+  EXPECT_TRUE(vec.size() == 3);
+  vec.pop_back();
+  EXPECT_TRUE(vec.size() == 2);
+  EXPECT_TRUE(vec.data()[0] == 100);
+  EXPECT_TRUE(vec.data()[1] == 200);
+}
 
 
 int main(int argc, char** argv) {

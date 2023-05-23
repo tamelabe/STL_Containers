@@ -75,7 +75,7 @@ class Vector {
   iterator insert(iterator pos, const_reference value);
   void erase(iterator pos);
   void push_back(const_reference value);
-  // void pop_back();
+  void pop_back();
   // void swap(vector& other);
   
   // HELPER methods
@@ -344,6 +344,12 @@ void Vector<T>::push_back(const_reference value) {
     ptr++; i++;
   }
   tmp.swap(*this);
+}
+
+// removes the last element
+template <class T>
+void Vector<T>::pop_back() {
+  storage_[--size_].~T();
 }
 
 
