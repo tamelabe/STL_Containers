@@ -2,9 +2,10 @@
 
 #include <gtest/gtest-spi.h>
 #include <gtest/gtest.h>
-#include <vector>
-#include <iostream>
+
 #include <cstring>
+#include <iostream>
+#include <vector>
 
 // Constructors
 TEST(Constructor, base) {
@@ -24,7 +25,7 @@ TEST(Constructor, size_n) {
 }
 
 TEST(Constructor, items) {
-  s21::Vector<int> vec{1,2,3,4,5};
+  s21::Vector<int> vec{1, 2, 3, 4, 5};
   EXPECT_TRUE(vec.capacity() == 5);
   EXPECT_TRUE(vec.size() == 5);
   for (size_t i = 0; i < vec.capacity(); i++) {
@@ -33,7 +34,7 @@ TEST(Constructor, items) {
 }
 
 TEST(Constructor, copy) {
-  s21::Vector<int> vec{1,2,3};
+  s21::Vector<int> vec{1, 2, 3};
   s21::Vector<int> vec2(vec);
   EXPECT_TRUE(vec2.capacity() == 3);
   EXPECT_TRUE(vec2.size() == 3);
@@ -46,7 +47,7 @@ TEST(Constructor, copy) {
 }
 
 TEST(Constructor, move) {
-  s21::Vector<int> vec{1,2,3};
+  s21::Vector<int> vec{1, 2, 3};
   s21::Vector<int> vec2(std::move(vec));
 
   EXPECT_TRUE(vec2.capacity() == 3);
@@ -59,7 +60,7 @@ TEST(Constructor, move) {
 
 // Overloads
 TEST(OperatorOverload, move) {
-  s21::Vector<int> vec{1,2,3};
+  s21::Vector<int> vec{1, 2, 3};
   s21::Vector<int> vec2 = std::move(vec);
 
   EXPECT_TRUE(vec2.capacity() == 3);
@@ -71,7 +72,7 @@ TEST(OperatorOverload, move) {
 }
 
 TEST(OperatorOverload, copy) {
-  s21::Vector<int> vec{1,2,3};
+  s21::Vector<int> vec{1, 2, 3};
   s21::Vector<int> vec2 = vec;
 
   EXPECT_TRUE(vec2.capacity() == 3);
@@ -83,40 +84,40 @@ TEST(OperatorOverload, copy) {
 
 // Element access
 TEST(ElementAccess, at) {
-  s21::Vector<int> vec{1,2,3};
+  s21::Vector<int> vec{1, 2, 3};
   int a = vec.at(2);
   EXPECT_TRUE(a == 3);
 }
 
 TEST(ElementAccess, at_operator) {
-  s21::Vector<int> vec{1,2,3};
+  s21::Vector<int> vec{1, 2, 3};
   int a = vec[2];
   EXPECT_TRUE(a == 3);
 }
 
 TEST(ElementAccess, front) {
-  s21::Vector<int> vec{1,2,3};
+  s21::Vector<int> vec{1, 2, 3};
   int a = vec.front();
   EXPECT_TRUE(a == 1);
 }
 
 TEST(ElementAccess, back) {
-  s21::Vector<int> vec{1,2,3};
+  s21::Vector<int> vec{1, 2, 3};
   int a = vec.back();
   EXPECT_TRUE(a == 3);
 }
 
 // Iterators
 TEST(Iterator, begin) {
-  s21::Vector<int> vec{1,2,3};
-  int * a = vec.begin();
+  s21::Vector<int> vec{1, 2, 3};
+  int* a = vec.begin();
   EXPECT_TRUE(*a == 1);
 }
 
 TEST(Iterator, end) {
-  s21::Vector<int> vec{1,2,3};
-  int * a = vec.end();
-  int * b = vec.begin();
+  s21::Vector<int> vec{1, 2, 3};
+  int* a = vec.end();
+  int* b = vec.begin();
   std::advance(b, 3);
   EXPECT_TRUE(a == b);
 }
@@ -124,13 +125,13 @@ TEST(Iterator, end) {
 // Capacity
 TEST(Capacity, empty) {
   s21::Vector<int> vec;
-  s21::Vector<int> vec2{1,2};
+  s21::Vector<int> vec2{1, 2};
   EXPECT_TRUE(vec.empty());
   EXPECT_FALSE(vec2.empty());
 }
 
 TEST(Capacity, size) {
-  s21::Vector<int> vec{1,2};
+  s21::Vector<int> vec{1, 2};
   EXPECT_TRUE(vec.size() == 2);
 }
 
@@ -140,41 +141,41 @@ TEST(Capacity, max_size) {
 }
 
 TEST(Capacity, capacity) {
-  s21::Vector<int> vec{1,2,3};
+  s21::Vector<int> vec{1, 2, 3};
   EXPECT_TRUE(vec.capacity() == 3);
 }
 
 TEST(Capacity, reserve) {
-  s21::Vector<int> vec{1,2,3};
+  s21::Vector<int> vec{1, 2, 3};
   vec.reserve(5);
   EXPECT_TRUE(vec.size() == 3);
   EXPECT_TRUE(vec.capacity() == 5);
   for (size_t i = 0; i < vec.size(); i++) {
-    EXPECT_TRUE(vec.data()[i] == (int)i+1);
+    EXPECT_TRUE(vec.data()[i] == (int)i + 1);
   }
 }
 
 TEST(Capacity, shrink_to_fit) {
-  s21::Vector<int> vec{1,2,3};
+  s21::Vector<int> vec{1, 2, 3};
   vec.reserve(5);
   EXPECT_TRUE(vec.size() == 3);
   EXPECT_TRUE(vec.capacity() == 5);
   vec.shrink_to_fit();
   EXPECT_TRUE(vec.capacity() == 3);
   for (size_t i = 0; i < vec.size(); i++) {
-    EXPECT_TRUE(vec.data()[i] == (int)i+1);
+    EXPECT_TRUE(vec.data()[i] == (int)i + 1);
   }
 }
 
 TEST(Modifier, clear) {
-  s21::Vector<int> vec{1,2,3};
+  s21::Vector<int> vec{1, 2, 3};
   vec.clear();
   EXPECT_TRUE(vec.size() == 0);
   EXPECT_TRUE(vec.capacity() == 3);
 }
 
 TEST(Modifier, insert) {
-  s21::Vector<int> vec{100,200,300};
+  s21::Vector<int> vec{100, 200, 300};
   EXPECT_TRUE(vec.size() == 3);
   s21::Vector<int>::iterator it = vec.insert(vec.begin(), 777);
   EXPECT_TRUE(vec.size() == 4);
@@ -183,16 +184,16 @@ TEST(Modifier, insert) {
 }
 
 TEST(Modifier, erase) {
-  s21::Vector<int> vec{100,200,300};
+  s21::Vector<int> vec{100, 200, 300};
   EXPECT_TRUE(vec.size() == 3);
-  vec.erase(vec.begin()+1);
+  vec.erase(vec.begin() + 1);
   EXPECT_TRUE(vec.size() == 2);
   EXPECT_TRUE(vec.data()[0] == 100);
   EXPECT_TRUE(vec.data()[1] == 300);
 }
 
 TEST(Modifier, push_back) {
-  s21::Vector<int> vec{100,200,300};
+  s21::Vector<int> vec{100, 200, 300};
   EXPECT_TRUE(vec.size() == 3);
   vec.push_back(777);
   EXPECT_TRUE(vec.size() == 4);
@@ -203,7 +204,7 @@ TEST(Modifier, push_back) {
 }
 
 TEST(Modifier, pop_back) {
-  s21::Vector<int> vec{100,200,300};
+  s21::Vector<int> vec{100, 200, 300};
   EXPECT_TRUE(vec.size() == 3);
   vec.pop_back();
   EXPECT_TRUE(vec.size() == 2);
@@ -212,8 +213,8 @@ TEST(Modifier, pop_back) {
 }
 
 TEST(Modifier, swap) {
-  s21::Vector<int> vec{100,200,300};
-  s21::Vector<int> vec2{1000,2000,3000};
+  s21::Vector<int> vec{100, 200, 300};
+  s21::Vector<int> vec2{1000, 2000, 3000};
   vec.swap(vec2);
   EXPECT_TRUE(vec.data()[0] == 1000);
   EXPECT_TRUE(vec.data()[1] == 2000);
@@ -222,7 +223,6 @@ TEST(Modifier, swap) {
   EXPECT_TRUE(vec2.data()[1] == 200);
   EXPECT_TRUE(vec2.data()[2] == 300);
 }
-
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);

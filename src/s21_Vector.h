@@ -18,11 +18,11 @@ limitations under the License.
 #ifndef CPP2_S21_CONTAINERS_S21_VECTOR_H_
 #define CPP2_S21_CONTAINERS_S21_VECTOR_H_
 
-#include <iostream>
 #include <initializer_list>
+#include <iostream>
 #include <utility>
 
-#define MAX_VECTOR_SIZE 1073741824U  //1GB
+#define MAX_VECTOR_SIZE 1073741824U  // 1GB
 
 namespace s21 {
 
@@ -39,9 +39,9 @@ class Vector {
   // CONSTRUCTORS
   Vector();
   explicit Vector(size_type);
-  Vector(std::initializer_list<value_type> const&);
-  Vector(const Vector&);
-  Vector(Vector&&) noexcept;
+  explicit Vector(std::initializer_list<value_type> const &);
+  Vector(const Vector &);
+  Vector(Vector &&) noexcept;
 
   // ASSIGNMENTS
   Vector<T> &operator=(std::initializer_list<value_type> const &);
@@ -53,7 +53,7 @@ class Vector {
 
   // ELEMENT ACCESS METHODS
   reference at(size_type);
-  reference operator[](size_type); // OPERATOR OVERLOAD
+  reference operator[](size_type);  // OPERATOR OVERLOAD
   const_reference front();
   const_reference back();
   iterator data();
@@ -77,7 +77,7 @@ class Vector {
   void push_back(const_reference value);
   void pop_back();
   void swap(Vector &);
-  
+
   // HELPER methods
   void printVector();
 
@@ -87,9 +87,8 @@ class Vector {
   iterator storage_;
 
   // HELPER methods
-  void reallocate(size_type, size_type, iterator);
+  void reallocate(size_type, size_type, const iterator);
 };
-
 
 // ===================================================================
 //                           IMPLEMENTATION
@@ -98,41 +97,31 @@ class Vector {
 // CONSTRUCTORS AND MEMBER FUNCTIONS
 // default constructor, creates empty vector
 template <class T>
-Vector<T>::Vector()
-    : size_(0U),
-      capacity_(0U),
-      storage_(nullptr) {}
+Vector<T>::Vector() : size_(0U), capacity_(0U), storage_(nullptr) {}
 
 // parameterized constructor, creates the vector of size n
 template <class T>
-Vector<T>::Vector(size_type n) 
-    : size_(n), 
-      capacity_(n), 
-      storage_(new T[capacity_]) {
-  for (size_type i = 0; i < n; i++)
-    storage_[i] = T();
+Vector<T>::Vector(size_type n)
+    : size_(n), capacity_(n), storage_(new T[capacity_]) {
+  for (size_type i = 0; i < n; ++i) storage_[i] = T();
 }
 
-// initializer list constructor, 
+// initializer list constructor,
 // creates vector initizialized using std::initializer_list
 template <class T>
 Vector<T>::Vector(std::initializer_list<T> const &items) : size_(0) {
   size_type count = items.size();
   capacity_ = count;
   storage_ = new T[capacity_];
-  
-  for (const T& item : items)
-    storage_[size_++] = item;
+
+  for (const T &item : items) storage_[size_++] = item;
 }
 
 // copy constructor
 template <class T>
 Vector<T>::Vector(const Vector &v)
-    : size_(v.size_), 
-      capacity_(v.capacity_), 
-      storage_(new T[capacity_]) {
-  for (size_type i = 0; i < size_; i++)
-    storage_[i] = v.storage_[i];
+    : size_(v.size_), capacity_(v.capacity_), storage_(new T[capacity_]) {
+  for (size_type i = 0; i < size_; ++i) storage_[i] = v.storage_[i];
 };
 
 // move constructor
@@ -144,86 +133,72 @@ Vector<T>::Vector(Vector &&origin) noexcept : Vector() {
 // destructor
 template <class T>
 Vector<T>::~Vector() {
-  delete[] storage_; 
+  delete[] storage_;
 }
-
 
 // OPERATOR OVERLOADS
 // assignment operator overload for vector initizialized list
 template <class T>
-Vector<T> &
-Vector<T>::operator=(std::initializer_list<value_type> const &items) {
+Vector<T> &Vector<T>::operator=(
+    std::initializer_list<value_type> const &items) {
   swap(Vector<T>(items));
   return *this;
 }
 
 // assignment operator overload for copy object
 template <class T>
-Vector<T> &
-Vector<T>::operator=(const Vector<T> &origin) {
+Vector<T> &Vector<T>::operator=(const Vector<T> &origin) {
   swap(Vector<T>(origin));
   return *this;
 }
 
 // assignment operator overload for moving object
 template <class T>
-Vector<T> &
-Vector<T>::operator=(Vector<T> &&origin) {
+Vector<T> &Vector<T>::operator=(Vector<T> &&origin) {
   swap(origin);
   return *this;
 }
 
-
 // ELEMENT ACCESS METHODS
 // access specified element with bounds checking
 template <class T>
-typename Vector<T>::reference
-Vector<T>::at(size_type pos) {
-  if (pos >= size_)
-    throw std::out_of_range{"Position is out of range."};
+typename Vector<T>::reference Vector<T>::at(size_type pos) {
+  if (pos >= size_) throw std::out_of_range{"Position is out of range."};
   return storage_[pos];
 }
 
 template <class T>
-typename Vector<T>::iterator
-Vector<T>::data() {
+typename Vector<T>::iterator Vector<T>::data() {
   return storage_;
 }
 
 template <class T>
-typename Vector<T>::reference
-Vector<T>::operator[](size_type pos) {
+typename Vector<T>::reference Vector<T>::operator[](size_type pos) {
   return storage_[pos];
 }
 
 template <class T>
-typename Vector<T>::const_reference
-Vector<T>::front() {
+typename Vector<T>::const_reference Vector<T>::front() {
   return storage_[0];
 }
 
 template <class T>
-typename Vector<T>::const_reference
-Vector<T>::back() {
+typename Vector<T>::const_reference Vector<T>::back() {
   return storage_[size_ - 1];
 }
-
 
 // ITERATOR METHODS
 // returns an iterator to the beginning
 template <class T>
-typename Vector<T>::iterator
-Vector<T>::begin() {
+typename Vector<T>::iterator Vector<T>::begin() {
   return storage_;
 }
 
 // returns an iterator to the end
 template <class T>
-typename Vector<T>::iterator
-Vector<T>::end() {
+typename Vector<T>::iterator Vector<T>::end() {
   return storage_ + size_;
 }
-
 
 // CAPACITY METHODS
 // checks whether the container is empty
@@ -234,31 +209,28 @@ bool Vector<T>::empty() {
 
 // returns the number of elements
 template <class T>
-typename Vector<T>::size_type 
-Vector<T>::size() const noexcept {
+typename Vector<T>::size_type Vector<T>::size() const noexcept {
   return size_;
 }
 
 // returns the maximum possible number of elements
 template <class T>
-typename Vector<T>::size_type 
-Vector<T>::max_size() const noexcept {
+typename Vector<T>::size_type Vector<T>::max_size() const noexcept {
   return MAX_VECTOR_SIZE;
 }
 
-// returns the number of elements that can be held in 
+// returns the number of elements that can be held in
 // currently allocated storage
 template <class T>
-typename Vector<T>::size_type 
-Vector<T>::capacity() const noexcept {
+typename Vector<T>::size_type Vector<T>::capacity() const noexcept {
   return capacity_;
 }
 
-// allocate storage of size elements and copies current 
+// allocate storage of size elements and copies current
 // array elements to a newely allocated array
 template <class T>
 void Vector<T>::reserve(size_type n) {
-  if (n > MAX_VECTOR_SIZE){
+  if (n > MAX_VECTOR_SIZE) {
     throw std::length_error{"Requesting size is larger than max_size."};
   }
   if (n <= capacity_) {
@@ -277,23 +249,23 @@ void Vector<T>::shrink_to_fit() {
   tmp.swap(*this);
 }
 
-
 // MODIFIER METHODS
 // clears the contents
 template <class T>
 void Vector<T>::clear() noexcept {
-  for (size_type i = 0; i < size_; i++) {
+  for (size_type i = 0; i < size_; ++i) {
     storage_[i].~T();
   }
   size_ = 0;
 }
 
-// inserts elements into concrete pos and 
+// inserts elements into concrete pos and
 // returns the iterator that points to the new element
 template <class T>
-typename Vector<T>::iterator Vector<T>::insert(iterator pos, const_reference value) {
+typename Vector<T>::iterator Vector<T>::insert(iterator pos,
+                                               const_reference value) {
   s21::Vector<T> tmp(size_ + 1);
-  iterator new_element_ptr = nullptr;
+  size_type new_element_index = 0;
   iterator ptr = begin();
   size_type i = 0;
   while (ptr <= end()) {
@@ -301,15 +273,18 @@ typename Vector<T>::iterator Vector<T>::insert(iterator pos, const_reference val
       tmp.storage_[i] = *ptr;
     } else if (ptr == pos) {
       tmp.storage_[i] = value;
-      new_element_ptr = &tmp.storage_[i];
+      new_element_index = i;
     } else {
       tmp.storage_[i] = *(ptr - 1);
     }
-    ptr++; i++;
+    ptr++;
+    ++i;
   }
   tmp.swap(*this);
 
-  return new_element_ptr;
+  std::cout << new_element_index << std::endl;
+
+  return &(storage_[new_element_index]);
 }
 
 // erases element at pos
@@ -324,7 +299,8 @@ void Vector<T>::erase(iterator pos) {
     } else {
       tmp.storage_[i] = *(ptr + 1);
     }
-    ptr++; i++;
+    ptr++;
+    ++i;
   }
   tmp.swap(*this);
 }
@@ -341,7 +317,8 @@ void Vector<T>::push_back(const_reference value) {
     } else {
       tmp.storage_[i] = *ptr;
     }
-    ptr++; i++;
+    ptr++;
+    ++i;
   }
   tmp.swap(*this);
 }
@@ -353,17 +330,16 @@ void Vector<T>::pop_back() {
 }
 
 // swaps the contents
-template<typename T>
-void s21::Vector<T>::swap(s21::Vector<T>& v) {
+template <typename T>
+void s21::Vector<T>::swap(s21::Vector<T> &v) {
   using std::swap;
   swap(size_, v.size_);
   swap(capacity_, v.capacity_);
   swap(storage_, v.storage_);
 }
 
-
 // HELPER METHODS
-template<typename T>
+template <typename T>
 void s21::Vector<T>::printVector() {
   iterator ptr = begin();
   std::cout << "============" << std::endl;
@@ -371,22 +347,21 @@ void s21::Vector<T>::printVector() {
   std::cout << "============" << std::endl;
   while (ptr < end()) {
     std::cout << "ptr: " << *ptr << " - " << ptr << std::endl;
-    ptr++;
+    ++ptr;
   }
   std::cout << "============" << std::endl;
 }
 
-template<typename T>
-void s21::Vector<T>::reallocate(size_type capacity, size_type size, iterator storage) {
+template <typename T>
+void s21::Vector<T>::reallocate(size_type capacity, size_type size,
+                                const iterator storage) {
   storage_ = new T[capacity];
   capacity_ = capacity;
-  for (size_type i = 0; i < size; i++) {
+  for (size_type i = 0; i < size; ++i) {
     storage_[i] = storage[i];
     size_ = i + 1;
   }
 }
-
 }  // namespace s21
-
 
 #endif  // CPP2_S21_CONTAINERS_S21_VECTOR_H_
