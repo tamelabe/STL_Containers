@@ -191,6 +191,17 @@ TEST(Modifier, erase) {
   EXPECT_TRUE(vec.data()[1] == 300);
 }
 
+TEST(Modifier, push_back) {
+  s21::Vector<int> vec{100,200,300};
+  EXPECT_TRUE(vec.size() == 3);
+  vec.push_back(777);
+  EXPECT_TRUE(vec.size() == 4);
+  EXPECT_TRUE(vec.data()[0] == 100);
+  EXPECT_TRUE(vec.data()[1] == 200);
+  EXPECT_TRUE(vec.data()[2] == 300);
+  EXPECT_TRUE(vec.data()[3] == 777);
+}
+
 // TODO NEED MORE TESTS FOR INSERT
 
 
