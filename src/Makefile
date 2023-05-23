@@ -6,27 +6,15 @@ VECTOR_SOURCE=s21_vector.cc
 VECTOR_OUTPUT=s21_vector.a
 VECTOR_O=s21_vector.o
 
-# main: main.cc
-# 	@gcc main.cc -o main.o -lstdc++
-
 # all: build check test leaks gcov_report 
-all: clean test
-
-# build: $(VECTOR_OUTPUT)
-
-# rebuild: clean build
-
-# $(VECTOR_OUTPUT):
-# 	gcc $(FLAGS) -c $(VECTOR_SOURCE)
-# 	@ar rc $(VECTOR_OUTPUT) $(VECTOR_O)
-# 	@ranlib $(VECTOR_OUTPUT)
+all: clean check vector_test leaks gcov_report 
 
 check:
 	cp ../materials/linters/.clang-format . && clang-format *.cc *.h
 	rm -f .clang-format
 	cppcheck --std=c++17 --language=c++ --enable=all --suppress=missingIncludeSystem *.cc *.h
 
-test: $(VECTOR_TEST_SOURCE)
+vector_test: $(VECTOR_TEST_SOURCE)
 	@gcc $(FLAGS) --coverage $(VECTOR_TEST_SOURCE) -o $(VECTOR_TEST_OUTPUT) -lgtest
 	@./$(VECTOR_TEST_OUTPUT)
 

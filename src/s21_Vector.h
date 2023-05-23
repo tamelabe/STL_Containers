@@ -76,7 +76,7 @@ class Vector {
   void erase(iterator pos);
   void push_back(const_reference value);
   void pop_back();
-  // void swap(vector& other);
+  void swap(Vector &);
   
   // HELPER methods
   void printVector();
@@ -87,7 +87,6 @@ class Vector {
   iterator storage_;
 
   // HELPER methods
-  void swap(Vector &);
   void reallocate(size_type, size_type, iterator);
 };
 
@@ -96,7 +95,7 @@ class Vector {
 //                           IMPLEMENTATION
 // ===================================================================
 
-// CONSTRUCTORS
+// CONSTRUCTORS AND MEMBER FUNCTIONS
 // default constructor, creates empty vector
 template <class T>
 Vector<T>::Vector()
@@ -278,6 +277,7 @@ void Vector<T>::shrink_to_fit() {
   tmp.swap(*this);
 }
 
+
 // MODIFIER METHODS
 // clears the contents
 template <class T>
@@ -352,9 +352,17 @@ void Vector<T>::pop_back() {
   storage_[--size_].~T();
 }
 
+// swaps the contents
+template<typename T>
+void s21::Vector<T>::swap(s21::Vector<T>& v) {
+  using std::swap;
+  swap(size_, v.size_);
+  swap(capacity_, v.capacity_);
+  swap(storage_, v.storage_);
+}
 
 
-
+// HELPER METHODS
 template<typename T>
 void s21::Vector<T>::printVector() {
   iterator ptr = begin();
@@ -366,15 +374,6 @@ void s21::Vector<T>::printVector() {
     ptr++;
   }
   std::cout << "============" << std::endl;
-}
-
-// HELPER METHODS
-template<typename T>
-void s21::Vector<T>::swap(s21::Vector<T>& v) {
-  using std::swap;
-  swap(size_, v.size_);
-  swap(capacity_, v.capacity_);
-  swap(storage_, v.storage_);
 }
 
 template<typename T>

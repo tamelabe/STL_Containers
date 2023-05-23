@@ -211,6 +211,18 @@ TEST(Modifier, pop_back) {
   EXPECT_TRUE(vec.data()[1] == 200);
 }
 
+TEST(Modifier, swap) {
+  s21::Vector<int> vec{100,200,300};
+  s21::Vector<int> vec2{1000,2000,3000};
+  vec.swap(vec2);
+  EXPECT_TRUE(vec.data()[0] == 1000);
+  EXPECT_TRUE(vec.data()[1] == 2000);
+  EXPECT_TRUE(vec.data()[2] == 3000);
+  EXPECT_TRUE(vec2.data()[0] == 100);
+  EXPECT_TRUE(vec2.data()[1] == 200);
+  EXPECT_TRUE(vec2.data()[2] == 300);
+}
+
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
