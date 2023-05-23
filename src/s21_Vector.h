@@ -90,10 +90,6 @@ class Vector {
   void reallocate(size_type, size_type, const iterator);
 };
 
-// ===================================================================
-//                           IMPLEMENTATION
-// ===================================================================
-
 // CONSTRUCTORS AND MEMBER FUNCTIONS
 // default constructor, creates empty vector
 template <class T>
@@ -236,7 +232,7 @@ void Vector<T>::reserve(size_type n) {
   if (n <= capacity_) {
     return;
   }
-  s21::Vector<T> tmp(0);
+  s21::Vector<T> tmp;
   tmp.reallocate(n, size_, storage_);
   tmp.swap(*this);
 }
@@ -244,7 +240,7 @@ void Vector<T>::reserve(size_type n) {
 // reduces memory usage by freeing unused memory
 template <class T>
 void Vector<T>::shrink_to_fit() {
-  s21::Vector<T> tmp(size_);
+  s21::Vector<T> tmp;
   tmp.reallocate(size_, size_, storage_);
   tmp.swap(*this);
 }
@@ -281,8 +277,6 @@ typename Vector<T>::iterator Vector<T>::insert(iterator pos,
     ++i;
   }
   tmp.swap(*this);
-
-  std::cout << new_element_index << std::endl;
 
   return &(storage_[new_element_index]);
 }
@@ -359,8 +353,8 @@ void s21::Vector<T>::reallocate(size_type capacity, size_type size,
   capacity_ = capacity;
   for (size_type i = 0; i < size; ++i) {
     storage_[i] = storage[i];
-    size_ = i + 1;
   }
+  size_ = size;
 }
 }  // namespace s21
 

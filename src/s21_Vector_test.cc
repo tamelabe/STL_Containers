@@ -145,6 +145,7 @@ TEST(Capacity, capacity) {
   EXPECT_TRUE(vec.capacity() == 3);
 }
 
+// LEAK
 TEST(Capacity, reserve) {
   s21::Vector<int> vec{1, 2, 3};
   vec.reserve(5);
@@ -155,6 +156,7 @@ TEST(Capacity, reserve) {
   }
 }
 
+// LEAK
 TEST(Capacity, shrink_to_fit) {
   s21::Vector<int> vec{1, 2, 3};
   vec.reserve(5);
@@ -167,6 +169,7 @@ TEST(Capacity, shrink_to_fit) {
   }
 }
 
+// Modifier
 TEST(Modifier, clear) {
   s21::Vector<int> vec{1, 2, 3};
   vec.clear();
@@ -177,10 +180,10 @@ TEST(Modifier, clear) {
 TEST(Modifier, insert) {
   s21::Vector<int> vec{100, 200, 300};
   EXPECT_TRUE(vec.size() == 3);
-  s21::Vector<int>::iterator it = vec.insert(vec.begin(), 777);
+  s21::Vector<int>::iterator it = vec.insert(vec.begin() + 1, 777);
   EXPECT_TRUE(vec.size() == 4);
   EXPECT_TRUE(*it == 777);
-  EXPECT_TRUE(*(vec.begin()) == 777);
+  EXPECT_TRUE(*(vec.begin() + 1) == 777);
 }
 
 TEST(Modifier, erase) {
