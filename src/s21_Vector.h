@@ -72,19 +72,23 @@ class Vector {
 
   // // MODIFIER METHODS
   void clear() noexcept;
-  // iterator insert(iterator pos, const_reference value);
+  iterator insert(iterator pos, const_reference value);
   // void erase(iterator pos);
   // void push_back(const_reference value);
   // void pop_back();
   // void swap(vector& other);
+  
+  // HELPER methods
+  void printVector();
 
  private:
   size_type size_;
   size_type capacity_;
   iterator storage_;
 
+  // HELPER methods
   void swap(Vector &);
-  Vector<T> reallocate(size_type, size_type, iterator);
+  void reallocate(size_type, size_type, iterator);
 };
 
 // IMPLEMENTATION
@@ -281,6 +285,47 @@ void Vector<T>::clear() noexcept {
   size_ = 0;
 }
 
+// inserts elements into concrete pos and 
+// returns the iterator that points to the new element
+template <class T>
+typename Vector<T>::iterator Vector<T>::insert(iterator pos, const_reference value) {  
+  s21::Vector<T> tmp(size_ + 1);
+  iterator new_element_ptr = nullptr;
+  iterator ptr = begin();
+  size_type i = 0;
+  while (ptr <= end()) {
+    if (ptr < pos) {
+      tmp.storage_[i] = *ptr;
+    } else if (ptr == pos) {
+      tmp.storage_[i] = value;
+      new_element_ptr = tmp.storage_;
+    } else {
+      tmp.storage_[i] = *(ptr - 1);
+    }
+    ptr++;
+    i++;
+  }
+  tmp.swap(*this);
+
+  return new_element_ptr;
+}
+
+
+template<typename T>
+void s21::Vector<T>::printVector() {
+  iterator ptr = begin();
+  
+  std::cout << "============" << std::endl;
+  std::cout << "PRINT VECTOR" << std::endl;
+  std::cout << "============" << std::endl;
+
+  while (ptr < end()) {
+    std::cout << "ptr: " << *ptr << " - " << ptr << std::endl;
+    ptr++;
+  }
+  std::cout << "============" << std::endl;
+}
+
 // HELPER METHODS
 template<typename T>
 void s21::Vector<T>::swap(s21::Vector<T>& v) {
@@ -291,18 +336,15 @@ void s21::Vector<T>::swap(s21::Vector<T>& v) {
 }
 
 template<typename T>
-s21::Vector<T> s21::Vector<T>::reallocate(
-    size_type capacity, 
-    size_type size, 
-    iterator storage) {
+void s21::Vector<T>::reallocate(size_type capacity, size_type size, iterator storage) {
   storage_ = new T[capacity];
   capacity_ = capacity;
   for (size_type i = 0; i < size; i++) {
     storage_[i] = storage[i];
     size_ = i + 1;
   }
-  return *this;
 }
+
 }  // namespace s21
 
 

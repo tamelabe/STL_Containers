@@ -173,6 +173,17 @@ TEST(Modifier, clear) {
   EXPECT_TRUE(vec.capacity() == 3);
 }
 
+TEST(Modifier, insert) {
+  s21::Vector<int> vec{100,200,300};
+  EXPECT_TRUE(vec.size() == 3);
+  s21::Vector<int>::iterator it = vec.insert(vec.begin(), 777);
+  EXPECT_TRUE(vec.size() == 4);
+  EXPECT_TRUE(*it == 777);
+  EXPECT_TRUE(*(vec.begin()) == 777);
+}
+
+// TODO NEED MORE TESTS FOR INSERT
+
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
