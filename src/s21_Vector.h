@@ -73,7 +73,7 @@ class Vector {
   // // MODIFIER METHODS
   void clear() noexcept;
   iterator insert(iterator pos, const_reference value);
-  // void erase(iterator pos);
+  void erase(iterator pos);
   // void push_back(const_reference value);
   // void pop_back();
   // void swap(vector& other);
@@ -91,8 +91,11 @@ class Vector {
   void reallocate(size_type, size_type, iterator);
 };
 
-// IMPLEMENTATION
-// ========================================================
+
+// ===================================================================
+//                           IMPLEMENTATION
+// ===================================================================
+
 // CONSTRUCTORS
 // default constructor, creates empty vector
 template <class T>
@@ -288,26 +291,46 @@ void Vector<T>::clear() noexcept {
 // inserts elements into concrete pos and 
 // returns the iterator that points to the new element
 template <class T>
-typename Vector<T>::iterator Vector<T>::insert(iterator pos, const_reference value) {  
+typename Vector<T>::iterator Vector<T>::insert(iterator pos, const_reference value) {
   s21::Vector<T> tmp(size_ + 1);
   iterator new_element_ptr = nullptr;
   iterator ptr = begin();
   size_type i = 0;
+
   while (ptr <= end()) {
     if (ptr < pos) {
       tmp.storage_[i] = *ptr;
     } else if (ptr == pos) {
       tmp.storage_[i] = value;
-      new_element_ptr = tmp.storage_;
+      new_element_ptr = &tmp.storage_[i];
     } else {
       tmp.storage_[i] = *(ptr - 1);
+    }
+
+    ptr++; i++;
+  }
+  
+  tmp.swap(*this);
+
+  return new_element_ptr;
+}
+
+// erases element at pos
+template <class T>
+void Vector<T>::erase(iterator pos) {
+  s21::Vector<T> tmp(size_ - 1);
+  iterator ptr = begin();
+  size_type i = 0;
+  while (ptr < end()) {
+    if (ptr < pos) {
+      tmp.storage_[i] = *ptr;
+    } else {
+      tmp.storage_[i] = *(ptr + 1);
     }
     ptr++;
     i++;
   }
   tmp.swap(*this);
-
-  return new_element_ptr;
 }
 
 
