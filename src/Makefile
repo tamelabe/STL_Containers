@@ -1,4 +1,4 @@
-FLAGS=-Wall -Werror -Wextra -lstdc++ -std=c++17
+FLAGS=-ggdb -std=c++17 -Wall -Werror -Wextra -lstdc++
 
 VECTOR_TEST_SOURCE=s21_vector_test.cc
 VECTOR_TEST_OUTPUT=s21_vector_test.o
