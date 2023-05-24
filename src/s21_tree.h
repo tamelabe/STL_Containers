@@ -48,7 +48,7 @@ class BSTree
     // private methods
     private:
         void insert(Node<T1, T2> *&n, T1 key, T2 data);
-        Node<T1, T2> *find(T1 key, Node *root);
+        Node<T1, T2> *find(T1 key, Node<T1, T2> *root);
         Node<T1, T2> *successor(Node<T1, T2> *n);
         void remove(Node<T1, T2> *&n, T1 key);
 };
