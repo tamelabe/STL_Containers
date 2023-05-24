@@ -11,6 +11,7 @@ template<class T> class ListIterator;
 template<class T> class Node {
 friend class list<T>;
 friend class ListIterator<T>;
+friend class ConstListIterator<T>;
 
 public:
     // Aliases

@@ -20,7 +20,7 @@ namespace s21 {
         using node = Node<T>;
         using node_ptr = node*;
 
-        // Constructors and destructor
+        // List Member functions
         /**
          * default constructor, creates empty list and "fake" node
          */
@@ -67,13 +67,34 @@ namespace s21 {
             std::cout << "Destructor" << std::endl;
             deallocate(true);
         }
-        list operator=(list &&l) {
+        list &operator=(list &&l) noexcept {
             clear();
             for (auto i = l.begin_; i != l.end(); ++i)
                 push_back(*i);
             return *this;
         }
-        //Methods
+
+        // List Element access
+        /**
+        * Returns a reference to the first element in the container.
+        * @return reference to the first element
+        */
+        const_reference front() {
+            if (begin_ == end_)
+                throw std::out_of_range("list is empty");
+            return begin_->data_;
+        }
+        /**
+         * Returns a reference to the last element in the container.
+         * @return reference to the last element.
+         */
+        const_reference back() {
+            if (begin_ == end_)
+                throw std::out_of_range("list is empty");
+            return end_->prev_->data_;
+        }
+
+        // List Iterators
         /**
          * returns an iterator to the beginning
          */
@@ -85,6 +106,74 @@ namespace s21 {
          */
         iterator end() {
             return iterator(end_);
+        }
+
+        // List Capacity
+        /**
+        * Checks if the container has no elements
+        * @return true if the container is empty, false otherwise
+        */
+        bool empty() {
+            return begin_ == end_;
+        }
+        /**
+         * The number of elements in the container.
+         * @return the number of elements
+         */
+        size_type size() {
+            return size_;
+        }
+        /**
+         * Returns the maximum number of elements the container is able to hold due to system or library implementation limitations
+         * @return Maximum number of elements.
+         */
+        size_type max_size() const {
+            return std::numeric_limits<difference_type>::max();
+        }
+
+        // List Modifiers
+        /**
+        * clears the contents
+        */
+        void clear() {
+            deallocate(false);
+            initList();
+        }
+        /**
+        * inserts element into concrete pos and returns the iterator that points to the new element
+        * @param pos position of iterator to push new element
+        * @param value value to push in data field
+        * @return iterator that points to the new element
+        */
+        iterator insert(iterator pos, const_reference value) {
+            iterator ret_iter;
+            if (pos == begin()) {
+                push_front(value);
+                ret_iter = begin();
+            } else {
+                node_ptr new_node = new node(value);
+                new_node->prev_ = pos.iter_->prev_;
+                new_node->next_ = pos.iter_;
+                pos.iter_->prev_->next_ = new_node;
+                pos.iter_->prev_ = new_node;
+                ret_iter = iterator(new_node);
+                ++size_;
+            }
+            return ret_iter;
+        }
+        /**
+        * erases element at pos
+        * @param pos - position of iterator
+        */
+        void erase(iterator pos) {
+            if (pos == begin()) {
+                pop_front();
+            } else if (pos != end()) {
+                node_ptr temp = pos.iter_->prev_;
+                temp->next_ = pos.iter_->next_;
+                pos.iter_->next_->prev_ = temp;
+                delete pos.iter_;
+            }
         }
         /**
          * adds an element to the end
@@ -101,6 +190,17 @@ namespace s21 {
                 end_->prev_ = new_node;
             }
             ++size_;
+        }
+        /**
+        * removes the last element
+        */
+        void pop_back() noexcept {
+            node_ptr tmp = end_->prev_;
+            tmp->prev_->next_ = end_;
+            end_->prev_ = tmp->prev_;
+            delete tmp;
+            begin_ = end_->next_;
+            --size_;
         }
         /**
         * adds an element to the head
@@ -120,56 +220,6 @@ namespace s21 {
             ++size_;
         }
         /**
-         * Checks if the container has no elements
-         * @return true if the container is empty, false otherwise
-         */
-        bool empty() {
-            return begin_ == end_;
-        }
-        /**
-         * The number of elements in the container.
-         * @return the number of elements
-         */
-        size_type size() {
-            return size_;
-        }
-        /**
-         * Returns the maximum number of elements the container is able to hold due to system or library implementation limitations
-         * @return Maximum number of elements.
-         */
-        size_type max_size() const {
-            return std::numeric_limits<difference_type>::max();
-        }
-        /**
-         * Returns a reference to the first element in the container.
-         * @return reference to the first element
-         */
-        const_reference front() {
-            if (begin_ == end_)
-                throw std::out_of_range("list is empty");
-            return begin_->data_;
-        }
-        /**
-         * Returns a reference to the last element in the container.
-         * @return reference to the last element.
-         */
-        const_reference back() {
-            if (begin_ == end_)
-                throw std::out_of_range("list is empty");
-            return end_->prev_->data_;
-        }
-        /**
-         * removes the last element
-         */
-        void pop_back() noexcept {
-            node_ptr tmp = end_->prev_;
-            tmp->prev_->next_ = end_;
-            end_->prev_ = tmp->prev_;
-            delete tmp;
-            begin_ = end_->next_;
-            --size_;
-        }
-        /**
          * removes the first element
          */
         void pop_front() noexcept {
@@ -180,50 +230,6 @@ namespace s21 {
             --size_;
         }
         /**
-         * clears the contents
-         */
-        void clear() {
-            deallocate(false);
-            initList();
-        }
-        /**
-         * inserts element into concrete pos and returns the iterator that points to the new element
-         * @param pos position of iterator to push new element
-         * @param value value to push in data field
-         * @return iterator that points to the new element
-         */
-        iterator insert(iterator pos, const_reference value) {
-            iterator ret_iter;
-            if (pos == begin()) {
-                push_front(value);
-                ret_iter = begin();
-            } else {
-                node_ptr new_node = new node(value);
-                new_node->prev_ = pos.iterator_->prev_;
-                new_node->next_ = pos.iterator_;
-                pos.iterator_->prev_->next_ = new_node;
-                pos.iterator_->prev_ = new_node;
-                ret_iter = iterator(new_node);
-                ++size_;
-            }
-            return ret_iter;
-        }
-        /**
-         * erases element at pos
-         * @param pos - position of iterator
-         */
-        void erase(iterator pos) {
-            if (pos == begin()) {
-                pop_front();
-            } else if (pos != end()) {
-                node_ptr temp = pos.iterator_->prev_;
-                temp->next_ = pos.iterator_->next_;
-                pos.iterator_->next_->prev_ = temp;
-                delete pos.iterator_;
-            }
-        }
-
-        /**
          * swaps the contents
          */
         void swap(list& other) {
@@ -233,6 +239,7 @@ namespace s21 {
                 *this = temp;
             }
         }
+
         void merge(list& other) {
             if (other.begin() == this->begin())
                 return;
@@ -248,7 +255,7 @@ namespace s21 {
             iterator bef_end = end;
             --bef_end;
             for (auto i = begin; i != bef_end; ++i) {
-                if (*i > i.iterator_->next_->data_)
+                if (*i > i.iter_->next_->data_)
                     res = false;
             }
             return res;
@@ -304,7 +311,7 @@ namespace s21 {
         void deallocate(bool mode) {
             if (begin_ != end_)
                 for (auto i = begin(); i != end(); ++i) {
-                    delete i.iterator_;
+                    delete i.iter_;
                     --size_;
                 }
             if (mode) {
