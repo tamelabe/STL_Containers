@@ -3,14 +3,15 @@
 
 #include <initializer_list>
 #include <iostream>
+#include <limits>
 #include "./s21_iterator.h"
 #include "./s21_node.h"
 
 namespace s21 {
-    template<class T>
-    class list {
+    template<class T> class list {
     public:
         // Aliases declaration
+        using difference_type = std::ptrdiff_t;
         using value_type = T;  //ok
         using size_type = std::size_t; //ok
         using reference = value_type &; //ok
@@ -66,7 +67,7 @@ namespace s21 {
             std::cout << "Destructor" << std::endl;
             deallocate(true);
         }
-        operator=(list &&l) {
+        list operator=(list &&l) {
             clear();
             for (auto i = l.begin_; i != l.end(); ++i)
                 push_back(*i);
@@ -82,7 +83,7 @@ namespace s21 {
         /**
          * returns an iterator to the end (next from the last element)
          */
-        iterator end() const {
+        iterator end() {
             return iterator(end_);
         }
         /**
@@ -94,10 +95,10 @@ namespace s21 {
                 pushFirstNode(value);
             } else {
                 node_ptr new_node = new node(value);
-                new_node->rPrev() = end_->rPrev();
-                new_node->rNext() = end_;
-                end_->rPrev()->rNext() = new_node;
-                end_->rPrev() = new_node;
+                new_node->prev_ = end_->prev_;
+                new_node->next_ = end_;
+                end_->prev_->next_ = new_node;
+                end_->prev_ = new_node;
             }
             ++size_;
         }
@@ -110,32 +111,72 @@ namespace s21 {
                 pushFirstNode(value);
             } else {
                 node_ptr new_node = new node(value);
-                new_node->rPrev() = end_;
-                new_node->rNext() = begin_;
-                end_->rNext() = new_node;
-                begin_->rPrev() = new_node;
+                new_node->prev_ = end_;
+                new_node->next_ = begin_;
+                end_->next_ = new_node;
+                begin_->prev_ = new_node;
                 begin_ = new_node;
             }
             ++size_;
         }
         /**
+         * Checks if the container has no elements
+         * @return true if the container is empty, false otherwise
+         */
+        bool empty() {
+            return begin_ == end_;
+        }
+        /**
+         * The number of elements in the container.
+         * @return the number of elements
+         */
+        size_type size() {
+            return size_;
+        }
+        /**
+         * Returns the maximum number of elements the container is able to hold due to system or library implementation limitations
+         * @return Maximum number of elements.
+         */
+        size_type max_size() const {
+            return std::numeric_limits<difference_type>::max();
+        }
+        /**
+         * Returns a reference to the first element in the container.
+         * @return reference to the first element
+         */
+        const_reference front() {
+            if (begin_ == end_)
+                throw std::out_of_range("list is empty");
+            return begin_->data_;
+        }
+        /**
+         * Returns a reference to the last element in the container.
+         * @return reference to the last element.
+         */
+        const_reference back() {
+            if (begin_ == end_)
+                throw std::out_of_range("list is empty");
+            return end_->prev_->data_;
+        }
+        /**
          * removes the last element
          */
         void pop_back() noexcept {
-            node_ptr tmp = end_->rPrev();
-            tmp->rPrev()->rNext() = end_;
-            end_->rPrev() = tmp->rPrev();
+            node_ptr tmp = end_->prev_;
+            tmp->prev_->next_ = end_;
+            end_->prev_ = tmp->prev_;
             delete tmp;
+            begin_ = end_->next_;
             --size_;
         }
         /**
          * removes the first element
          */
         void pop_front() noexcept {
-            end_->rNext() = begin_->rNext();
-            begin_->rNext()->rPrev() = end_;
+            end_->next_ = begin_->next_;
+            begin_->next_->prev_ = end_;
             delete begin_;
-            begin_ = end_->rNext();
+            begin_ = end_->next_;
             --size_;
         }
         /**
@@ -158,10 +199,10 @@ namespace s21 {
                 ret_iter = begin();
             } else {
                 node_ptr new_node = new node(value);
-                new_node->rPrev() = pos.iterPtr()->rPrev();
-                new_node->rNext() = pos.iterPtr();
-                pos.iterPtr()->rPrev()->rNext() = new_node;
-                pos.iterPtr()->rPrev() = new_node;
+                new_node->prev_ = pos.iterator_->prev_;
+                new_node->next_ = pos.iterator_;
+                pos.iterator_->prev_->next_ = new_node;
+                pos.iterator_->prev_ = new_node;
                 ret_iter = iterator(new_node);
                 ++size_;
             }
@@ -175,10 +216,10 @@ namespace s21 {
             if (pos == begin()) {
                 pop_front();
             } else if (pos != end()) {
-                node_ptr temp = pos.iterPtr()->rPrev();
-                temp->rNext() = pos.iterPtr()->rNext();
-                pos.iterPtr()->rNext()->rPrev() = temp;
-                delete pos.iterPtr();
+                node_ptr temp = pos.iterator_->prev_;
+                temp->next_ = pos.iterator_->next_;
+                pos.iterator_->next_->prev_ = temp;
+                delete pos.iterator_;
             }
         }
 
@@ -192,9 +233,54 @@ namespace s21 {
                 *this = temp;
             }
         }
-        void sort() {
+        void merge(list& other) {
+            if (other.begin() == this->begin())
+                return;
+            if (sortCheck(begin(), end()) && sortCheck(other.begin(), other.end())) {
+                std::cout << "congrats!" << std::endl;
+            } else {
+                std::cout << "bad story" << std::endl;
+            }
 
         }
+        bool sortCheck(iterator begin, iterator end) {
+            bool res = true;
+            iterator bef_end = end;
+            --bef_end;
+            for (auto i = begin; i != bef_end; ++i) {
+                if (*i > i.iterator_->next_->data_)
+                    res = false;
+            }
+            return res;
+        }
+        /**
+         * Merge Sort algorithm based onion brand principle
+         */
+//        void sort() {
+//            if (begin_ == end_ || size_ <= 1)
+//                return;
+//            sortEngine(begin(), --end());
+//
+//
+//        }
+//
+//        void sortEngine(const iterator& first_st, const iterator& sec_end) {
+//            auto first_end = --splitList();
+//            auto sec_st = ++first_end;
+//            if (first_st != first_end && sec_st != sec_end) {
+//                sortEngine(first_st, first_end);
+//                sortEngine(sec_st, sec_end);
+//            }
+//
+//        }
+//
+//        iterator splitList() {
+//            iterator iter = begin();
+//            for (auto i = 0; i < size_/2; ++i)
+//                ++iter;
+//            return iter;
+//        }
+
     private:
         // Variables
         node_ptr begin_;
@@ -206,8 +292,8 @@ namespace s21 {
          * Create connection of empty list nodes from end_ to begin_
          */
         void initList() {
-            end_->rNext() = end_;
-            end_->rPrev() = end_;
+            end_->next_ = end_;
+            end_->prev_ = end_;
             begin_ = end_;
         }
         /**
@@ -218,7 +304,7 @@ namespace s21 {
         void deallocate(bool mode) {
             if (begin_ != end_)
                 for (auto i = begin(); i != end(); ++i) {
-                    delete i.iterPtr();
+                    delete i.iterator_;
                     --size_;
                 }
             if (mode) {
@@ -232,8 +318,8 @@ namespace s21 {
          */
         void pushFirstNode(const_reference value) {
             node_ptr new_node = new node(value);
-            new_node->rNext() = new_node->rPrev() = end_;
-            end_->rPrev() = end_->rNext() = new_node;
+            new_node->next_ = new_node->prev_ = end_;
+            end_->prev_ = end_->next_ = new_node;
             begin_ = new_node;
         }
 };
