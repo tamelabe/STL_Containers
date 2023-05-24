@@ -7,7 +7,25 @@
   HEADER FILE
 */
 
-namespace s21 {
+// Структура узла дерева
+template <class T1, class T2>
+class Node
+{
+    T1 key_;
+    T2 data_;
+    size_t size_;
+    Node<T1, T2> *left_;
+    Node<T1, T2> *right_;
+    Node<T1, T2> *parent_;
+
+    Node(T1 key, T2 data) {
+        key_ = key;
+        data_ = data;
+        left_ = right_ = nullptr;
+    }
+};
+
+// Структура дерева
 template <class T1, class T2>
 class BSTree
 {   
@@ -15,44 +33,24 @@ class BSTree
     private:
         size_t size;
         size_t capacity;
+        Node <T1, T2>* root;
 
-    // public types of members
+    // public methods
     public:
-        using key_type = T1;
-        using key_reference = T1 &;
-        using data_type = T2;
-        using data_reference = T1 &;
-        using size_type = size_t;
-        
-    private:    // private methods
-        
-    public:     // public methods
         // Добавление пары (key, value) в дерево
-        void insert(T1 key, T2 value);
+        void insert(T1 key, T2 data);
         // Исключение из дерева значения по ключу
         void remove(T1 key);
         // Получение значения по ключу key
         T2 find(T1 key);
-        // Структура узла дерева
+        // Рекурсивный обход с выводом значений
+        void traverse(Node<T1, T2> *n);
+    // private methods
     private:
-        template <class key_type, class data_type>
-        class Node
-        {
-            key_type key_;
-            data_type data_;
-            size_type size_;
-            Node<key_type, data_type> *left_;
-            Node<key_type, data_type> *right_;
-            Node<key_type, data_type> *parent_;
-
-            Node(key_type key, data_type data) {
-                key_ = key;
-                data_ = data;
-                left_ = right_ = nullptr;
-            }
-        }
+        void insert(Node<T1, T2> *&n, T1 key, T2 data);
+        Node<T1, T2> *find(T1 key, Node *root);
+        Node<T1, T2> *successor(Node<T1, T2> *n);
+        void remove(Node<T1, T2> *&n, T1 key);
 };
-
-}
 
 #endif  //  S21_TREE_H
