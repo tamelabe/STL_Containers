@@ -1,12 +1,23 @@
-#ifndef S21_TREE_H
-#define S21_TREE_H
+/**
+Copyright 2023 darrpama@student.21-school.ru
 
-#include <iostream>
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-/*
-  HEADER FILE
-*/
+  http://www.apache.org/licenses/LICENSE-2.0
 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+**/
+
+#ifndef CPP2_S21_CONTAINERS_S21_TREE_H
+#define CPP2_S21_CONTAINERS_S21_TREE_H
+
+namespace s21 {
 // Структура узла дерева
 template <class T1, class T2>
 class Node
@@ -53,4 +64,112 @@ class BSTree
         void remove(Node<T1, T2> *&n, T1 key);
 };
 
-#endif  //  S21_TREE_H
+// private
+template<class T1, class T2>
+void BSTree<T1, T2>::insert(Node<T1, T2> *&n, T1 key, T2 data)
+{
+    if (n == nullptr) {
+        n = new Node(key, data);
+    } else if (key < n->key_) {
+        insert(n->left_, key, data);
+    } else {
+        insert(n->right_, key, data);
+    }
+}
+
+// public
+template<class T1, class T2>
+void BSTree<T1, T2>::insert(T1 key, T2 data)
+{
+    insert(root, key, data);
+}
+
+// private
+template<class T1, class T2>
+Node<T1, T2> *BSTree<T1, T2>::successor(Node<T1, T2> *n)
+{
+    Node *r = n->right;
+    while (r->left != nullptr)
+        r = r->left;
+    return r;
+}
+
+// private
+template<class T1, class T2>
+void BSTree<T1, T2>::remove(Node<T1, T2> *&n, T1 key)
+{
+    if (n == nullptr) {
+        return;
+    }
+    if (key == n->key_) {
+        if (n->left_ == nullptr || n->right_ == nullptr) {
+            Node *child = (n->left != nullptr ?
+            n->left_
+            :
+            n->right_);
+            delete n;
+            n = child;
+        } else {
+            Node<T1, T2> *success = successor(n);
+            n->key = success->key_;
+            n->data = success->data_;
+            remove(n->right_, success->key_)
+        }
+        return;
+    }
+    if (key < n->key_) {
+        remove(n->left_, key);
+    } else {
+        remove(n->right_, key);
+    }
+}
+
+// public
+template<class T1, class T2>
+void BSTree<T1, T2>::remove(T1 key)
+{
+    remove(root, key);
+}
+
+// public
+template<class T1, class T2>
+void BSTree<T1, T2>::traverse(Node<T1, T2> *n)
+{
+    if (n == nullptr) {
+        return;
+    }
+    traverse(n->left_);
+    // do something
+    traverse(n->right_);
+}
+
+
+// private
+template<class T1, class T2>
+Node<T1, T2> *BSTree<T1, T2>::find(T1 key, Node<T1, T2> *n)
+{
+    if (n == nullptr || key == n->key_) {
+        return n;
+    }
+    if (key < n->key_) {
+        return find(n->left_, key);
+    } else {
+        return find(n->right_, key);
+    }
+}
+
+// public
+template<class T1, class T2>
+T2 BSTree<T1, T2>::find(T1 key)
+{
+    Node<T1, T2> *n = find(root, key);
+    if (n != nullptr) {
+        return n->data_;
+    } else {
+        return -1;
+    }
+}
+}  // namespace s21
+
+#endif  // CPP2_S21_CONTAINERS_S21_TREE_H
+
