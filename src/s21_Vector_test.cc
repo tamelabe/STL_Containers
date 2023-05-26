@@ -215,6 +215,16 @@ TEST(Modifier, pop_back) {
   EXPECT_TRUE(vec.data()[1] == 200);
 }
 
+TEST(Modifier, pop_back2) {
+  s21::Vector<int> vec{100, 200, 300};
+  EXPECT_TRUE(vec.size() == 3);
+  vec.pop_back();
+  vec.pop_back();
+  vec.pop_back();
+  vec.pop_back();
+  EXPECT_TRUE(vec.size() == 0);
+}
+
 TEST(Modifier, swap) {
   s21::Vector<int> vec{100, 200, 300};
   s21::Vector<int> vec2{1000, 2000, 3000};

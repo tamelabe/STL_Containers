@@ -319,7 +319,9 @@ void Vector<T>::push_back(const_reference value) {
 // removes the last element
 template <class T>
 void Vector<T>::pop_back() {
-  storage_[--size_].~T();
+  if (size_ > 0) {
+    storage_[--size_].~T();
+  }
 }
 
 // swaps the contents
