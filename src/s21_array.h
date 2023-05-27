@@ -46,7 +46,7 @@ class Array {
   ~Array();
 
   // // ELEMENT ACCESS METHODS
-  // reference at(size_type);
+  reference at(size_type);
   // reference operator[](size_type);  // OPERATOR OVERLOAD
   // const_reference front();
   // const_reference back();
@@ -127,13 +127,13 @@ Array<T, N> &Array<T, N>::operator=(Array<T, N> &&origin) {
   return *this;
 }
 
-// // ELEMENT ACCESS METHODS
-// // access specified element with bounds checking
-// template <class T>
-// typename Vector<T>::reference Vector<T>::at(size_type pos) {
-//   if (pos >= size_) throw std::out_of_range{"Position is out of range."};
-//   return storage_[pos];
-// }
+// ELEMENT ACCESS METHODS
+// access specified element with bounds checking
+template <class T, size_t N>
+typename Array<T, N>::reference Array<T, N>::at(size_type pos) {
+  if (pos >= size_) throw std::out_of_range{"Position is out of range."};
+  return data_[pos];
+}
 
 template <class T, size_t N>
 typename Array<T, N>::iterator Array<T, N>::data() {

@@ -68,24 +68,20 @@ TEST(OperatorOverload, move) {
   }
 }
 
-// TEST(OperatorOverload, copy) {
-//   s21::Vector<int> vec{1, 2, 3};
-//   s21::Vector<int> vec2 = vec;
+// Element access
+TEST(ElementAccess, at) {
+  s21::Array<int, 3> arr{1, 2, 3};
+  int a = arr.at(2);
+  EXPECT_TRUE(a == 3);
+}
 
-//   EXPECT_TRUE(vec2.capacity() == 3);
-//   EXPECT_TRUE(vec2.size() == 3);
-//   for (size_t i = 0; i < vec2.capacity(); i++) {
-//     EXPECT_TRUE(vec.data()[i] == vec2.data()[i]);
-//   }
-// }
-
-// // Element access
-// TEST(ElementAccess, at) {
-//   s21::Vector<int> vec{1, 2, 3};
-//   int a = vec.at(2);
-//   EXPECT_TRUE(a == 3);
-// }
-
+TEST(ElementAccess, at_error) {
+  EXPECT_THROW(({
+                 s21::Array<int, 3> arr{1, 2, 3};
+                 arr.at(4);
+               }),
+               std::out_of_range);
+}
 // TEST(ElementAccess, at_operator) {
 //   s21::Vector<int> vec{1, 2, 3};
 //   int a = vec[2];
