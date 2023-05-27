@@ -63,9 +63,7 @@ class Array {
 
   // MODIFIER METHODS
   void swap(Array &);
-
-  // // HELPER methods
-  // void printVector();
+  void fill(const_reference);
 
  private:
   size_type size_;
@@ -191,30 +189,12 @@ void s21::Array<T, N>::swap(s21::Array<T, N> &v) {
   v.size_ = 0;
 }
 
-// // HELPER METHODS
-// template <typename T>
-// void s21::Vector<T>::printVector() {
-//   iterator ptr = begin();
-//   std::cout << "============" << std::endl;
-//   std::cout << "PRINT VECTOR" << std::endl;
-//   std::cout << "============" << std::endl;
-//   while (ptr < end()) {
-//     std::cout << "ptr: " << *ptr << " - " << ptr << std::endl;
-//     ++ptr;
-//   }
-//   std::cout << "============" << std::endl;
-// }
+// assigns the given value value to all elements in the container.
+template <typename T, size_t N>
+void s21::Array<T, N>::fill(const_reference value) {
+  for (size_type i = 0; i < size_; ++i) data_[i] = value;
+}
 
-// template <typename T>
-// void s21::Vector<T>::reallocate(size_type capacity, size_type size,
-//                                 const iterator storage) {
-//   data_ = new T[capacity];
-//   capacity_ = capacity;
-//   for (size_type i = 0; i < size; ++i) {
-//     data_[i] = storage[i];
-//   }
-//   size_ = size;
-// }
 }  // namespace s21
 
 #endif  // CPP2_S21_CONTAINERS_SRC_S21_VECTOR_H_

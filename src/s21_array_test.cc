@@ -168,6 +168,14 @@ TEST(Modifier, swap) {
   EXPECT_TRUE(arr2.data()[2] == 300);
 }
 
+TEST(Modifier, fill) {
+  s21::Array<int, 3> arr;
+  arr.fill(7);
+  EXPECT_TRUE(arr.data()[0] == 7);
+  EXPECT_TRUE(arr.data()[1] == 7);
+  EXPECT_TRUE(arr.data()[2] == 7);
+}
+
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
