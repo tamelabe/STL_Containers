@@ -48,8 +48,8 @@ class Array {
   // // ELEMENT ACCESS METHODS
   reference at(size_type);
   reference operator[](size_type);  // OPERATOR OVERLOAD
-  // const_reference front();
-  // const_reference back();
+  const_reference front();
+  const_reference back();
   iterator data();
 
   // // ITERATOR METHODS
@@ -146,15 +146,17 @@ typename Array<T, N>::reference Array<T, N>::operator[](size_type pos) {
   return data_[pos];
 }
 
-// template <class T>
-// typename Vector<T>::const_reference Vector<T>::front() {
-//   return data_[0];
-// }
+template <class T, size_t N>
+typename Array<T, N>::const_reference Array<T, N>::front() {
+  if (size_ == 0) throw std::out_of_range{"Position is out of range."};
+  return data_[0];
+}
 
-// template <class T>
-// typename Vector<T>::const_reference Vector<T>::back() {
-//   return data_[size_ - 1];
-// }
+template <class T, size_t N>
+typename Array<T, N>::const_reference Array<T, N>::back() {
+  if (size_ == 0) throw std::out_of_range{"Position is out of range."};
+  return data_[size_ - 1];
+}
 
 // // ITERATOR METHODS
 // // returns an iterator to the beginning

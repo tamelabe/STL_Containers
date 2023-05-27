@@ -86,7 +86,6 @@ TEST(ElementAccess, at_error) {
 TEST(ElementAccess, at_operator) {
   s21::Array<int, 3> arr{1, 2, 3};
   int a = arr[2];
-  std::cout << a << std::endl;
   EXPECT_TRUE(a == 3);
 }
 
@@ -98,17 +97,33 @@ TEST(ElementAccess, at_operator_error) {
                std::out_of_range);
 }
 
-// TEST(ElementAccess, front) {
-//   s21::Vector<int> vec{1, 2, 3};
-//   int a = vec.front();
-//   EXPECT_TRUE(a == 1);
-// }
+TEST(ElementAccess, front) {
+  s21::Array<int, 3> arr{1, 2, 3};
+  int a = arr.front();
+  EXPECT_TRUE(a == 1);
+}
 
-// TEST(ElementAccess, back) {
-//   s21::Vector<int> vec{1, 2, 3};
-//   int a = vec.back();
-//   EXPECT_TRUE(a == 3);
-// }
+TEST(ElementAccess, front_empty) {
+  EXPECT_THROW(({
+                 s21::Array<int, 0> arr;
+                 arr.front();
+               }),
+               std::out_of_range);
+}
+
+TEST(ElementAccess, back) {
+  s21::Array<int, 3> arr{1, 2, 3};
+  int a = arr.back();
+  EXPECT_TRUE(a == 3);
+}
+
+TEST(ElementAccess, back_empty) {
+  EXPECT_THROW(({
+                 s21::Array<int, 0> arr;
+                 arr.back();
+               }),
+               std::out_of_range);
+}
 
 // // Iterators
 // TEST(Iterator, begin) {
