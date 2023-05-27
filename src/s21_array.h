@@ -35,9 +35,8 @@ class Array {
 
   // CONSTRUCTORS
   Array();
-  // explicit Vector(size_type);
-  // explicit Vector(std::initializer_list<value_type> const &);
-  // Vector(const Vector &);
+  explicit Array(std::initializer_list<value_type> const &);
+  Array(const Array &);
   // Vector(Vector &&) noexcept;
 
   // // ASSIGNMENTS
@@ -53,7 +52,7 @@ class Array {
   // reference operator[](size_type);  // OPERATOR OVERLOAD
   // const_reference front();
   // const_reference back();
-  // iterator data();
+  iterator data();
 
   // // ITERATOR METHODS
   // iterator begin();
@@ -61,7 +60,7 @@ class Array {
 
   // // CAPACITY METHODS
   // bool empty();
-  // size_type size() const noexcept;
+  size_type size() const noexcept;
   // size_type max_size() const noexcept;
   // void reserve(size_type size);
   // size_type capacity() const noexcept;
@@ -80,41 +79,37 @@ class Array {
 
  private:
   size_type size_;
-  iterator storage_;
+  T data_[N]{};
 
   // HELPER methods
   // void reallocate(size_type, size_type, const iterator);
 };
 
 // CONSTRUCTORS AND MEMBER FUNCTIONS
-// default constructor, creates empty vector
+// default constructor, creates empty array
 template <class T, size_t N>
-Array<T, N>::Array() : size_(0U), storage_(nullptr) {}
+Array<T, N>::Array() : size_(N), data_() {}
 
-// // parameterized constructor, creates the vector of size n
-// template <class T>
-// Vector<T>::Vector(size_type n)
-//     : size_(n), capacity_(n), storage_(new T[capacity_]) {
-//   for (size_type i = 0; i < n; ++i) storage_[i] = T();
-// }
+// initializer list constructor, creates array
+// initizialized using std::initializer_list
+template <class T, size_t N>
+Array<T, N>::Array(std::initializer_list<value_type> const &items) : size_(N) {
+  size_type count = items.size();
+  if (count > size_) {
+    throw std::length_error{"Count of items is bigger than size."};
+  }
+  int index = 0;
+  for (const T &item : items) {
+    data_[index] = item;
+    index++;
+  }
+}
 
-// // initializer list constructor,
-// // creates vector initizialized using std::initializer_list
-// template <class T>
-// Vector<T>::Vector(std::initializer_list<T> const &items) : size_(0) {
-//   size_type count = items.size();
-//   capacity_ = count;
-//   storage_ = new T[capacity_];
-
-//   for (const T &item : items) storage_[size_++] = item;
-// }
-
-// // copy constructor
-// template <class T>
-// Vector<T>::Vector(const Vector &v)
-//     : size_(v.size_), capacity_(v.capacity_), storage_(new T[capacity_]) {
-//   for (size_type i = 0; i < size_; ++i) storage_[i] = v.storage_[i];
-// };
+// copy constructor
+template <class T, size_t N>
+Array<T, N>::Array(const Array &a) : size_(a.size_), data_() {
+  for (size_type i = 0; i < size_; ++i) data_[i] = a.data_[i];
+};
 
 // // move constructor
 // template <class T>
@@ -159,10 +154,10 @@ Array<T, N>::Array() : size_(0U), storage_(nullptr) {}
 //   return storage_[pos];
 // }
 
-// template <class T>
-// typename Vector<T>::iterator Vector<T>::data() {
-//   return storage_;
-// }
+template <class T, size_t N>
+typename Array<T, N>::iterator Array<T, N>::data() {
+  return data_;
+}
 
 // template <class T>
 // typename Vector<T>::reference Vector<T>::operator[](size_type pos) {
@@ -199,11 +194,11 @@ Array<T, N>::Array() : size_(0U), storage_(nullptr) {}
 //   return size_ == 0;
 // }
 
-// // returns the number of elements
-// template <class T>
-// typename Vector<T>::size_type Vector<T>::size() const noexcept {
-//   return size_;
-// }
+// returns the number of elements
+template <class T, size_t N>
+typename Array<T, N>::size_type Array<T, N>::size() const noexcept {
+  return size_;
+}
 
 // // returns the maximum possible number of elements
 // template <class T>

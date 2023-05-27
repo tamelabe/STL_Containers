@@ -3,48 +3,46 @@
 #include <gtest/gtest-spi.h>
 #include <gtest/gtest.h>
 
+#include <array>
 #include <cstring>
 #include <iostream>
 #include <vector>
 
 // Constructors
-// TEST(Constructor, base) {
-//   s21::Vector<int> vec;
-//   EXPECT_TRUE(vec.size() == 0 && vec.capacity() == 0);
-//   EXPECT_TRUE(vec.data() == nullptr);
+TEST(Constructor, base) {
+  s21::Array<int, 3> arr;
+  EXPECT_TRUE(arr.size() == 3);
+  EXPECT_TRUE(arr.data());
+}
 
-//   s21::Vector<double> vec2;
-//   EXPECT_TRUE(vec2.size() == 0 && vec2.capacity() == 0);
-//   EXPECT_TRUE(vec2.data() == nullptr);
-// }
+TEST(Constructor, items) {
+  s21::Array<int, 5> arr{1, 2, 3, 4, 5};
+  EXPECT_TRUE(arr.size() == 5);
+  for (size_t i = 0; i < arr.size(); i++) {
+    EXPECT_TRUE((int)(i + 1) == arr.data()[i]);
+  }
+}
 
-// TEST(Constructor, size_n) {
-//   s21::Vector<int> vec(2);
-//   EXPECT_TRUE(vec.capacity() == 2);
-//   EXPECT_TRUE(vec.size() == 2);
-// }
+TEST(Constructor, items_less) {
+  s21::Array<int, 3> arr2{1, 2};
+  EXPECT_TRUE(arr2.size() == 3);
+  EXPECT_TRUE(arr2.data()[0] == 1);
+  EXPECT_TRUE(arr2.data()[1] == 2);
+  EXPECT_TRUE(arr2.data()[2] == 0);
+}
 
-// TEST(Constructor, items) {
-//   s21::Vector<int> vec{1, 2, 3, 4, 5};
-//   EXPECT_TRUE(vec.capacity() == 5);
-//   EXPECT_TRUE(vec.size() == 5);
-//   for (size_t i = 0; i < vec.capacity(); i++) {
-//     EXPECT_TRUE((int)(i + 1) == vec.data()[i]);
-//   }
-// }
+TEST(Constructor, items_error) {
+  EXPECT_THROW((s21::Array<int, 2>{1, 2, 3}), std::length_error);
+}
 
-// TEST(Constructor, copy) {
-//   s21::Vector<int> vec{1, 2, 3};
-//   s21::Vector<int> vec2(vec);
-//   EXPECT_TRUE(vec2.capacity() == 3);
-//   EXPECT_TRUE(vec2.size() == 3);
-//   for (size_t i = 0; i < vec2.capacity(); i++) {
-//     EXPECT_TRUE((int)(i + 1) == vec2.data()[i]);
-//   }
-//   for (size_t i = 0; i < vec.capacity(); i++) {
-//     EXPECT_TRUE((int)(i + 1) == vec2.data()[i]);
-//   }
-// }
+TEST(Constructor, copy) {
+  s21::Array<int, 3> arr{1, 2, 3};
+  s21::Array<int, 3> arr2(arr);
+  EXPECT_TRUE(arr2.size() == 3);
+  for (size_t i = 0; i < arr2.size(); i++) {
+    EXPECT_TRUE(arr.data()[i] == arr2.data()[i]);
+  }
+}
 
 // TEST(Constructor, move) {
 //   s21::Vector<int> vec{1, 2, 3};
