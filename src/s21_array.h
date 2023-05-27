@@ -39,13 +39,11 @@ class Array {
   Array(const Array &);
   Array(Array &&) noexcept;
 
-  // // ASSIGNMENTS
-  // Vector<T> &operator=(std::initializer_list<value_type> const &);
-  // Vector<T> &operator=(const Vector<T> &);
-  // Vector<T> &operator=(Vector<T> &&);
+  // ASSIGNMENTS
+  Array<T, N> &operator=(Array<T, N> &&);
 
-  // // DESTRUCTOR
-  // ~Vector();
+  // DESTRUCTOR
+  ~Array();
 
   // // ELEMENT ACCESS METHODS
   // reference at(size_type);
@@ -117,34 +115,17 @@ Array<T, N>::Array(Array &&origin) noexcept : Array() {
   swap(origin);
 }
 
-// // destructor
-// template <class T>
-// Vector<T>::~Vector() {
-//   delete[] storage_;
-// }
+// destructor
+template <class T, size_t N>
+Array<T, N>::~Array() {}
 
-// // OPERATOR OVERLOADS
-// // assignment operator overload for vector initizialized list
-// template <class T>
-// Vector<T> &Vector<T>::operator=(
-//     std::initializer_list<value_type> const &items) {
-//   swap(Vector<T>(items));
-//   return *this;
-// }
-
-// // assignment operator overload for copy object
-// template <class T>
-// Vector<T> &Vector<T>::operator=(const Vector<T> &origin) {
-//   swap(Vector<T>(origin));
-//   return *this;
-// }
-
-// // assignment operator overload for moving object
-// template <class T>
-// Vector<T> &Vector<T>::operator=(Vector<T> &&origin) {
-//   swap(origin);
-//   return *this;
-// }
+// OPERATOR OVERLOADS
+// assignment operator overload for moving object
+template <class T, size_t N>
+Array<T, N> &Array<T, N>::operator=(Array<T, N> &&origin) {
+  swap(origin);
+  return *this;
+}
 
 // // ELEMENT ACCESS METHODS
 // // access specified element with bounds checking
