@@ -125,20 +125,18 @@ TEST(ElementAccess, back_empty) {
                std::out_of_range);
 }
 
-// // Iterators
-// TEST(Iterator, begin) {
-//   s21::Vector<int> vec{1, 2, 3};
-//   int* a = vec.begin();
-//   EXPECT_TRUE(*a == 1);
-// }
+// Iterators
+TEST(Iterator, begin) {
+  s21::Array<int, 3> arr{1, 2, 3};
+  int* a = arr.begin();
+  EXPECT_TRUE(*a == 1);
+}
 
-// TEST(Iterator, end) {
-//   s21::Vector<int> vec{1, 2, 3};
-//   int* a = vec.end();
-//   int* b = vec.begin();
-//   std::advance(b, 3);
-//   EXPECT_TRUE(a == b);
-// }
+TEST(Iterator, end) {
+  s21::Array<int, 3> arr{1, 2, 3};
+  int* a = arr.end();
+  EXPECT_TRUE(*(a - 1) == 3);
+}
 
 // // Capacity
 // TEST(Capacity, empty) {

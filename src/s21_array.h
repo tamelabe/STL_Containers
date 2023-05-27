@@ -45,16 +45,16 @@ class Array {
   // DESTRUCTOR
   ~Array();
 
-  // // ELEMENT ACCESS METHODS
+  // ELEMENT ACCESS METHODS
   reference at(size_type);
   reference operator[](size_type);  // OPERATOR OVERLOAD
   const_reference front();
   const_reference back();
   iterator data();
 
-  // // ITERATOR METHODS
-  // iterator begin();
-  // iterator end();
+  // ITERATOR METHODS
+  iterator begin();
+  iterator end();
 
   // // CAPACITY METHODS
   // bool empty();
@@ -158,18 +158,18 @@ typename Array<T, N>::const_reference Array<T, N>::back() {
   return data_[size_ - 1];
 }
 
-// // ITERATOR METHODS
-// // returns an iterator to the beginning
-// template <class T>
-// typename Vector<T>::iterator Vector<T>::begin() {
-//   return data_;
-// }
+// ITERATOR METHODS
+// returns an iterator to the beginning
+template <class T, size_t N>
+typename Array<T, N>::iterator Array<T, N>::begin() {
+  return data_;
+}
 
-// // returns an iterator to the end
-// template <class T>
-// typename Vector<T>::iterator Vector<T>::end() {
-//   return data_ + size_;
-// }
+// returns an iterator to the end
+template <class T, size_t N>
+typename Array<T, N>::iterator Array<T, N>::end() {
+  return data_ + size_;
+}
 
 // // CAPACITY METHODS
 // // checks whether the container is empty
