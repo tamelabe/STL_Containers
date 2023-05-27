@@ -138,120 +138,35 @@ TEST(Iterator, end) {
   EXPECT_TRUE(*(a - 1) == 3);
 }
 
-// // Capacity
-// TEST(Capacity, empty) {
-//   s21::Vector<int> vec;
-//   s21::Vector<int> vec2{1, 2};
-//   EXPECT_TRUE(vec.empty());
-//   EXPECT_FALSE(vec2.empty());
-// }
+// Capacity
+TEST(Capacity, empty) {
+  s21::Array<int, 0> arr;
+  s21::Array<int, 2> arr2{1, 2};
+  EXPECT_TRUE(arr.empty());
+  EXPECT_FALSE(arr2.empty());
+}
 
-// TEST(Capacity, size) {
-//   s21::Vector<int> vec{1, 2};
-//   EXPECT_TRUE(vec.size() == 2);
-// }
+TEST(Capacity, size) {
+  s21::Array<int, 2> arr{1, 2};
+  EXPECT_TRUE(arr.size() == 2);
+}
 
-// TEST(Capacity, max_size) {
-//   s21::Vector<int> vec;
-//   EXPECT_TRUE(vec.max_size() == 1073741824U);
-// }
+TEST(Capacity, max_size) {
+  s21::Array<int, 10> arr;
+  EXPECT_TRUE(arr.max_size() == 10);
+}
 
-// TEST(Capacity, capacity) {
-//   s21::Vector<int> vec{1, 2, 3};
-//   EXPECT_TRUE(vec.capacity() == 3);
-// }
-
-// // LEAK
-// TEST(Capacity, reserve) {
-//   s21::Vector<int> vec{1, 2, 3};
-//   vec.reserve(5);
-//   EXPECT_TRUE(vec.size() == 3);
-//   EXPECT_TRUE(vec.capacity() == 5);
-//   for (size_t i = 0; i < vec.size(); i++) {
-//     EXPECT_TRUE(vec.data()[i] == (int)i + 1);
-//   }
-// }
-
-// // LEAK
-// TEST(Capacity, shrink_to_fit) {
-//   s21::Vector<int> vec{1, 2, 3};
-//   vec.reserve(5);
-//   EXPECT_TRUE(vec.size() == 3);
-//   EXPECT_TRUE(vec.capacity() == 5);
-//   vec.shrink_to_fit();
-//   EXPECT_TRUE(vec.capacity() == 3);
-//   for (size_t i = 0; i < vec.size(); i++) {
-//     EXPECT_TRUE(vec.data()[i] == (int)i + 1);
-//   }
-// }
-
-// // Modifier
-// TEST(Modifier, clear) {
-//   s21::Vector<int> vec{1, 2, 3};
-//   vec.clear();
-//   EXPECT_TRUE(vec.size() == 0);
-//   EXPECT_TRUE(vec.capacity() == 3);
-// }
-
-// TEST(Modifier, insert) {
-//   s21::Vector<int> vec{100, 200, 300};
-//   EXPECT_TRUE(vec.size() == 3);
-//   s21::Vector<int>::iterator it = vec.insert(vec.begin() + 1, 777);
-//   EXPECT_TRUE(vec.size() == 4);
-//   EXPECT_TRUE(*it == 777);
-//   EXPECT_TRUE(*(vec.begin() + 1) == 777);
-// }
-
-// TEST(Modifier, erase) {
-//   s21::Vector<int> vec{100, 200, 300};
-//   EXPECT_TRUE(vec.size() == 3);
-//   vec.erase(vec.begin() + 1);
-//   EXPECT_TRUE(vec.size() == 2);
-//   EXPECT_TRUE(vec.data()[0] == 100);
-//   EXPECT_TRUE(vec.data()[1] == 300);
-// }
-
-// TEST(Modifier, push_back) {
-//   s21::Vector<int> vec{100, 200, 300};
-//   EXPECT_TRUE(vec.size() == 3);
-//   vec.push_back(777);
-//   EXPECT_TRUE(vec.size() == 4);
-//   EXPECT_TRUE(vec.data()[0] == 100);
-//   EXPECT_TRUE(vec.data()[1] == 200);
-//   EXPECT_TRUE(vec.data()[2] == 300);
-//   EXPECT_TRUE(vec.data()[3] == 777);
-// }
-
-// TEST(Modifier, pop_back) {
-//   s21::Vector<int> vec{100, 200, 300};
-//   EXPECT_TRUE(vec.size() == 3);
-//   vec.pop_back();
-//   EXPECT_TRUE(vec.size() == 2);
-//   EXPECT_TRUE(vec.data()[0] == 100);
-//   EXPECT_TRUE(vec.data()[1] == 200);
-// }
-
-// TEST(Modifier, pop_back2) {
-//   s21::Vector<int> vec{100, 200, 300};
-//   EXPECT_TRUE(vec.size() == 3);
-//   vec.pop_back();
-//   vec.pop_back();
-//   vec.pop_back();
-//   vec.pop_back();
-//   EXPECT_TRUE(vec.size() == 0);
-// }
-
-// TEST(Modifier, swap) {
-//   s21::Vector<int> vec{100, 200, 300};
-//   s21::Vector<int> vec2{1000, 2000, 3000};
-//   vec.swap(vec2);
-//   EXPECT_TRUE(vec.data()[0] == 1000);
-//   EXPECT_TRUE(vec.data()[1] == 2000);
-//   EXPECT_TRUE(vec.data()[2] == 3000);
-//   EXPECT_TRUE(vec2.data()[0] == 100);
-//   EXPECT_TRUE(vec2.data()[1] == 200);
-//   EXPECT_TRUE(vec2.data()[2] == 300);
-// }
+TEST(Modifier, swap) {
+  s21::Array<int, 3> arr{100, 200, 300};
+  s21::Array<int, 3> arr2{1000, 2000, 3000};
+  arr.swap(arr2);
+  EXPECT_TRUE(arr.data()[0] == 1000);
+  EXPECT_TRUE(arr.data()[1] == 2000);
+  EXPECT_TRUE(arr.data()[2] == 3000);
+  EXPECT_TRUE(arr2.data()[0] == 100);
+  EXPECT_TRUE(arr2.data()[1] == 200);
+  EXPECT_TRUE(arr2.data()[2] == 300);
+}
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);

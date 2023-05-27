@@ -56,20 +56,12 @@ class Array {
   iterator begin();
   iterator end();
 
-  // // CAPACITY METHODS
-  // bool empty();
+  // CAPACITY METHODS
+  bool empty();
   size_type size() const noexcept;
-  // size_type max_size() const noexcept;
-  // void reserve(size_type size);
-  // size_type capacity() const noexcept;
-  // void shrink_to_fit();
+  size_type max_size() const noexcept;
 
   // MODIFIER METHODS
-  // void clear() noexcept;
-  // iterator insert(iterator pos, const_reference value);
-  // void erase(iterator pos);
-  // void push_back(const_reference value);
-  // void pop_back();
   void swap(Array &);
 
   // // HELPER methods
@@ -148,13 +140,13 @@ typename Array<T, N>::reference Array<T, N>::operator[](size_type pos) {
 
 template <class T, size_t N>
 typename Array<T, N>::const_reference Array<T, N>::front() {
-  if (size_ == 0) throw std::out_of_range{"Position is out of range."};
+  if (empty()) throw std::out_of_range{"Position is out of range."};
   return data_[0];
 }
 
 template <class T, size_t N>
 typename Array<T, N>::const_reference Array<T, N>::back() {
-  if (size_ == 0) throw std::out_of_range{"Position is out of range."};
+  if (empty()) throw std::out_of_range{"Position is out of range."};
   return data_[size_ - 1];
 }
 
@@ -171,12 +163,12 @@ typename Array<T, N>::iterator Array<T, N>::end() {
   return data_ + size_;
 }
 
-// // CAPACITY METHODS
-// // checks whether the container is empty
-// template <class T>
-// bool Vector<T>::empty() {
-//   return size_ == 0;
-// }
+// CAPACITY METHODS
+// checks whether the container is empty
+template <class T, size_t N>
+bool Array<T, N>::empty() {
+  return size_ == 0;
+}
 
 // returns the number of elements
 template <class T, size_t N>
@@ -184,121 +176,11 @@ typename Array<T, N>::size_type Array<T, N>::size() const noexcept {
   return size_;
 }
 
-// // returns the maximum possible number of elements
-// template <class T>
-// typename Vector<T>::size_type Vector<T>::max_size() const noexcept {
-//   return MAX_VECTOR_SIZE;
-// }
-
-// // returns the number of elements that can be held in
-// // currently allocated storage
-// template <class T>
-// typename Vector<T>::size_type Vector<T>::capacity() const noexcept {
-//   return capacity_;
-// }
-
-// // allocate storage of size elements and copies current
-// // array elements to a newely allocated array
-// template <class T>
-// void Vector<T>::reserve(size_type n) {
-//   if (n > MAX_VECTOR_SIZE) {
-//     throw std::length_error{"Requesting size is larger than max_size."};
-//   }
-//   if (n <= capacity_) {
-//     return;
-//   }
-//   s21::Vector<T> tmp;
-//   tmp.reallocate(n, size_, data_);
-//   tmp.swap(*this);
-// }
-
-// // reduces memory usage by freeing unused memory
-// template <class T>
-// void Vector<T>::shrink_to_fit() {
-//   s21::Vector<T> tmp;
-//   tmp.reallocate(size_, size_, data_);
-//   tmp.swap(*this);
-// }
-
-// // MODIFIER METHODS
-// // clears the contents
-// template <class T>
-// void Vector<T>::clear() noexcept {
-//   for (size_type i = 0; i < size_; ++i) {
-//     data_[i].~T();
-//   }
-//   size_ = 0;
-// }
-
-// // inserts elements into concrete pos and
-// // returns the iterator that points to the new element
-// template <class T>
-// typename Vector<T>::iterator Vector<T>::insert(iterator pos,
-//                                                const_reference value) {
-//   s21::Vector<T> tmp(size_ + 1);
-//   size_type new_element_index = 0;
-//   iterator ptr = begin();
-//   size_type i = 0;
-//   while (ptr <= end()) {
-//     if (ptr < pos) {
-//       tmp.data_[i] = *ptr;
-//     } else if (ptr == pos) {
-//       tmp.data_[i] = value;
-//       new_element_index = i;
-//     } else {
-//       tmp.data_[i] = *(ptr - 1);
-//     }
-//     ptr++;
-//     ++i;
-//   }
-//   tmp.swap(*this);
-
-//   return &(data_[new_element_index]);
-// }
-
-// // erases element at pos
-// template <class T>
-// void Vector<T>::erase(iterator pos) {
-//   s21::Vector<T> tmp(size_ - 1);
-//   iterator ptr = begin();
-//   size_type i = 0;
-//   while (ptr < end()) {
-//     if (ptr < pos) {
-//       tmp.data_[i] = *ptr;
-//     } else {
-//       tmp.data_[i] = *(ptr + 1);
-//     }
-//     ptr++;
-//     ++i;
-//   }
-//   tmp.swap(*this);
-// }
-
-// // adds an element to the end
-// template <class T>
-// void Vector<T>::push_back(const_reference value) {
-//   s21::Vector<T> tmp(size_ + 1);
-//   iterator ptr = begin();
-//   size_type i = 0;
-//   while (ptr <= end()) {
-//     if (ptr == end()) {
-//       tmp.data_[i] = value;
-//     } else {
-//       tmp.data_[i] = *ptr;
-//     }
-//     ptr++;
-//     ++i;
-//   }
-//   tmp.swap(*this);
-// }
-
-// // removes the last element
-// template <class T>
-// void Vector<T>::pop_back() {
-//   if (size_ > 0) {
-//     data_[--size_].~T();
-//   }
-// }
+// returns the maximum possible number of elements
+template <class T, size_t N>
+typename Array<T, N>::size_type Array<T, N>::max_size() const noexcept {
+  return size_;
+}
 
 // swaps the contents
 template <typename T, size_t N>
