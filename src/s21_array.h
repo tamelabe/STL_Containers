@@ -47,7 +47,7 @@ class Array {
 
   // // ELEMENT ACCESS METHODS
   reference at(size_type);
-  // reference operator[](size_type);  // OPERATOR OVERLOAD
+  reference operator[](size_type);  // OPERATOR OVERLOAD
   // const_reference front();
   // const_reference back();
   iterator data();
@@ -140,32 +140,33 @@ typename Array<T, N>::iterator Array<T, N>::data() {
   return data_;
 }
 
-// template <class T>
-// typename Vector<T>::reference Vector<T>::operator[](size_type pos) {
-//   return storage_[pos];
-// }
+template <class T, size_t N>
+typename Array<T, N>::reference Array<T, N>::operator[](size_type pos) {
+  if (pos >= size_) throw std::out_of_range{"Position is out of range."};
+  return data_[pos];
+}
 
 // template <class T>
 // typename Vector<T>::const_reference Vector<T>::front() {
-//   return storage_[0];
+//   return data_[0];
 // }
 
 // template <class T>
 // typename Vector<T>::const_reference Vector<T>::back() {
-//   return storage_[size_ - 1];
+//   return data_[size_ - 1];
 // }
 
 // // ITERATOR METHODS
 // // returns an iterator to the beginning
 // template <class T>
 // typename Vector<T>::iterator Vector<T>::begin() {
-//   return storage_;
+//   return data_;
 // }
 
 // // returns an iterator to the end
 // template <class T>
 // typename Vector<T>::iterator Vector<T>::end() {
-//   return storage_ + size_;
+//   return data_ + size_;
 // }
 
 // // CAPACITY METHODS
@@ -205,7 +206,7 @@ typename Array<T, N>::size_type Array<T, N>::size() const noexcept {
 //     return;
 //   }
 //   s21::Vector<T> tmp;
-//   tmp.reallocate(n, size_, storage_);
+//   tmp.reallocate(n, size_, data_);
 //   tmp.swap(*this);
 // }
 
@@ -213,7 +214,7 @@ typename Array<T, N>::size_type Array<T, N>::size() const noexcept {
 // template <class T>
 // void Vector<T>::shrink_to_fit() {
 //   s21::Vector<T> tmp;
-//   tmp.reallocate(size_, size_, storage_);
+//   tmp.reallocate(size_, size_, data_);
 //   tmp.swap(*this);
 // }
 
@@ -222,7 +223,7 @@ typename Array<T, N>::size_type Array<T, N>::size() const noexcept {
 // template <class T>
 // void Vector<T>::clear() noexcept {
 //   for (size_type i = 0; i < size_; ++i) {
-//     storage_[i].~T();
+//     data_[i].~T();
 //   }
 //   size_ = 0;
 // }
@@ -238,19 +239,19 @@ typename Array<T, N>::size_type Array<T, N>::size() const noexcept {
 //   size_type i = 0;
 //   while (ptr <= end()) {
 //     if (ptr < pos) {
-//       tmp.storage_[i] = *ptr;
+//       tmp.data_[i] = *ptr;
 //     } else if (ptr == pos) {
-//       tmp.storage_[i] = value;
+//       tmp.data_[i] = value;
 //       new_element_index = i;
 //     } else {
-//       tmp.storage_[i] = *(ptr - 1);
+//       tmp.data_[i] = *(ptr - 1);
 //     }
 //     ptr++;
 //     ++i;
 //   }
 //   tmp.swap(*this);
 
-//   return &(storage_[new_element_index]);
+//   return &(data_[new_element_index]);
 // }
 
 // // erases element at pos
@@ -261,9 +262,9 @@ typename Array<T, N>::size_type Array<T, N>::size() const noexcept {
 //   size_type i = 0;
 //   while (ptr < end()) {
 //     if (ptr < pos) {
-//       tmp.storage_[i] = *ptr;
+//       tmp.data_[i] = *ptr;
 //     } else {
-//       tmp.storage_[i] = *(ptr + 1);
+//       tmp.data_[i] = *(ptr + 1);
 //     }
 //     ptr++;
 //     ++i;
@@ -279,9 +280,9 @@ typename Array<T, N>::size_type Array<T, N>::size() const noexcept {
 //   size_type i = 0;
 //   while (ptr <= end()) {
 //     if (ptr == end()) {
-//       tmp.storage_[i] = value;
+//       tmp.data_[i] = value;
 //     } else {
-//       tmp.storage_[i] = *ptr;
+//       tmp.data_[i] = *ptr;
 //     }
 //     ptr++;
 //     ++i;
@@ -293,7 +294,7 @@ typename Array<T, N>::size_type Array<T, N>::size() const noexcept {
 // template <class T>
 // void Vector<T>::pop_back() {
 //   if (size_ > 0) {
-//     storage_[--size_].~T();
+//     data_[--size_].~T();
 //   }
 // }
 
@@ -323,10 +324,10 @@ void s21::Array<T, N>::swap(s21::Array<T, N> &v) {
 // template <typename T>
 // void s21::Vector<T>::reallocate(size_type capacity, size_type size,
 //                                 const iterator storage) {
-//   storage_ = new T[capacity];
+//   data_ = new T[capacity];
 //   capacity_ = capacity;
 //   for (size_type i = 0; i < size; ++i) {
-//     storage_[i] = storage[i];
+//     data_[i] = storage[i];
 //   }
 //   size_ = size;
 // }

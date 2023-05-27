@@ -82,11 +82,21 @@ TEST(ElementAccess, at_error) {
                }),
                std::out_of_range);
 }
-// TEST(ElementAccess, at_operator) {
-//   s21::Vector<int> vec{1, 2, 3};
-//   int a = vec[2];
-//   EXPECT_TRUE(a == 3);
-// }
+
+TEST(ElementAccess, at_operator) {
+  s21::Array<int, 3> arr{1, 2, 3};
+  int a = arr[2];
+  std::cout << a << std::endl;
+  EXPECT_TRUE(a == 3);
+}
+
+TEST(ElementAccess, at_operator_error) {
+  EXPECT_THROW(({
+                 s21::Array<int, 3> arr{1, 2, 3};
+                 arr[4];
+               }),
+               std::out_of_range);
+}
 
 // TEST(ElementAccess, front) {
 //   s21::Vector<int> vec{1, 2, 3};
