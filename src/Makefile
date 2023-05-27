@@ -30,3 +30,4 @@ clean:
 	@rm -rf *.info
 	@rm -rf *.a
 	@rm -rf *.o
+	@rm -rf *.dSYM
