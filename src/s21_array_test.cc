@@ -44,17 +44,17 @@ TEST(Constructor, copy) {
   }
 }
 
-// TEST(Constructor, move) {
-//   s21::Vector<int> vec{1, 2, 3};
-//   s21::Vector<int> vec2(std::move(vec));
+TEST(Constructor, move) {
+  s21::Array<int, 3> arr{1, 2, 3};
+  s21::Array<int, 3> arr2(std::move(arr));
 
-//   EXPECT_TRUE(vec2.capacity() == 3);
-//   EXPECT_TRUE(vec2.size() == 3);
-//   for (size_t i = 0; i < vec2.capacity(); i++) {
-//     EXPECT_TRUE((int)(i + 1) == vec2.data()[i]);
-//   }
-//   EXPECT_TRUE(vec.data() == nullptr);
-// }
+  EXPECT_TRUE(arr2.size() == 3);
+  EXPECT_TRUE(arr.size() == 0);
+  for (size_t i = 0; i < arr2.size(); i++) {
+    EXPECT_TRUE((int)(i + 1) == arr2.data()[i]);
+    EXPECT_TRUE(0 == arr.data()[i]);
+  }
+}
 
 // // Overloads
 // TEST(OperatorOverload, move) {

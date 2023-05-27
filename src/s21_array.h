@@ -37,7 +37,7 @@ class Array {
   Array();
   explicit Array(std::initializer_list<value_type> const &);
   Array(const Array &);
-  // Vector(Vector &&) noexcept;
+  Array(Array &&) noexcept;
 
   // // ASSIGNMENTS
   // Vector<T> &operator=(std::initializer_list<value_type> const &);
@@ -66,13 +66,13 @@ class Array {
   // size_type capacity() const noexcept;
   // void shrink_to_fit();
 
-  // // // MODIFIER METHODS
+  // MODIFIER METHODS
   // void clear() noexcept;
   // iterator insert(iterator pos, const_reference value);
   // void erase(iterator pos);
   // void push_back(const_reference value);
   // void pop_back();
-  // void swap(Vector &);
+  void swap(Array &);
 
   // // HELPER methods
   // void printVector();
@@ -111,11 +111,11 @@ Array<T, N>::Array(const Array &a) : size_(a.size_), data_() {
   for (size_type i = 0; i < size_; ++i) data_[i] = a.data_[i];
 };
 
-// // move constructor
-// template <class T>
-// Vector<T>::Vector(Vector &&origin) noexcept : Vector() {
-//   swap(origin);
-// }
+// move constructor
+template <class T, size_t N>
+Array<T, N>::Array(Array &&origin) noexcept : Array() {
+  swap(origin);
+}
 
 // // destructor
 // template <class T>
@@ -316,14 +316,14 @@ typename Array<T, N>::size_type Array<T, N>::size() const noexcept {
 //   }
 // }
 
-// // swaps the contents
-// template <typename T>
-// void s21::Vector<T>::swap(s21::Vector<T> &v) {
-//   using std::swap;
-//   swap(size_, v.size_);
-//   swap(capacity_, v.capacity_);
-//   swap(storage_, v.storage_);
-// }
+// swaps the contents
+template <typename T, size_t N>
+void s21::Array<T, N>::swap(s21::Array<T, N> &v) {
+  using std::swap;
+  swap(size_, v.size_);
+  swap(data_, v.data_);
+  v.size_ = 0;
+}
 
 // // HELPER METHODS
 // template <typename T>
