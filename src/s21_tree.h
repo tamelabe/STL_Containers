@@ -25,15 +25,12 @@ template <class T1, class T2>
 class Node {
   T1 key_;
   T2 data_;
-  //   size_t size_;
   Node<T1, T2> *left_;
   Node<T1, T2> *right_;
-  Node<T1, T2> *parent_;
 
-  Node(T1 key, T2 data) : key_(key), data_(data)
-  {
-    left_ = right_ = parent_= nullptr;
-  }
+  Node(const T1 key = T1{}, const T2 data = T2{}, Node<T1, T2> *left_ = nullptr,
+       Node<T1, T2> *right_ = nullptr)
+      : key_{key}, data_{data}, left_{left_}, right_{right_} {}
 };
 
 // Структура дерева
@@ -50,26 +47,30 @@ class BSTree {
   // Исключение из дерева значения по ключу
   void remove(T1 key);
   // Получение значения по ключу key
-  T2 find(T1 key);
-  // Рекурсивный обход с выводом значений
-  void traverse(Node<T1, T2> *n);
+  // T2 find(T1 key);
   // private methods
  private:
   void insert(Node<T1, T2> *&n, T1 key, T2 data);
-  Node<T1, T2> *find(T1 key, Node<T1, T2> *root);
+  // Node<T1, T2> *find(T1 key, Node<T1, T2> *root);
   Node<T1, T2> *successor(Node<T1, T2> *n);
   void remove(Node<T1, T2> *&n, T1 key);
 };
 
 // private
 template <class T1, class T2>
-void BSTree<T1, T2>::insert(Node<T1, T2> *&root, T1 key, T2 data) {
-  if (root == nullptr) {
-    root = new Node(key, data);
-  } else if (key < root->key_) {
-    insert(root->left_, key, data);
-  } else {
-    insert(root->right_, key, data);
+void BSTree<T1, T2>::insert(Node<T1, T2> *&node, T1 key, T2 data) {
+  if (key < node->key_) {
+    if (node->left_ == nullptr) {
+      node->left_ = new Node<T1, T2>(key, data);
+    } else {
+      insert(node->left_, key, data);
+    }
+  } else if (key >= node->key_) {
+    if (node->right_ == nullptr) {
+      node->right_ = new Node<T1, T2>(key, data);
+    } else {
+      insert(node->left_, key, data);
+    }
   }
 }
 
@@ -119,40 +120,29 @@ void BSTree<T1, T2>::remove(T1 key) {
   remove(root, key);
 }
 
-// public
-template <class T1, class T2>
-void BSTree<T1, T2>::traverse(Node<T1, T2> *n) {
-  if (n == nullptr) {
-    return;
-  }
-  traverse(n->left_);
-  // do something
-  traverse(n->right_);
-}
-
-// private
-template <class T1, class T2>
-Node<T1, T2> *BSTree<T1, T2>::find(T1 key, Node<T1, T2> *n) {
-  if (n == nullptr || key == n->key_) {
-    return n;
-  }
-  if (key < n->key_) {
-    return find(n->left_, key);
-  } else {
-    return find(n->right_, key);
-  }
-}
-
-// public
-template <class T1, class T2>
-T2 BSTree<T1, T2>::find(T1 key) {
-  Node<T1, T2> *n = find(key, root);
-  if (n != nullptr) {
-    return n->data_;
-  } else {
-    return f;
-  }
-}
+// // private
+// template <class T1, class T2>
+// Node<T1, T2> *BSTree<T1, T2>::find(T1 key, Node<T1, T2> *n) {
+//   if (n == nullptr || key == n->key_) {
+//     return n;
+//   }
+//   if (key < n->key_) {
+//     return find(n->left_, key);
+//   } else {
+//     return find(n->right_, key);
+//   }
+// }
+//
+// // public
+// template <class T1, class T2>
+// T2 BSTree<T1, T2>::find(T1 key) {
+//   Node<T1, T2> *n = find(key, root);
+//   if (n != nullptr) {
+//     return n->getData();
+//   } else {
+//     return T2{};
+//   }
+// }
 }  // namespace s21
 
 #endif  // CPP2_S21_CONTAINERS_S21_TREE_H

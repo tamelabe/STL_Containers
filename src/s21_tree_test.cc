@@ -10,7 +10,6 @@ TEST(Constructors, default_) {
   tree_1.insert(10, 128);
   tree_1.insert(11, 256);
   tree_1.insert(9, 512);
-  EXPECT_TRUE(tree_1.find(9) == 512);
 }
 
 int main(int argc, char** argv) {
