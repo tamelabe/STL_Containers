@@ -17,59 +17,67 @@ limitations under the License.
 #ifndef CPP2_S21_CONTAINERS_S21_TREE_H
 #define CPP2_S21_CONTAINERS_S21_TREE_H
 
-#include <cstddef>
+// #include <cstddef>
+#include <iostream>
+#include <string>
+#include <utility>
 
+using namespace std::string_literals;
 namespace s21 {
 // Структура узла дерева
-template <class T1, class T2>
-class Node {
-  T1 key_;
-  T2 data_;
-  Node<T1, T2> *left_;
-  Node<T1, T2> *right_;
+template <class T1>
+struct Node {
+  T1 key;
+  Node<T1> *left;
+  Node<T1> *right;
+  Node<T1> *parent;
 
-  Node(const T1 key = T1{}, const T2 data = T2{}, Node<T1, T2> *left_ = nullptr,
-       Node<T1, T2> *right_ = nullptr)
-      : key_{key}, data_{data}, left_{left_}, right_{right_} {}
+  Node(const T1 key = T1{}, Node<T1> *left = nullptr, Node<T1> *right = nullptr,
+       Node<T1> *parent = nullptr)
+      : key{key}, left{left}, right{right}, parent{parent} {}
 };
 
 // Структура дерева
 template <class T1, class T2>
 class BSTree {
-  // private attributes
- private:
-  Node<T1, T2> *root = nullptr;
-
-  // public methods
  public:
-  // Добавление пары (key, value) в дерево
+  using node_type = Node<std::pair<T1, T2>>;
   void insert(T1 key, T2 data);
-  // Исключение из дерева значения по ключу
-  void remove(T1 key);
+  // void remove(T1 key);
   // Получение значения по ключу key
   // T2 find(T1 key);
   // private methods
+  void printBT(std::string prefix, node_type *node, bool isLeft);
+  void printBT(BSTree tree);
+
  private:
-  void insert(Node<T1, T2> *&n, T1 key, T2 data);
+  void insert(node_type *, T1 key, T2 data);
   // Node<T1, T2> *find(T1 key, Node<T1, T2> *root);
-  Node<T1, T2> *successor(Node<T1, T2> *n);
-  void remove(Node<T1, T2> *&n, T1 key);
+  // node_type *successor(node_type *);
+  // void remove(node_type *, T1 key);
+
+  node_type *root = nullptr;
 };
 
 // private
 template <class T1, class T2>
-void BSTree<T1, T2>::insert(Node<T1, T2> *&node, T1 key, T2 data) {
-  if (key < node->key_) {
-    if (node->left_ == nullptr) {
-      node->left_ = new Node<T1, T2>(key, data);
+void BSTree<T1, T2>::insert(typename BSTree<T1, T2>::node_type *node, T1 key,
+                            T2 data) {
+  if (root == nullptr) {
+    root = new node_type(std::make_pair(key, data));
+    return;
+  }
+  if (key < node->key.first) {
+    if (node->left == nullptr) {
+      node->left = new node_type(std::make_pair(key, data));
     } else {
-      insert(node->left_, key, data);
+      insert(node->left, key, data);
     }
-  } else if (key >= node->key_) {
-    if (node->right_ == nullptr) {
-      node->right_ = new Node<T1, T2>(key, data);
+  } else if (key >= node->key.first) {
+    if (node->right == nullptr) {
+      node->right = new node_type(std::make_pair(key, data));
     } else {
-      insert(node->left_, key, data);
+      insert(node->right, key, data);
     }
   }
 }
@@ -80,45 +88,68 @@ void BSTree<T1, T2>::insert(T1 key, T2 data) {
   insert(root, key, data);
 }
 
-// private
 template <class T1, class T2>
-Node<T1, T2> *BSTree<T1, T2>::successor(Node<T1, T2> *n) {
-  Node<T1, T2> *r = n->right;
-  while (r->left != nullptr) r = r->left;
-  return r;
-}
+void BSTree<T1, T2>::printBT(std::string prefix,
+                             typename BSTree<T1, T2>::node_type *node,
+                             bool isLeft) {
+  if (node != nullptr) {
+    std::cout << prefix;
 
-// private
-template <class T1, class T2>
-void BSTree<T1, T2>::remove(Node<T1, T2> *&n, T1 key) {
-  if (n == nullptr) {
-    return;
-  }
-  if (key == n->key_) {
-    if (n->left_ == nullptr || n->right_ == nullptr) {
-      Node<T1, T2> *child = (n->left != nullptr ? n->left_ : n->right_);
-      delete n;
-      n = child;
-    } else {
-      Node<T1, T2> *success = successor(n);
-      n->key = success->key_;
-      n->data = success->data_;
-      remove(n->right_, success->key_);
-    }
-    return;
-  }
-  if (key < n->key_) {
-    remove(n->left_, key);
-  } else {
-    remove(n->right_, key);
+    std::cout << (isLeft ? "├──" : "└──");
+
+    // print the value of the node
+    std::cout << node->key.first << " " << node->key.second << std::endl;
+
+    // enter the next tree level - left and right branch
+    printBT(prefix + (isLeft ? "│   " : "    "), node->left, true);
+    printBT(prefix + (isLeft ? "│   " : "    "), node->right, false);
   }
 }
 
-// public
 template <class T1, class T2>
-void BSTree<T1, T2>::remove(T1 key) {
-  remove(root, key);
+void BSTree<T1, T2>::printBT(BSTree<T1, T2> tree) {
+  printBT(std::string{}, tree.root, false);
 }
+
+// // private
+// template <class T1, class T2>
+// Node<T1, T2> *BSTree<T1, T2>::successor(Node<T1, T2> *n) {
+//   Node<T1, T2> *r = n->right;
+//   while (r->left != nullptr) r = r->left;
+//   return r;
+// }
+
+// private
+// template <class T1, class T2>
+// void BSTree<T1, T2>::remove(Node<T1, T2> *&n, T1 key) {
+//   if (n == nullptr) {
+//     return;
+//   }
+//   if (key == n->key_) {
+//     if (n->left_ == nullptr || n->right_ == nullptr) {
+//       Node<T1, T2> *child = (n->left != nullptr ? n->left_ : n->right_);
+//       delete n;
+//       n = child;
+//     } else {
+//       Node<T1, T2> *success = successor(n);
+//       n->key = success->key_;
+//       n->data = success->data_;
+//       remove(n->right_, success->key_);
+//     }
+//     return;
+//   }
+//   if (key < n->key_) {
+//     remove(n->left_, key);
+//   } else {
+//     remove(n->right_, key);
+//   }
+// }
+
+// // public
+// template <class T1, class T2>
+// void BSTree<T1, T2>::remove(T1 key) {
+//   remove(root, key);
+// }
 
 // // private
 // template <class T1, class T2>
