@@ -25,15 +25,15 @@ limitations under the License.
 using namespace std::string_literals;
 namespace s21 {
 // Структура узла дерева
-template <class T1>
+template <class T>
 struct Node {
-  T1 key;
-  Node<T1> *left;
-  Node<T1> *right;
-  Node<T1> *parent;
+  T key;
+  Node<T> *left;
+  Node<T> *right;
+  Node<T> *parent;
 
-  Node(const T1 key = T1{}, Node<T1> *left = nullptr, Node<T1> *right = nullptr,
-       Node<T1> *parent = nullptr)
+  Node(const T key = T{}, Node<T> *left = nullptr, Node<T> *right = nullptr,
+       Node<T> *parent = nullptr)
       : key{key}, left{left}, right{right}, parent{parent} {}
 };
 
@@ -49,6 +49,7 @@ class BSTree {
   // private methods
   void printBT(std::string prefix, node_type *node, bool isLeft);
   void printBT(BSTree tree);
+  void printBT();
 
  private:
   void insert(node_type *, T1 key, T2 data);
@@ -109,6 +110,11 @@ void BSTree<T1, T2>::printBT(std::string prefix,
 template <class T1, class T2>
 void BSTree<T1, T2>::printBT(BSTree<T1, T2> tree) {
   printBT(std::string{}, tree.root, false);
+}
+
+template <class T1, class T2>
+void BSTree<T1, T2>::printBT() {
+  printBT(std::string{}, this->root, false);
 }
 
 // // private
