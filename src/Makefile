@@ -7,7 +7,7 @@ TREE_TEST_OUTPUT=s21_tree_test.o
 all: clean check tree_test
 
 check:
-	cp ../materials/linters/.clang-format . && clang-format *.cc *.h -i
+	cp ../materials/linters/.clang-format . && clang-format *.cc *.h
 	rm -f .clang-format
 	cppcheck --std=c++17 --language=c++ --enable=all --suppress=missingIncludeSystem *.cc *.h
 
