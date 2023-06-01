@@ -3,8 +3,8 @@
 namespace s21 {
     template<typename Key, typename V>
     class CCompare {
-        public:
-         bool operator()(std::pair<Key, V> p1, std::pair<Key, V> p2) {
+      public:
+        bool operator()(std::pair<Key, V> p1, std::pair<Key, V> p2) {
             return p1.first < p2.first;
         }
     };
