@@ -17,7 +17,6 @@ public:
     using pointer = T*;
     using n_pointer = Node<T> *;
     using reference = T&;
-    using size_type = std::size_t;
 
     ListIterator() : iter_(nullptr) {};
     explicit ListIterator(n_pointer ptr) : iter_(ptr) {};
@@ -25,12 +24,16 @@ public:
     ListIterator(ListIterator &&other) noexcept : iter_(other.iter_) {
         other.iter_ = nullptr;
     }
+    ListIterator(ListConstIterator<T>& other) { iter_ = other.getIter();}
     ~ListIterator() { iter_ = nullptr; }
     ListIterator& operator=(const ListIterator &other) {
         iter_ = other.iter_;
         return *this;
     }
 
+    n_pointer getIter() {
+        return iter_;
+    }
     /**
      * gets the element pointed to by the iterator
      */
@@ -81,36 +84,91 @@ public:
         iter_ = iter_->prev_;
         return *tmp;
     }
-    size_type operator-(ListIterator(other)) {
-        size_type size = 1;
-        n_pointer start = iter_;
-        while (start != other.iter_) {
-            start = start->next_;
-            ++size;
-        }
-        return size;
-    }
-protected:
+private:
     n_pointer iter_;
 };
 
 template<class T>
-class ListConstIterator : public ListIterator<T> {
-friend class list<T>;
+class ListConstIterator {
+    friend class list<T>;
 
 public:
     using value_type = const T;
-    using pointer = const T*;
-    using reference = const T&;
+    using pointer = const T *;
+    using reference = const T &;
     using n_pointer = Node<T> *;
 
-    explicit ListConstIterator(ListIterator<T> other) : ListIterator<T>(other) {}
-    reference operator*() const {
-        return this->iter_->data_;
+    ListConstIterator() : iter_(nullptr) {};
+    explicit ListConstIterator(n_pointer ptr) : iter_(ptr) {};
+    ListConstIterator(const ListConstIterator &other) : iter_(other.iter_) {}
+    ListConstIterator(ListConstIterator &&other) noexcept: iter_(other.iter_) {
+        other.iter_ = nullptr;
     }
+    ListConstIterator(ListIterator<T>& other) { iter_ = other.getIter(); }
+    ~ListConstIterator() { iter_ = nullptr; }
+    ListConstIterator &operator=(const ListConstIterator &other) {
+        iter_ = other.iter_;
+        return *this;
+    }
+
+    /**
+     * gets the element pointed to by the iterator
+     */
+    reference operator*() const {
+        return iter_->data_;
+    }
+    /**
+     * two iterators are not equal if they point to different elements
+     */
+    bool operator!=(ListConstIterator &other) {
+        return iter_ != other.iter_;
+    }
+    /**
+     * two iterators are equal if they point to the same element
+     */
+    bool operator==(ListConstIterator &other) {
+        return iter_ == other.iter_;
+    }
+    /**
+     * moves the iterator forward to the next element
+     * @return incremented value
+     */
+    ListConstIterator operator++() {
+        iter_ = iter_->next_;
+        return *this;
+    }
+
+    /**
+     * @return original value
+     */
+    ListConstIterator operator++(int) {
+        ListConstIterator<value_type> tmp(*this);
+        iter_ = iter_->next_;
+        return *tmp;
+    }
+
+    /**
+     * moves the iterator backwards to the previous element
+     * @return decremented value
+     */
+    ListConstIterator operator--() {
+        iter_ = iter_->prev_;
+        return *this;
+    }
+
+    /**
+     * @return original value
+     */
+    ListConstIterator operator--(int) {
+        ListConstIterator<value_type> tmp(*this);
+        iter_ = iter_->prev_;
+        return *tmp;
+    }
+    n_pointer getIter() {
+        return iter_;
+    }
+private:
+    n_pointer iter_;
 };
-    
-
-
 }
 #endif  // S21_iter_H_

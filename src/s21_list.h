@@ -260,24 +260,14 @@ namespace s21 {
             size_ += other.size_;
             other.initList();
         }
-        /// PRIVATE!!!
-        iterator sortCheck(iterator current, const iterator& end) {
-            auto start_pos = current;
-            while (*start_pos > *(++current) && current != end) {}
-            --current;
-            return current;
-        }
-        /// PRIVATE!!!
-        iterator insSubList(iterator& pos, iterator& first, iterator& last) {
-            iterator next = last;
-            ++next;
-            pos.iter_->prev_->next_ = first.iter_;
-            first.iter_->prev_ = pos.iter_->prev_;
-            pos.iter_->prev_ = last.iter_;
-            last.iter_->next_ = pos.iter_;
-            if (pos == begin() || begin_ == nullptr)
-                begin_ = first.iter_;
-            return next;
+        void splice(const_iterator pos, list& other) {
+            if (!other.size_)
+                return;
+            if (pos == begin())
+                begin_ = other.begin_;
+            auto end = other.end();
+            --end;
+//            insSubList(pos, other.begin(), end);
         }
         /**
          * Merge Sort algorithm based onion brand principle
@@ -348,6 +338,36 @@ namespace s21 {
             new_node->next_ = new_node->prev_ = end_;
             end_->prev_ = end_->next_ = new_node;
             begin_ = new_node;
+        }
+        /**
+ * Checks for descending sequence
+ * @param current current iterator position
+ * @param end end of list
+ * @return last desc sequence iterator
+ */
+        iterator sortCheck(iterator current, const iterator& end) {
+            auto start_pos = current;
+            while (*start_pos > *(++current) && current != end) {}
+            --current;
+            return current;
+        }
+        /**
+         * Inserts sublist between given iterators inclusive into main list BEFORE given position
+         * @param pos iterator position of main list
+         * @param first iterator that defines first point of sublist
+         * @param last iterator that defines last point of sublist
+         * @return
+         */
+        iterator insSubList(iterator& pos, iterator& first, iterator& last) {
+            iterator next = last;
+            ++next;
+            pos.iter_->prev_->next_ = first.iter_;
+            first.iter_->prev_ = pos.iter_->prev_;
+            pos.iter_->prev_ = last.iter_;
+            last.iter_->next_ = pos.iter_;
+            if (pos == begin() || begin_ == nullptr)
+                begin_ = first.iter_;
+            return next;
         }
 };
 } // namespace s21
