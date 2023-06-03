@@ -50,7 +50,7 @@ namespace s21 {
          * @param l - list to copy
          */
         list(const list &l) : list() {
-            for (auto i = l.begin(); i != l.end(); ++i)
+            for (auto i = l.cbegin(); i != l.cend(); ++i)
                 push_back(*i);
         }
         /**
@@ -102,18 +102,18 @@ namespace s21 {
         iterator begin() {
             return iterator(begin_);
         }
-//        const_iterator cbegin() {
-//            return const_iterator(begin_);
-//        }
+        const_iterator cbegin() const {
+            return const_iterator(begin_);
+        }
         /**
          * returns an iterator to the end (next from the last element)
          */
         iterator end() {
             return iterator(end_);
         }
-//        const_iterator cend() {
-//            return const_iterator(end_);
-//        }
+        const_iterator cend() const {
+            return const_iterator(end_);
+        }
 
         // List Capacity
         /**
@@ -240,11 +240,9 @@ namespace s21 {
          * swaps the contents
          */
         void swap(list& other) {
-            if (this != &other) {
-                list temp(other);
-                other = *this;
-                *this = temp;
-            }
+            std::swap(begin_, other.begin_);
+            std::swap(end_, other.end_);
+            std::swap(size_, other.size_);
         }
 
         void merge(list& other) {
@@ -253,8 +251,8 @@ namespace s21 {
             if (!size_) {
                 swap(other);
             }
-            for (auto iter_ths = begin(), iter_oth = other.begin(); iter_ths != end(); ++iter_ths) {
-                while (*iter_ths > *iter_oth && iter_oth != other.end()) {
+            for (auto iter_ths = begin(), iter_oth = other.begin(); iter_ths != end() || iter_oth != other.end(); ++iter_ths) {
+                while ((*iter_ths > *iter_oth || iter_ths == end()) && iter_oth != other.end()) {
                     iterator last_oth = sortCheck(iter_oth, other.end());
                     iter_oth = insSubList(iter_ths, iter_oth, last_oth);
                 }
@@ -277,7 +275,7 @@ namespace s21 {
             first.iter_->prev_ = pos.iter_->prev_;
             pos.iter_->prev_ = last.iter_;
             last.iter_->next_ = pos.iter_;
-            if (pos == begin())
+            if (pos == begin() || begin_ == nullptr)
                 begin_ = first.iter_;
             return next;
         }

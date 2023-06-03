@@ -81,15 +81,15 @@ public:
         iter_ = iter_->prev_;
         return *tmp;
     }
-//    size_type operator-(ListIterator(other)) {
-//        size_type size = 1;
-//        n_pointer start = iter_;
-//        while (start != other.iter_) {
-//            start = start->next_;
-//            ++size;
-//        }
-//        return size;
-//    }
+    size_type operator-(ListIterator(other)) {
+        size_type size = 1;
+        n_pointer start = iter_;
+        while (start != other.iter_) {
+            start = start->next_;
+            ++size;
+        }
+        return size;
+    }
 protected:
     n_pointer iter_;
 };

@@ -14,12 +14,11 @@ void printList(list<T>& a) {
 }
 
 int main() {
-    list<int> mrg1 = {};
-    list<int> mrg2 = {4, 5, 6};
+    list<int> mrg1 = {1, 2, 3};
+    list<int> mrg2 = {4, 5, 6, 1, 4};
     mrg1.merge(mrg2);
     printList(mrg1);
     printList(mrg2);
-
     return 0;
 }
 
