@@ -24,7 +24,7 @@ array_test: $(ARRAY_TEST_SOURCE)
 	@./$(ARRAY_TEST_OUTPUT)
 
 leaks:
-	leaks -atExit -- ./$(VECTOR_TEST_OUTPUT)
+	leaks -atExit -- ./*.o
 
 gcov_report:
 	lcov -t "test" -o test.info -c -d ./
