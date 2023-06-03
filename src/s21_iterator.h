@@ -120,13 +120,13 @@ public:
     /**
      * two iterators are not equal if they point to different elements
      */
-    bool operator!=(ListConstIterator &other) {
+    bool operator!=(const ListConstIterator &other) {
         return iter_ != other.iter_;
     }
     /**
      * two iterators are equal if they point to the same element
      */
-    bool operator==(ListConstIterator &other) {
+    bool operator==(const ListConstIterator &other) {
         return iter_ == other.iter_;
     }
     /**

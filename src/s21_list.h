@@ -263,11 +263,11 @@ namespace s21 {
         void splice(const_iterator pos, list& other) {
             if (!other.size_)
                 return;
-            if (pos == begin())
+            if (pos == cbegin())
                 begin_ = other.begin_;
             auto end = other.end();
             --end;
-//            insSubList(pos, other.begin(), end);
+            insSubList(pos, other.begin(), end);
         }
         /**
          * Merge Sort algorithm based onion brand principle
@@ -358,14 +358,14 @@ namespace s21 {
          * @param last iterator that defines last point of sublist
          * @return
          */
-        iterator insSubList(iterator& pos, iterator& first, iterator& last) {
+        iterator insSubList(const iterator& pos, iterator& first, iterator& last) {
             iterator next = last;
             ++next;
             pos.iter_->prev_->next_ = first.iter_;
             first.iter_->prev_ = pos.iter_->prev_;
             pos.iter_->prev_ = last.iter_;
             last.iter_->next_ = pos.iter_;
-            if (pos == begin() || begin_ == nullptr)
+            if (pos == cbegin() || begin_ == nullptr)
                 begin_ = first.iter_;
             return next;
         }
