@@ -7,11 +7,12 @@
 namespace s21 {
 template<class T> class list;
 template<class T> class ListIterator;
+template<class T> class ListConstIterator;
 
 template<class T> class Node {
 friend class list<T>;
 friend class ListIterator<T>;
-friend class ConstListIterator<T>;
+friend class ListConstIterator<T>;
 
 public:
     // Aliases

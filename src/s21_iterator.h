@@ -17,16 +17,18 @@ public:
     using pointer = T*;
     using n_pointer = Node<T> *;
     using reference = T&;
+    using size_type = std::size_t;
 
     ListIterator() : iter_(nullptr) {};
-    ListIterator(n_pointer ptr) : iter_(ptr) {};
+    explicit ListIterator(n_pointer ptr) : iter_(ptr) {};
     ListIterator(const ListIterator &other) : iter_(other.iter_) {}
-    ListIterator(ListIterator &&other) : iter_(other.iter_) {
+    ListIterator(ListIterator &&other) noexcept : iter_(other.iter_) {
         other.iter_ = nullptr;
     }
     ~ListIterator() { iter_ = nullptr; }
     ListIterator& operator=(const ListIterator &other) {
         iter_ = other.iter_;
+        return *this;
     }
 
     /**
@@ -79,12 +81,21 @@ public:
         iter_ = iter_->prev_;
         return *tmp;
     }
+//    size_type operator-(ListIterator(other)) {
+//        size_type size = 1;
+//        n_pointer start = iter_;
+//        while (start != other.iter_) {
+//            start = start->next_;
+//            ++size;
+//        }
+//        return size;
+//    }
 protected:
     n_pointer iter_;
 };
 
 template<class T>
-class ConstListIterator : public ListIterator<T> {
+class ListConstIterator : public ListIterator<T> {
 friend class list<T>;
 
 public:
@@ -92,7 +103,8 @@ public:
     using pointer = const T*;
     using reference = const T&;
     using n_pointer = Node<T> *;
-    ConstListIterator(ListIterator<T> other) : ListIterator<T>(other) {}
+
+    explicit ListConstIterator(ListIterator<T> other) : ListIterator<T>(other) {}
     reference operator*() const {
         return this->iter_->data_;
     }

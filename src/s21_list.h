@@ -16,7 +16,8 @@ namespace s21 {
         using size_type = std::size_t; //ok
         using reference = value_type &; //ok
         using const_reference = const value_type &; //ok
-        using iterator = ListIterator<T>;
+        using iterator = ListIterator<value_type>;
+        using const_iterator = ListConstIterator<value_type>;
         using node = Node<T>;
         using node_ptr = node*;
 
@@ -49,7 +50,7 @@ namespace s21 {
          * @param l - list to copy
          */
         list(const list &l) : list() {
-            for (auto i = l.begin_; i < l.end_; i++)
+            for (auto i = l.begin(); i != l.end(); ++i)
                 push_back(*i);
         }
         /**
@@ -101,12 +102,18 @@ namespace s21 {
         iterator begin() {
             return iterator(begin_);
         }
+//        const_iterator cbegin() {
+//            return const_iterator(begin_);
+//        }
         /**
          * returns an iterator to the end (next from the last element)
          */
         iterator end() {
             return iterator(end_);
         }
+//        const_iterator cend() {
+//            return const_iterator(end_);
+//        }
 
         // List Capacity
         /**
@@ -241,24 +248,38 @@ namespace s21 {
         }
 
         void merge(list& other) {
-            if (other.begin() == this->begin())
+            if (other.begin() == begin() || !other.size_)
                 return;
-            if (sortCheck(begin(), end()) && sortCheck(other.begin(), other.end())) {
-                std::cout << "congrats!" << std::endl;
-            } else {
-                std::cout << "bad story" << std::endl;
+            if (!size_) {
+                swap(other);
             }
-
+            for (auto iter_ths = begin(), iter_oth = other.begin(); iter_ths != end(); ++iter_ths) {
+                while (*iter_ths > *iter_oth && iter_oth != other.end()) {
+                    iterator last_oth = sortCheck(iter_oth, other.end());
+                    iter_oth = insSubList(iter_ths, iter_oth, last_oth);
+                }
+            }
+            size_ += other.size_;
+            other.initList();
         }
-        bool sortCheck(iterator begin, iterator end) {
-            bool res = true;
-            iterator bef_end = end;
-            --bef_end;
-            for (auto i = begin; i != bef_end; ++i) {
-                if (*i > i.iter_->next_->data_)
-                    res = false;
-            }
-            return res;
+        /// PRIVATE!!!
+        iterator sortCheck(iterator current, const iterator& end) {
+            auto start_pos = current;
+            while (*start_pos > *(++current) && current != end) {}
+            --current;
+            return current;
+        }
+        /// PRIVATE!!!
+        iterator insSubList(iterator& pos, iterator& first, iterator& last) {
+            iterator next = last;
+            ++next;
+            pos.iter_->prev_->next_ = first.iter_;
+            first.iter_->prev_ = pos.iter_->prev_;
+            pos.iter_->prev_ = last.iter_;
+            last.iter_->next_ = pos.iter_;
+            if (pos == begin())
+                begin_ = first.iter_;
+            return next;
         }
         /**
          * Merge Sort algorithm based onion brand principle
@@ -302,6 +323,7 @@ namespace s21 {
             end_->next_ = end_;
             end_->prev_ = end_;
             begin_ = end_;
+            size_ = 0;
         }
         /**
          * Deallocator
