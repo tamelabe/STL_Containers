@@ -3,6 +3,7 @@
 
 #include <initializer_list>
 #include <iostream>
+#include <iterator>
 #include <limits>
 #include "./s21_iterator.h"
 #include "./s21_node.h"
@@ -159,10 +160,10 @@ namespace s21 {
                 ret_iter = begin();
             } else {
                 node_ptr new_node = new node(value);
-                new_node->prev_ = pos.iter_->prev_;
-                new_node->next_ = pos.iter_;
-                pos.iter_->prev_->next_ = new_node;
-                pos.iter_->prev_ = new_node;
+                new_node->prev_ = pos.node_->prev_;
+                new_node->next_ = pos.node_;
+                pos.node_->prev_->next_ = new_node;
+                pos.node_->prev_ = new_node;
                 ret_iter = iterator(new_node);
                 ++size_;
             }
@@ -176,10 +177,10 @@ namespace s21 {
             if (pos == begin()) {
                 pop_front();
             } else if (pos != end()) {
-                node_ptr temp = pos.iter_->prev_;
-                temp->next_ = pos.iter_->next_;
-                pos.iter_->next_->prev_ = temp;
-                delete pos.iter_;
+                node_ptr temp = pos.node_->prev_;
+                temp->next_ = pos.node_->next_;
+                pos.node_->next_->prev_ = temp;
+                delete pos.node_;
             }
         }
         /**
@@ -254,10 +255,10 @@ namespace s21 {
             if (!size_) {
                 swap(other);
             }
-            for (auto iter_ths = begin(), iter_oth = other.begin(); iter_ths != end() || iter_oth != other.end(); ++iter_ths) {
-                while ((*iter_ths > *iter_oth || iter_ths == end()) && iter_oth != other.end()) {
-                    iterator last_oth = sortCheck(iter_oth, other.end());
-                    iter_oth = insSubList(iter_ths, iter_oth, last_oth);
+            for (auto node_ths = begin(), node_oth = other.begin(); node_ths != end() || node_oth != other.end(); ++node_ths) {
+                while ((*node_ths > *node_oth || node_ths == end()) && node_oth != other.end()) {
+                    iterator last_oth = sortCheck(node_oth, other.end());
+                    node_oth = insSubList(node_ths, node_oth, last_oth);
                 }
             }
             size_ += other.size_;
@@ -287,7 +288,7 @@ namespace s21 {
             for (int sz = size_; sz >= 0; --sz) {
                 iterator temp = it;
                 ++it;
-                std::swap(temp.iter_->next_, temp.iter_->prev_);
+                std::swap(temp.node_->next_, temp.node_->prev_);
             }
             begin_ = end_->next_;
         }
@@ -300,32 +301,72 @@ namespace s21 {
                     erase(i);
         }
         /**
-         * Merge Sort algorithm based onion brand principle
+        * Merge Sort algorithm based onion brand principle
+        */
+        void sort() {
+            if (!size_ || size_ == 1)
+                return;
+            begin_ = mergeSort(begin().node_);
+            nodesPrevRepair();
+        }
+        /**
+         * main sort recursive function (via mergeSort method)
+         * @param first - first node of the list or sublist
+         * @return sorted single-linked list
          */
-//        void sort() {
-//            if (begin_ == end_ || size_ <= 1)
-//                return;
-//            sortEngine(begin(), --end());
-//
-//
-//        }
-//
-//        void sortEngine(const iterator& first_st, const iterator& sec_end) {
-//            auto first_end = --splitList();
-//            auto sec_st = ++first_end;
-//            if (first_st != first_end && sec_st != sec_end) {
-//                sortEngine(first_st, first_end);
-//                sortEngine(sec_st, sec_end);
-//            }
-//
-//        }
-//
-//        iterator splitList() {
-//            iterator iter = begin();
-//            for (auto i = 0; i < size_/2; ++i)
-//                ++iter;
-//            return iter;
-//        }
+        node_ptr mergeSort(node_ptr first) {
+            if (first->next_ == end_ || first ==end_)
+                return first;
+            node_ptr second = splitList(first);
+            first = mergeSort(first);
+            second = mergeSort(second);
+            return mergeNodes(first, second);
+        }
+        /**
+         * divides list to two separate list
+         * (first = N / 2, sec = N / 2 + N % 2)
+         * @param first first node of the list or sublist
+         * @return first node of the second list
+         */
+        node_ptr splitList(node_ptr first) {
+            node_ptr second = first;
+            while (first->next_ != end_ && first->next_->next_ != end_) {
+                first = first->next_->next_;
+                second = second->next_;
+            }
+            node_ptr sec_begin = second->next_;
+            second->next_ = end_;
+            return sec_begin;
+        }
+        /**
+         * recursively merges sublists to single-linked asc. ordered list
+         * @param first - first node of first sublist
+         * @param second - first node of second sublist
+         * @return merged or existing list
+         */
+        node_ptr mergeNodes(node_ptr first, node_ptr second) {
+            if (first == end_)
+                return second;
+            if (second == end_)
+                return first;
+            if (first->data_ < second->data_) {
+                first->next_ = mergeNodes(first->next_, second);
+                return first;
+            } else {
+                second->next_ = mergeNodes(second->next_, first);
+                return second;
+            }
+        }
+        /**
+         * repairs prev pointer of the list (makes it double-linked)
+         */
+        void nodesPrevRepair() {
+            for (auto iter = begin(); iter != end(); ++iter) {
+                iter.node_->next_->prev_ = iter.node_;
+            }
+        }
+
+
 
     private:
         // Variables
@@ -351,7 +392,7 @@ namespace s21 {
         void deallocate(bool mode) {
             if (begin_ != end_)
                 for (auto i = begin(); i != end(); ++i) {
-                    delete i.iter_;
+                    delete i.node_;
                     --size_;
                 }
             if (mode) {
@@ -391,12 +432,15 @@ namespace s21 {
         iterator insSubList(const_iterator pos, iterator first, iterator last) {
             iterator next = last;
             ++next;
-            pos.iter_->prev_->next_ = first.iter_;
-            first.iter_->prev_ = pos.iter_->prev_;
-            pos.iter_->prev_ = last.iter_;
-            last.iter_->next_ = pos.iter_;
+            // conne
+            first.node_->prev_->next_ = last.node_->next_;
+            last.node_->next_->prev_ = first.node_->prev_;
+            pos.node_->prev_->next_ = first.node_;
+            first.node_->prev_ = pos.node_->prev_;
+            pos.node_->prev_ = last.node_;
+            last.node_->next_ = pos.node_;
             if (pos == cbegin())
-                begin_ = first.iter_;
+                begin_ = first.node_;
             return next;
         }
 };
