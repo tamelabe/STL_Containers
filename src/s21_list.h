@@ -278,6 +278,28 @@ namespace s21 {
             other.initList();
         }
         /**
+         * Reverses the order of the elements in the container.
+         */
+        void reverse() {
+            if (!size_)
+                return;
+            auto it = begin();
+            for (int sz = size_; sz >= 0; --sz) {
+                iterator temp = it;
+                ++it;
+                std::swap(temp.iter_->next_, temp.iter_->prev_);
+            }
+            begin_ = end_->next_;
+        }
+        /**
+         * Removes all consecutive duplicate elements from the container
+         */
+        void unique() {
+            for (auto i = begin(); i != end();)
+                if (*i == *(++i))
+                    erase(i);
+        }
+        /**
          * Merge Sort algorithm based onion brand principle
          */
 //        void sort() {

@@ -14,11 +14,10 @@ void printList(list<T>& a) {
 }
 
 int main() {
-    list<int> mrg1 = {1, 2, 3};
+    list<int> mrg1 = {};
     list<int> mrg2 = {4, 5, 6};
     auto iter = mrg1.begin();
-    ++iter;
-    mrg1.splice(iter, mrg2);
+    mrg1.erase(iter);
     printList(mrg1);
     printList(mrg2);
     return 0;
