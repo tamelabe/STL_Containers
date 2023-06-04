@@ -3,7 +3,7 @@
 #include <string>
 #include "./s21_list.h"
 
-using namespace s21;
+using namespace std;
 
 template <typename T>
 void printList(list<T>& a) {

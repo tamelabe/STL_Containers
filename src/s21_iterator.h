@@ -24,7 +24,7 @@ public:
     ListIterator(ListIterator &&other) noexcept : iter_(other.iter_) {
         other.iter_ = nullptr;
     }
-    ListIterator(ListConstIterator<T>& other) { iter_ = other.getIter();}
+    ListIterator(ListConstIterator<T> other) { iter_ = other.getIter();}
     ~ListIterator() { iter_ = nullptr; }
     ListIterator& operator=(const ListIterator &other) {
         iter_ = other.iter_;

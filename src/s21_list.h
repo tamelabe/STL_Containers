@@ -244,9 +244,12 @@ namespace s21 {
             std::swap(end_, other.end_);
             std::swap(size_, other.size_);
         }
-
+        /**
+         * Merges two sorted lists into one
+         * @param other another container to merge
+         */
         void merge(list& other) {
-            if (other.begin() == begin() || !other.size_)
+            if (&other == this || !other.size_)
                 return;
             if (!size_) {
                 swap(other);
@@ -260,14 +263,19 @@ namespace s21 {
             size_ += other.size_;
             other.initList();
         }
+        /**
+         * Transfers elements from one list to another.
+         * @param pos element before which the content will be inserted
+         * @param other another container to transfer the content from
+         */
         void splice(const_iterator pos, list& other) {
-            if (!other.size_)
+            if (&other == this || !other.size_)
                 return;
-            if (pos == cbegin())
-                begin_ = other.begin_;
             auto end = other.end();
             --end;
             insSubList(pos, other.begin(), end);
+            size_ += other.size_;
+            other.initList();
         }
         /**
          * Merge Sort algorithm based onion brand principle
@@ -340,11 +348,11 @@ namespace s21 {
             begin_ = new_node;
         }
         /**
- * Checks for descending sequence
- * @param current current iterator position
- * @param end end of list
- * @return last desc sequence iterator
- */
+        * Checks for descending sequence
+        * @param current current iterator position
+        * @param end end of list
+        * @return last desc sequence iterator
+        */
         iterator sortCheck(iterator current, const iterator& end) {
             auto start_pos = current;
             while (*start_pos > *(++current) && current != end) {}
@@ -356,16 +364,16 @@ namespace s21 {
          * @param pos iterator position of main list
          * @param first iterator that defines first point of sublist
          * @param last iterator that defines last point of sublist
-         * @return
+         * @return next iterator after last param
          */
-        iterator insSubList(const iterator& pos, iterator& first, iterator& last) {
+        iterator insSubList(const_iterator pos, iterator first, iterator last) {
             iterator next = last;
             ++next;
             pos.iter_->prev_->next_ = first.iter_;
             first.iter_->prev_ = pos.iter_->prev_;
             pos.iter_->prev_ = last.iter_;
             last.iter_->next_ = pos.iter_;
-            if (pos == cbegin() || begin_ == nullptr)
+            if (pos == cbegin())
                 begin_ = first.iter_;
             return next;
         }
