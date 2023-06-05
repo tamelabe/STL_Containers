@@ -12,13 +12,16 @@
 int main(int argc, char** argv) {
 
 
+
   s21::map<char, int> m;
 
   m.insert(std::make_pair('I', 0));
   m.insert(std::make_pair('A', 0));
   m.insert(std::make_pair('X', 10));
 
-  m.printBT();
+  std::pair<char, int> needle = m.find(std::make_pair('I', 0));
+
+
   // s21::BSTree<std::string, int> aboba;
   // aboba.insert("3", 3);
   // aboba.insert("1", 1);

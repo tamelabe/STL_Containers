@@ -31,12 +31,16 @@ struct Node {
   Node<TP> *left;
   Node<TP> *right;
   Node<TP> *parent;
+  // Конструктор с параметром
+  Node(TP& key) 
+    : key{key}, left{nullptr}, right{nullptr}, parent{nullptr} {}
+  // Конструктор с const параметром
+  Node(const TP& key) 
+    : key{key}, left{nullptr}, right{nullptr}, parent{nullptr} {}
+  // Конструктор по-умолчанию
+  Node()
+    : key(TP{}), left{nullptr}, right{nullptr}, parent{nullptr} {}
 
-  Node(const TP key = TP{}, 
-      Node<TP> *left = nullptr, 
-      Node<TP> *right = nullptr,
-      Node<TP> *parent = nullptr
-  ) : key{key}, left{left}, right{right}, parent{parent} {}
 };
 
 // Структура дерева
@@ -44,23 +48,37 @@ template <typename T, typename Compare>
 class BSTree {
  public:
   using node_type = Node<T>;
+  // constructor
+  // BSTree();
+  // destructor
+  // ~BSTree();
+  // copy
+  // BSTree(const BSTree& other);
+  // BSTree<T, Compare>& operator=(BSTree&& other) noexcept;
+
   void insert(T data);
-  // void remove(T1 key);
+  T find(T data);
   // Получение значения по ключу key
   // T2 find(T1 key);
   // private methods
-  void printBT(std::string prefix, node_type *node, bool isLeft);
-  void printBT(BSTree tree);
-  void printBT();
 
  private:
   void insert(node_type *, T data);
-  // Node<T1, T2> *find(T1 key, Node<T1, T2> *root);
+  node_type *find(node_type *, T data);
   // node_type *successor(node_type *);
-  // void remove(node_type *, T1 key);
+  // void remove(node_type *, T data);
 
   node_type *root = nullptr;
 };
+
+
+// template <typename T, typename Compare>
+// BSTree<T, Compare>::BSTree() : root(nullptr) {};
+
+// template <typename T, typename Compare>
+// BSTree<T, Compare>::BSTree(const BSTree &other) : {
+//   
+// };
 
 // private
 template <typename T, typename Compare>
@@ -91,32 +109,25 @@ void BSTree<T, Compare>::insert(T data) {
 }
 
 template <typename T, typename Compare>
-void BSTree<T, Compare>::printBT(std::string prefix,
-                             typename BSTree<T, Compare>::node_type *node,
-                             bool isLeft) {
-  if (node != nullptr) {
-    std::cout << prefix;
-
-    std::cout << (isLeft ? "├──" : "└──");
-
-    // print the value of the node
-    // std::cout << node->key << std::endl;
-
-    // enter the next tree level - left and right branch
-    printBT(prefix + (isLeft ? "│   " : "    "), node->left, true);
-    printBT(prefix + (isLeft ? "│   " : "    "), node->right, false);
+typename BSTree<T, Compare>::node_type* BSTree<T, Compare>::find(BSTree<T, Compare>::node_type *node, T data) {
+  if (root == nullptr || data == root->key) {
+    return root;
+  }
+  if (Compare{}(data, node->key)) { // <
+      return find(node->left, data);
+  } else { // >=
+      return find(node->right, data);
   }
 }
 
 template <typename T, typename Compare>
-void BSTree<T, Compare>::printBT(BSTree<T, Compare> tree) {
-  printBT(std::string{}, tree.root, false);
+T BSTree<T, Compare>::find(T data) {
+  BSTree<T, Compare>::node_type* result = find(root, data);
+  if (result != nullptr) {
+    return result->key;
+  }
 }
 
-template <typename T, typename Compare>
-void BSTree<T, Compare>::printBT() {
-  printBT(std::string{}, this->root, false);
-}
 
 // // private
 // template <class T1, class T2>
