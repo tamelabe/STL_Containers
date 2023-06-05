@@ -12,7 +12,7 @@ namespace s21 {
     template<typename Key, typename V, typename Compare = std::less<Key>>
     class map : public s21::BSTree<std::pair<Key, V>, Compare> {
         V operator[](Key k) {
-            find(std::make_pair(k, V{}));
+            return find(std::make_pair(k, V{}));
         }
 
     };
