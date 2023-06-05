@@ -1,5 +1,5 @@
 /**
-Copyright 2023 darrpama@student.21-school.ru
+Copyright 2023 darrpama@student.21-school.ru, myregree@student.21-school.ru
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ limitations under the License.
 #include <string>
 #include <utility>
 
-using namespace std::string_literals;
 namespace s21 {
 // Структура узла дерева
 template <class TP>
@@ -31,6 +30,7 @@ struct Node {
   Node<TP> *left;
   Node<TP> *right;
   Node<TP> *parent;
+
   // Конструктор с параметром
   Node(TP& key) 
     : key{key}, left{nullptr}, right{nullptr}, parent{nullptr} {}
@@ -44,12 +44,12 @@ struct Node {
 };
 
 // Структура дерева
-template <typename T, typename Compare>
+template <typename T>
 class BSTree {
  public:
   using node_type = Node<T>;
   // constructor
-  // BSTree();
+  BSTree();
   // destructor
   // ~BSTree();
   // copy
@@ -57,23 +57,22 @@ class BSTree {
   // BSTree<T, Compare>& operator=(BSTree&& other) noexcept;
 
   void insert(T data);
-  T find(T data);
+  // T find(T data);
   // Получение значения по ключу key
   // T2 find(T1 key);
   // private methods
+  node_type *root = nullptr;
 
  private:
   void insert(node_type *, T data);
-  node_type *find(node_type *, T data);
+  // node_type *find(node_type *, T data);
   // node_type *successor(node_type *);
   // void remove(node_type *, T data);
 
-  node_type *root = nullptr;
 };
 
-
-// template <typename T, typename Compare>
-// BSTree<T, Compare>::BSTree() : root(nullptr) {};
+template <typename T>
+BSTree<T>::BSTree() : root(nullptr) {}
 
 // template <typename T, typename Compare>
 // BSTree<T, Compare>::BSTree(const BSTree &other) : {
@@ -81,19 +80,23 @@ class BSTree {
 // };
 
 // private
-template <typename T, typename Compare>
-void BSTree<T, Compare>::insert(BSTree<T, Compare>::node_type *node, T data) {
+template <typename T>
+void BSTree<T>::insert(BSTree<T>::node_type *node, T data) {
+  
   if (root == nullptr) {
     root = new node_type(data);
+    std::cout << "first: " << root->key.first << std::endl;
+    std::cout << "second: " << root->key.second << std::endl;
     return;
   }
-  if (Compare{}(data, node->key)) { // <
+  
+  if (data.first < node->key.first) {  // <
     if (node->left == nullptr) {
       node->left = new node_type(data);
     } else {
       insert(node->left, data);
     }
-  } else { // >=
+  } else {  // >=
     if (node->right == nullptr) {
       node->right = new node_type(data);
     } else {
@@ -103,30 +106,30 @@ void BSTree<T, Compare>::insert(BSTree<T, Compare>::node_type *node, T data) {
 }
 
 // public
-template <typename T, typename Compare>
-void BSTree<T, Compare>::insert(T data) {
+template <typename T>
+void BSTree<T>::insert(T data) {
   insert(root, data);
 }
 
-template <typename T, typename Compare>
-typename BSTree<T, Compare>::node_type* BSTree<T, Compare>::find(BSTree<T, Compare>::node_type *node, T data) {
-  if (root == nullptr || data == root->key) {
-    return root;
-  }
-  if (Compare{}(data, node->key)) { // <
-      return find(node->left, data);
-  } else { // >=
-      return find(node->right, data);
-  }
-}
+// template <typename T, typename Compare>
+// typename BSTree<T, Compare>::node_type* BSTree<T, Compare>::find(BSTree<T, Compare>::node_type *node, T data) {
+//   if (root == nullptr || data == root->key) {
+//     return root;
+//   }
+//   if (Compare{}(data, node->key)) { // <
+//       return find(node->left, data);
+//   } else { // >=
+//       return find(node->right, data);
+//   }
+// }
 
-template <typename T, typename Compare>
-T BSTree<T, Compare>::find(T data) {
-  BSTree<T, Compare>::node_type* result = find(root, data);
-  if (result != nullptr) {
-    return result->key;
-  }
-}
+// template <typename T, typename Compare>
+// T BSTree<T, Compare>::find(T data) {
+//   BSTree<T, Compare>::node_type* result = find(root, data);
+//   if (result != nullptr) {
+//     return result->key;
+//   }
+// }
 
 
 // // private

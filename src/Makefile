@@ -1,23 +1,22 @@
 # FLAGS=-ggdb -std=c++17 -Wall -Werror -Wextra -lstdc++
 
-TREE_TEST_SOURCE=s21_tree_test.cc
-TREE_TEST_OUTPUT=s21_tree_test.o
+MAP_TEST_SOURCE=./tests/s21_map_test.cc
+MAP_TEST_OUTPUT=s21_map_test.o
 
-# all: clean check tree_test leaks gcov_report 
-all: clean check tree_test
+# all: clean check map_test leaks gcov_report 
+all: clean map_test
 
 check:
 	cp ../materials/linters/.clang-format . && clang-format *.cc *.h
 	rm -f .clang-format
 	cppcheck --std=c++17 --language=c++ --enable=all --suppress=missingIncludeSystem *.cc *.h
 
-tree_test: $(TREE_TEST_SOURCE)
-	# @gcc $(FLAGS) --coverage $(TREE_TEST_SOURCE) -o $(TREE_TEST_OUTPUT) -lgtest
-	@g++ --coverage $(TREE_TEST_SOURCE) -o $(TREE_TEST_OUTPUT) -lgtest
-	@./$(TREE_TEST_OUTPUT)
+map_test: $(MAP_TEST_SOURCE)
+	@g++ $(FLAGS) --coverage $(MAP_TEST_SOURCE) -o $(MAP_TEST_OUTPUT) -lgtest
+	@./$(MAP_TEST_OUTPUT)
 
 leaks:
-	leaks -atExit -- ./$(TREE_TEST_OUTPUT)
+	leaks -atExit -- ./$(MAP_TEST_OUTPUT)
 
 gcov_report:
 	lcov -t "test" -o test.info -c -d ./
