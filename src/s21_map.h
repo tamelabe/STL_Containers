@@ -1,20 +1,11 @@
 #include "s21_tree.h"
+#include "helpers/MapIterator.h"
+#include "helpers/MapConstIterator.h"
 
 namespace s21 {
-
-template<typename K, typename T>
-class MapIterator {
-
-};
-
-template<typename K, typename T>
-class MapConstIterator {
-    
-};
-
-template<typename Key, typename T>
-class map : public s21::BSTree<std::pair<Key, T>> {
   
+template<typename Key, typename T>
+class map {
   using key_type = Key;
   using mapped_type = T;
   using value_type = std::pair<const key_type, mapped_type>;
@@ -24,17 +15,17 @@ class map : public s21::BSTree<std::pair<Key, T>> {
   using const_iterator = MapConstIterator<key_type, mapped_type>;
   using size_type = size_t;
 
-  public:
+ public:
   // Member functions (constructors, destructor)
   map();
-  // map(std::initializer_list<value_type> const &items);
+  map(std::initializer_list<value_type> const &items);
   // map(const map &m);
   // map(map &&m);
   // ~map();
   // Map& operator=(map &&m);
 
   // // Element access methods
-  // T& at(const Key& key);
+  T& at(const Key& key);
   // T& operator[](const Key& key);
   // // V operator[](Key k) {
   // //     return find(std::make_pair(k, V{}));
@@ -46,7 +37,7 @@ class map : public s21::BSTree<std::pair<Key, T>> {
 
   // // Capacity
   // bool empty();
-  // size_type size();
+  size_type size();
   // size_type max_size();
 
   // // Modifiers
@@ -65,31 +56,34 @@ class map : public s21::BSTree<std::pair<Key, T>> {
   void print_map();
 
  private:
-  void print_tree(typename s21::Node<std::pair<Key, T>>);
+  s21::BSTree<std::pair<Key, T>> tree_;
+  size_type size_;
+  
 };
 
 template <typename Key, typename T>
-s21::map<Key, T>::map() {
-  
+s21::map<Key, T>::map()  : tree_(), size_() {}
+
+template <typename Key, typename T>
+s21::map<Key, T>::map(std::initializer_list<value_type> const &items) {}
+
+template <typename Key, typename T>
+typename s21::map<Key, T>::size_type 
+s21::map<Key, T>::size() {
+  return size_;
 }
+
+// template <typename Key, typename T>
+// T& at(const Key& key) {
+//   tree.
+// }
+
+template <typename Key, typename T>
+std::pair<MapIterator<Key, T>, bool> insert(const std::pair<const Key, T>& value) {}
 
 template <typename Key, typename T>
 void s21::map<Key, T>::print_map() {
-  print_tree(*this->root);
+  this->print(this->getRoot());
 }
-
-template <typename Key, typename T>
-void s21::map<Key, T>::print_tree(typename s21::Node<std::pair<Key, T>> node) {
-  if (node == nullptr) {
-    return;
-  }
-
-  std::cout << "key: " << node.key->first << std::endl;
-  std::cout << "value: " << node.key->second << std::endl;
-
-  print_tree(node->left);
-  print_tree(node->right);
-}
-
 
 }  // namespace s21

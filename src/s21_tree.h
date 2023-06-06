@@ -17,76 +17,70 @@ limitations under the License.
 #ifndef CPP2_S21_CONTAINERS_S21_TREE_H
 #define CPP2_S21_CONTAINERS_S21_TREE_H
 
-// #include <cstddef>
+#include "helpers/Node.h"
+
 #include <iostream>
 #include <string>
 #include <utility>
 
 namespace s21 {
-// Структура узла дерева
-template <class TP>
-struct Node {
-  TP key;
-  Node<TP> *left;
-  Node<TP> *right;
-  Node<TP> *parent;
 
-  // Конструктор с параметром
-  Node(TP& key) 
-    : key{key}, left{nullptr}, right{nullptr}, parent{nullptr} {}
-  // Конструктор с const параметром
-  Node(const TP& key) 
-    : key{key}, left{nullptr}, right{nullptr}, parent{nullptr} {}
-  // Конструктор по-умолчанию
-  Node()
-    : key(TP{}), left{nullptr}, right{nullptr}, parent{nullptr} {}
-
-};
-
-// Структура дерева
 template <typename T>
 class BSTree {
- public:
+ 
+ public: 
   using node_type = Node<T>;
-  // constructor
-  BSTree();
-  // destructor
-  // ~BSTree();
-  // copy
-  // BSTree(const BSTree& other);
-  // BSTree<T, Compare>& operator=(BSTree&& other) noexcept;
 
+  BSTree();
   void insert(T data);
-  // T find(T data);
-  // Получение значения по ключу key
-  // T2 find(T1 key);
-  // private methods
-  node_type *root = nullptr;
+  node_type *getRoot();
+  void print(node_type *node);
 
  private:
+  node_type *root = nullptr;
   void insert(node_type *, T data);
-  // node_type *find(node_type *, T data);
-  // node_type *successor(node_type *);
-  // void remove(node_type *, T data);
-
 };
 
+
+//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+//|||||||||||||||||||||||||||||||||||IMPLEMENTATION|||||||||||||||||||||||||||||||||||
+//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+
+// public
+//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 template <typename T>
 BSTree<T>::BSTree() : root(nullptr) {}
 
-// template <typename T, typename Compare>
-// BSTree<T, Compare>::BSTree(const BSTree &other) : {
-//   
-// };
+template <typename T>
+typename BSTree<T>::node_type* BSTree<T>::getRoot() {
+  return root;
+}
+
+template <typename T>
+void BSTree<T>::insert(T data) {
+  insert(root, data);
+}
+
+template <typename T>
+void BSTree<T>::print(node_type *node) {
+  if (node == nullptr) {
+    return;
+  }
+  std::cout << "key: " << node->key.first << std::endl;
+  std::cout << "value: " << node->key.second << std::endl;
+  print(node->left);
+  print(node->right);
+}
+
 
 // private
+//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 template <typename T>
 void BSTree<T>::insert(BSTree<T>::node_type *node, T data) {
   
   if (root == nullptr) {
     root = new node_type(data);
-    std::cout << "first: " << root->key.first << std::endl;
-    std::cout << "second: " << root->key.second << std::endl;
     return;
   }
   
@@ -105,96 +99,6 @@ void BSTree<T>::insert(BSTree<T>::node_type *node, T data) {
   }
 }
 
-// public
-template <typename T>
-void BSTree<T>::insert(T data) {
-  insert(root, data);
-}
-
-// template <typename T, typename Compare>
-// typename BSTree<T, Compare>::node_type* BSTree<T, Compare>::find(BSTree<T, Compare>::node_type *node, T data) {
-//   if (root == nullptr || data == root->key) {
-//     return root;
-//   }
-//   if (Compare{}(data, node->key)) { // <
-//       return find(node->left, data);
-//   } else { // >=
-//       return find(node->right, data);
-//   }
-// }
-
-// template <typename T, typename Compare>
-// T BSTree<T, Compare>::find(T data) {
-//   BSTree<T, Compare>::node_type* result = find(root, data);
-//   if (result != nullptr) {
-//     return result->key;
-//   }
-// }
-
-
-// // private
-// template <class T1, class T2>
-// Node<T1, T2> *BSTree<T, Compare>::successor(Node<T1, T2> *n) {
-//   Node<T1, T2> *r = n->right;
-//   while (r->left != nullptr) r = r->left;
-//   return r;
-// }
-
-// private
-// template <class T1, class T2>
-// void BSTree<T, Compare>::remove(Node<T1, T2> *&n, T1 key) {
-//   if (n == nullptr) {
-//     return;
-//   }
-//   if (key == n->key_) {
-//     if (n->left_ == nullptr || n->right_ == nullptr) {
-//       Node<T1, T2> *child = (n->left != nullptr ? n->left_ : n->right_);
-//       delete n;
-//       n = child;
-//     } else {
-//       Node<T1, T2> *success = successor(n);
-//       n->key = success->key_;
-//       n->data = success->data_;
-//       remove(n->right_, success->key_);
-//     }
-//     return;
-//   }
-//   if (key < n->key_) {
-//     remove(n->left_, key);
-//   } else {
-//     remove(n->right_, key);
-//   }
-// }
-
-// // public
-// template <class T1, class T2>
-// void BSTree<T, Compare>::remove(T1 key) {
-//   remove(root, key);
-// }
-
-// // private
-// template <class T1, class T2>
-// Node<T1, T2> *BSTree<T, Compare>::find(T1 key, Node<T1, T2> *n) {
-//   if (n == nullptr || key == n->key_) {
-//     return n;
-//   }
-//   if (key < n->key_) {
-//     return find(n->left_, key);
-//   } else {
-//     return find(n->right_, key);
-//   }
-// }
-//
-// // public
-// template <class T1, class T2>
-// T2 BSTree<T, Compare>::find(T1 key) {
-//   Node<T1, T2> *n = find(key, root);
-//   if (n != nullptr) {
-//     return n->getData();
-//   } else {
-//     return T2{};
-//   }
-// }
 }  // namespace s21
 
 #endif  // CPP2_S21_CONTAINERS_S21_TREE_H
