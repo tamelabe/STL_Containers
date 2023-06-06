@@ -51,9 +51,16 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+<<<<<<< HEAD
 # My files
 *.gcda
 *.gcno
 .vscode
 .DS_Store
 .clang-format
+=======
+# MISC
+.vscode
+*.gcda
+*.gcno
+>>>>>>> 73e64f099377aae28a8de04ffb82c78edd73658f
