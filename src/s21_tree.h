@@ -22,6 +22,7 @@ limitations under the License.
 #include <iostream>
 #include <string>
 #include <utility>
+#include <stack>
 
 namespace s21 {
 
@@ -32,23 +33,69 @@ class BSTree {
   using node_type = Node<T>;
 
   BSTree();
-  void insert(T data);
+  
+  void insert(T);
   node_type *getRoot();
-  void print(node_type *node);
+  void print(node_type *);
+
+  class Iterator {
+   public:
+    explicit Iterator(Node<T>* node) {
+      if (node) {
+        stack.push(node);
+        current = node;
+      }
+    }
+
+    Iterator& operator++() {
+      if (stack.empty()) {
+        current = nullptr;
+        return *this;
+      }
+
+      current = stack.top();
+      stack.pop();
+
+      if (current->right) {
+        stack.push(current->right);
+      }
+      if (current->left) {
+        stack.push(current->left);
+      }
+
+      return *this;
+    }
+
+    T& operator*() const {
+      return current->value;
+    }
+
+    bool operator==(const Iterator& other) const {
+      return current == other.current;
+    }
+
+    bool operator!=(const Iterator& other) const {
+      return !(*this == other);
+    }
+
+   private:
+    Node<T>* current;
+    std::stack<Node<T>*> stack;
+  };
+
+  Iterator begin() const {
+    return Iterator(root);
+  }
+
+  Iterator end() const {
+    return Iterator(nullptr);
+  }
 
  private:
   node_type *root = nullptr;
-  void insert(node_type *, T data);
+  void insert(node_type *, T);
 };
 
-
-//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-//|||||||||||||||||||||||||||||||||||IMPLEMENTATION|||||||||||||||||||||||||||||||||||
-//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-
-
-// public
-//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 template <typename T>
 BSTree<T>::BSTree() : root(nullptr) {}
 
@@ -63,19 +110,21 @@ void BSTree<T>::insert(T data) {
 }
 
 template <typename T>
+void BSTree<T>::insert(T data) {
+  insert(root, data);
+}
+
+template <typename T>
 void BSTree<T>::print(node_type *node) {
   if (node == nullptr) {
     return;
   }
-  std::cout << "key: " << node->key.first << std::endl;
-  std::cout << "value: " << node->key.second << std::endl;
+  std::cout << "key: " << node->value.first << std::endl;
+  std::cout << "value: " << node->value.second << std::endl;
   print(node->left);
   print(node->right);
 }
 
-
-// private
-//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 template <typename T>
 void BSTree<T>::insert(BSTree<T>::node_type *node, T data) {
   
@@ -84,7 +133,7 @@ void BSTree<T>::insert(BSTree<T>::node_type *node, T data) {
     return;
   }
   
-  if (data.first < node->key.first) {  // <
+  if (std::less<T>{}(data, node->value)) {  // <
     if (node->left == nullptr) {
       node->left = new node_type(data);
     } else {
@@ -98,6 +147,8 @@ void BSTree<T>::insert(BSTree<T>::node_type *node, T data) {
     }
   }
 }
+
+
 
 }  // namespace s21
 

@@ -65,7 +65,12 @@ template <typename Key, typename T>
 s21::map<Key, T>::map()  : tree_(), size_() {}
 
 template <typename Key, typename T>
-s21::map<Key, T>::map(std::initializer_list<value_type> const &items) {}
+s21::map<Key, T>::map(std::initializer_list<value_type> const &items) : tree_(), size_() {
+  for (auto item : items) {
+    tree_.insert(item);
+    size_++;
+  }
+}
 
 template <typename Key, typename T>
 typename s21::map<Key, T>::size_type 
@@ -73,17 +78,17 @@ s21::map<Key, T>::size() {
   return size_;
 }
 
-// template <typename Key, typename T>
-// T& at(const Key& key) {
-//   tree.
-// }
+template <typename Key, typename T>
+T& at(const Key& key) {
+  tree_.
+}
 
 template <typename Key, typename T>
 std::pair<MapIterator<Key, T>, bool> insert(const std::pair<const Key, T>& value) {}
 
 template <typename Key, typename T>
 void s21::map<Key, T>::print_map() {
-  this->print(this->getRoot());
+  tree_.print(tree_.getRoot());
 }
 
 }  // namespace s21
