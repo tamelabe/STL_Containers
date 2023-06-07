@@ -28,6 +28,15 @@ class set : public BSTree<Key>> {
   using const_iterator = SetConstIterator<key_type>;
   using size_type = size_t;
 
+public:
+  set();
+| set(std::initializer_list<value_type> const &items);
+| set(const set &s);
+| set(set &&s);
+| ~set();
+| operator=(set &&s);
+
+
 };
 
 
