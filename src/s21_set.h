@@ -19,7 +19,7 @@ limitations under the License.
 namespace s21 {
 
 template<typename Key>
-class set : public BSTree<Key>> {
+class set : public BSTree<Key, Key>> {
   using key_type = Key;
   using value_type = Key;
   using reference = value_type &;
@@ -30,14 +30,34 @@ class set : public BSTree<Key>> {
 
 public:
   set();
-| set(std::initializer_list<value_type> const &items);
-| set(const set &s);
-| set(set &&s);
-| ~set();
-| operator=(set &&s);
+// | set(std::initializer_list<value_type> const &items);
+// | set(const set &s);
+// | set(set &&s);
+// | ~set();
+// | operator=(set &&s);
 
+  // iterator begin();
+  // iterator end();
+
+  // bool empty();
+  // size_type size();
+  // size_type max_size();
+
+  // void clear();
+  // std::pair<iterator, bool> insert(const value_type& value);
+  // void erase(iterator pos);
+  // void swap(set& other);
+  // void merge(set& other);
+
+  // iterator find(const Key& key);
+  // bool contains(const Key& key);
+
+private:
+  s21::BSTree<Key> tree_;
 
 };
 
+template <typename Key>
+s21::set<Key>::set() {}
 
 }
