@@ -15,14 +15,14 @@ TEST(Constructor, base) {
 
 TEST(Constructor, initializer_list) {
   s21::map<int, int> map{
-    std::pair<int, int> {4.0, 'a'},
-    std::pair<int, int> {2.0, 'b'},
-    std::pair<int, int> {3.0, 'c'},
-    std::pair<int, int> {7.0, 'd'}
+    std::pair<int, char> {4, 'a'},
+    std::pair<int, char> {2, 'b'},
+    std::pair<int, char> {3, 'c'},
+    std::pair<int, char> {7, 'd'}
   };
   std::cout << map.size() << std::endl;
   ASSERT_TRUE(map.size() == 4);
-  ASSERT_TRUE(map.getRoot()->left->key.first == 2);
+  // ASSERT_TRUE(map.at(4) == 'a');
 }
 
 

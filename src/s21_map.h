@@ -1,31 +1,36 @@
-#include "s21_tree.h"
-#include "helpers/MapIterator.h"
-#include "helpers/MapConstIterator.h"
+#ifndef CPP2_S21_CONTAINERS_S21_MAP_H_
+#define CPP2_S21_CONTAINERS_S21_MAP_H_
+
+#include "helpers/BinaryTree.h"
+
+#include <initializer_list>
+#include <utility>
 
 namespace s21 {
   
-template<typename Key, typename T>
+template<typename KT, typename VT>
 class map {
-  using key_type = Key;
-  using mapped_type = T;
-  using value_type = std::pair<const key_type, mapped_type>;
-  using reference = value_type &;
+  using key_type        = KT;
+  using mapped_type     = VT;
+  using value_type      = std::pair<const key_type, mapped_type>;
+  using reference       = value_type &;
   using const_reference = const value_type &;
-  using iterator = MapIterator<key_type, mapped_type>;
-  using const_iterator = MapConstIterator<key_type, mapped_type>;
-  using size_type = size_t;
+  using tree_type       = s21::BinaryTree<KT, VT>;
+  using iterator        = typename tree_type::iterator;
+  using const_iterator  = typename tree_type::const_iterator;
+  using size_type       = size_t;
 
  public:
   // Member functions (constructors, destructor)
   map();
-  map(std::initializer_list<value_type> const &items);
+  explicit map(std::initializer_list<value_type> const &items);
   // map(const map &m);
   // map(map &&m);
   // ~map();
   // Map& operator=(map &&m);
 
   // // Element access methods
-  T& at(const Key& key);
+  // VT& at(const KT& key);
   // T& operator[](const Key& key);
   // // V operator[](Key k) {
   // //     return find(std::make_pair(k, V{}));
@@ -56,39 +61,37 @@ class map {
   void print_map();
 
  private:
-  s21::BSTree<std::pair<Key, T>> tree_;
+  s21::BinaryTree<KT, VT> tree_;
   size_type size_;
-  
 };
 
-template <typename Key, typename T>
-s21::map<Key, T>::map()  : tree_(), size_() {}
+template <typename KT, typename VT>
+s21::map<KT, VT>::map()  : tree_(), size_(0) {}
 
-template <typename Key, typename T>
-s21::map<Key, T>::map(std::initializer_list<value_type> const &items) : tree_(), size_() {
+template <typename KT, typename VT>
+s21::map<KT, VT>::map(std::initializer_list<value_type> const &items) : tree_(), size_(0) {
   for (auto item : items) {
-    tree_.insert(item);
+    tree_.insert(item.first, item.second);
     size_++;
   }
 }
 
-template <typename Key, typename T>
-typename s21::map<Key, T>::size_type 
-s21::map<Key, T>::size() {
+template <typename KT, typename VT>
+typename s21::map<KT, VT>::size_type 
+s21::map<KT, VT>::size() {
   return size_;
 }
 
-template <typename Key, typename T>
-T& at(const Key& key) {
-  tree_.
-}
+// template <typename KT, typename VT>
+// VT& s21::map<KT, VT>::at(const KT& key) {
+//   return NULL;
+// }
 
-template <typename Key, typename T>
-std::pair<MapIterator<Key, T>, bool> insert(const std::pair<const Key, T>& value) {}
-
-template <typename Key, typename T>
-void s21::map<Key, T>::print_map() {
+template <typename KT, typename VT>
+void s21::map<KT, VT>::print_map() {
   tree_.print(tree_.getRoot());
 }
 
 }  // namespace s21
+
+#endif  // CPP2_S21_CONTAINERS_S21_MAP_H_
