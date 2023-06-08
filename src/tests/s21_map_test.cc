@@ -13,6 +13,18 @@ TEST(Constructor, base) {
   ASSERT_TRUE(map.size() == 0);
 }
 
+TEST(Constructor, initializer_list) {
+  s21::map<int, int> map{
+    std::pair<int, int> {4.0, 'a'},
+    std::pair<int, int> {2.0, 'b'},
+    std::pair<int, int> {3.0, 'c'},
+    std::pair<int, int> {7.0, 'd'}
+  };
+  std::cout << map.size() << std::endl;
+  ASSERT_TRUE(map.size() == 4);
+  ASSERT_TRUE(map.getRoot()->left->key.first == 2);
+}
+
 
 // // Modifiers
 // TEST(Modifiers, insert) {
