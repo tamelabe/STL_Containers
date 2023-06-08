@@ -19,7 +19,7 @@ limitations under the License.
 namespace s21 {
 
 template<typename Key>
-class set : public BSTree<Key, Key>> {
+class set {
   using key_type = Key;
   using value_type = Key;
   using reference = value_type &;
