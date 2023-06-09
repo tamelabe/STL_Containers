@@ -5,34 +5,36 @@
 #include <string>
 #include <utility>
 
-using namespace s21;
+using namespace std;
 
 template <typename T>
-void printList(List<T>& a) {
+void printList(s21::List<T>& a) {
   for (auto iter = a.begin(); iter != a.end(); ++iter) {
     std::cout << *iter << " ";
   }
   std::cout << std::endl;
 }
 template <typename T>
-void printRevList(List<T>& a) {
-  for (auto iter = --a.end(); iter != a.begin(); --iter) {
+void printList(std::list<T>& a) {
+  for (auto iter = a.begin(); iter != a.end(); ++iter) {
     std::cout << *iter << " ";
   }
-  std::cout << *a.begin() << std::endl;
+  std::cout << std::endl;
 }
+// template <typename T>
+// void printRevList(std::ist<T>& a) {
+//   for (auto iter = --a.end(); iter != a.begin(); --iter) {
+//     std::cout << *iter << " ";
+//   }
+//   std::cout << *a.begin() << std::endl;
+// }
 
 int main() {
-  //    List<int> mrg1 = {4, 3, 2, 1, -1, -50, 100};
-  //    List<int> mrg2 = {4, 7, 6};
-  //    auto iter = mrg1.begin();
-  //    mrg1.sort();
-  List<int> mrg3 = {1, 2, 3, 4};
-  mrg3 = std::move(mrg3);
-  printList(mrg3);
-  //    mrg2.sort();
-  //    printList(mrg1);
-  //    printRevList(mrg1);
-  //    printList(mrg2);
+  s21::List<std::string> s21_test{"aboba", "asdf"};
+  std::list<std::string> std_test{"aboba", "asdf"};
+  s21_test.pop_back();
+  std_test.pop_back();
+  printList(s21_test);
+  printList(std_test);
   return 0;
 }

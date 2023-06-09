@@ -1,5 +1,5 @@
-#ifndef SRC_S21_LIST_H_
-#define SRC_S21_LIST_H_
+#ifndef CPP2_S21_CONTAINERS_1_SRC_S21_LIST_H_
+#define CPP2_S21_CONTAINERS_1_SRC_S21_LIST_H_
 
 #include <initializer_list>
 #include <iostream>
@@ -17,7 +17,7 @@ class List {
   using difference_type = std::ptrdiff_t;
   using value_type = T;
   using size_type = std::size_t;
-  using reference = value_type &;  //  Убрать
+  using reference = value_type &;
   using const_reference = const value_type &;
   using iterator = ListIterator<value_type>;
   using const_iterator = ListConstIterator<value_type>;
@@ -51,7 +51,7 @@ class List {
    * @param l - List to copy
    */
   List(const List &l) : List() {
-    for (auto i = l.cbegin(); i != l.cend(); ++i) push_back(*i);
+    for (auto i = l.begin(); i != l.end(); ++i) push_back(*i);
   }
   /**
    * move constructor
@@ -66,13 +66,13 @@ class List {
    */
   ~List() { deallocate(true); }
 
-  List &operator=(const List &l) noexcept {
+  List &operator=(const List &l) {
     if (&l == this) return *this;
     clear();
     for (auto i = l.begin(); i != l.end(); ++i) push_back(*i);
     return *this;
   }
-  List &operator=(List &&l) noexcept {
+  List &operator=(List &&l) {
     if (&l == this) return *this;
     clear();
     begin_ = l.begin_;
@@ -106,7 +106,7 @@ class List {
   /**
    * returns an const iterator to the beginning
    */
-  const_iterator cbegin() const noexcept { return const_iterator(begin_); }
+  const_iterator begin() const noexcept { return const_iterator(begin_); }
   /**
    * returns an iterator to the end (next from the last element)
    */
@@ -114,7 +114,7 @@ class List {
   /**
    * returns an const iterator to the end (next from the last element)
    */
-  const_iterator cend() const noexcept { return const_iterator(end_); }
+  const_iterator end() const noexcept { return const_iterator(end_); }
 
   // List Capacity
   /**
@@ -133,7 +133,7 @@ class List {
    * @return Maximum number of elements.
    */
   size_type max_size() const noexcept {
-    return std::numeric_limits<difference_type>::max();
+    return std::numeric_limits<difference_type>::max() / sizeof(node);
   }
 
   // List Modifiers
@@ -157,9 +157,7 @@ class List {
       push_front(value);
       ret_iter = begin();
     } else {
-      node_ptr new_node = new node(value);
-      new_node->prev_ = pos.node_->prev_;
-      new_node->next_ = pos.node_;
+      node_ptr new_node = new node(pos.node_->prev_, pos.node_, value);
       pos.node_->prev_->next_ = new_node;
       pos.node_->prev_ = new_node;
       ret_iter = iterator(new_node);
@@ -179,6 +177,7 @@ class List {
       temp->next_ = pos.node_->next_;
       pos.node_->next_->prev_ = temp;
       delete pos.node_;
+      --size_;
     }
   }
   /**
@@ -189,9 +188,7 @@ class List {
     if (end_ == begin_) {
       pushFirstNode(value);
     } else {
-      node_ptr new_node = new node(value);
-      new_node->prev_ = end_->prev_;
-      new_node->next_ = end_;
+      node_ptr new_node = new node(end_->prev_, end_, value);
       end_->prev_->next_ = new_node;
       end_->prev_ = new_node;
     }
@@ -216,9 +213,7 @@ class List {
     if (end_ == begin_) {
       pushFirstNode(value);
     } else {
-      node_ptr new_node = new node(value);
-      new_node->prev_ = end_;
-      new_node->next_ = begin_;
+      node_ptr new_node = new node(end_, begin_, value);
       end_->next_ = new_node;
       begin_->prev_ = new_node;
       begin_ = new_node;
@@ -345,8 +340,7 @@ class List {
    * @param value pushing value in data_ field
    */
   void pushFirstNode(const_reference value) {
-    node_ptr new_node = new node(value);
-    new_node->next_ = new_node->prev_ = end_;
+    node_ptr new_node = new node(end_, end_, value);
     end_->prev_ = end_->next_ = new_node;
     begin_ = new_node;
   }
@@ -380,7 +374,7 @@ class List {
     first.node_->prev_ = pos.node_->prev_;
     pos.node_->prev_ = last.node_;
     last.node_->next_ = pos.node_;
-    if (pos == cbegin()) begin_ = first.node_;
+    if (pos == begin()) begin_ = first.node_;
     return next;
   }
   /**
@@ -438,4 +432,4 @@ class List {
   }
 };
 }  // namespace s21
-#endif  // SRC_S21_LIST_H_
+#endif  // CPP2_S21_CONTAINERS_1_SRC_S21_LIST_H_

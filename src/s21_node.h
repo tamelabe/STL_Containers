@@ -1,5 +1,5 @@
-#ifndef SRC_S21_NODE_H
-#define SRC_S21_NODE_H
+#ifndef CPP2_S21_CONTAINERS_1_SRC_S21_NODE_H_
+#define CPP2_S21_CONTAINERS_1_SRC_S21_NODE_H_
 
 #include "./s21_list.h"
 
@@ -25,17 +25,15 @@ class Node {
   Node() : prev_(this), next_(this), data_(value_type{}) {}
   explicit Node(value_type value)
       : prev_(nullptr), next_(nullptr), data_(value) {}
-  Node(Node *prev, value_type value)
-      : prev_(prev), next_(nullptr), data_(value) {}
   Node(Node *prev, Node *next, value_type value)
       : prev_(prev), next_(next), data_(value) {}
   ~Node() {}
 
-  Node operator=(const Node &other) {
+  Node &operator=(const Node &other) {
     this->prev_ = other.prev_;
     this->next_ = other.next_;
     this->data_ = other.data_;
-    return this;
+    return *this;
   }
 
  private:
@@ -44,4 +42,4 @@ class Node {
   value_type data_;
 };
 }  // namespace s21
-#endif  // S21_NODE_H
+#endif  // CPP2_S21_CONTAINERS_1_SRC_S21_NODE_H_

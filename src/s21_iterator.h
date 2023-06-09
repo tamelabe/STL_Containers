@@ -1,5 +1,5 @@
-#ifndef CPP2_S21_CONTAINERS  //-1_SRC_S21_node_H_
-#define S21_node_H_
+#ifndef CPP2_S21_CONTAINERS_1_SRC_S21_ITERATOR_H_
+#define CPP2_S21_CONTAINERS_1_SRC_S21_ITERATOR_H_
 
 #include "./s21_node.h"
 
@@ -13,10 +13,7 @@ class ListIterator {
   friend class List<T>;
 
  public:
-  //    using node_category = std::bidirectional_node_tag;
-  //    using difference_type = std::ptrdiff_t;
   using value_type = T;
-  using pointer = T *;
   using n_pointer = Node<T> *;
   using reference = T &;
 
@@ -56,9 +53,9 @@ class ListIterator {
    * @return original value
    */
   ListIterator operator++(int) {
-    ListIterator<value_type> tmp(*this);
+    ListIterator<value_type> tmp = *this;
     node_ = node_->next_;
-    return *tmp;
+    return tmp;
   }
   /**
    * moves the iterator backwards to the previous element
@@ -72,9 +69,9 @@ class ListIterator {
    * @return original value
    */
   ListIterator operator--(int) {
-    ListIterator<value_type> tmp(*this);
+    ListIterator<value_type> tmp = *this;
     node_ = node_->prev_;
-    return *tmp;
+    return tmp;
   }
 
  private:
@@ -86,9 +83,8 @@ class ListConstIterator {
   friend class List<T>;
 
  public:
-  using value_type = const T;
-  using pointer = const T *;
-  using reference = const T &;
+  using value_type = T;
+  using reference = const value_type &;
   using n_pointer = Node<T> *;
 
   ListConstIterator() : node_(nullptr){};
@@ -97,9 +93,13 @@ class ListConstIterator {
   ListConstIterator(ListConstIterator &&other) noexcept : node_(other.node_) {
     other.node_ = nullptr;
   }
-  ListConstIterator(ListIterator<T> &other) { node_ = other.getNode(); }
+  ListConstIterator(ListIterator<T> other) { node_ = other.getNode(); }
   ~ListConstIterator() { node_ = nullptr; }
   ListConstIterator &operator=(const ListConstIterator &other) {
+    node_ = other.node_;
+    return *this;
+  }
+  ListConstIterator &operator=(ListConstIterator &&other) noexcept {
     node_ = other.node_;
     return *this;
   }
@@ -133,9 +133,9 @@ class ListConstIterator {
    * @return original value
    */
   ListConstIterator operator++(int) {
-    ListConstIterator<value_type> tmp(*this);
+    ListConstIterator<value_type> tmp = *this;
     node_ = node_->next_;
-    return *tmp;
+    return tmp;
   }
 
   /**
@@ -151,9 +151,9 @@ class ListConstIterator {
    * @return original value
    */
   ListConstIterator operator--(int) {
-    ListConstIterator<value_type> tmp(*this);
+    ListConstIterator<value_type> tmp = *this;
     node_ = node_->prev_;
-    return *tmp;
+    return tmp;
   }
   n_pointer getNode() { return node_; }
 
@@ -161,4 +161,4 @@ class ListConstIterator {
   n_pointer node_;
 };
 }  // namespace s21
-#endif  // S21_node_H_
+#endif  // CPP2_S21_CONTAINERS_1_SRC_S21_ITERATOR_H_
