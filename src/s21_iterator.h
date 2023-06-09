@@ -24,7 +24,8 @@ class ListIterator {
   ListIterator(ListIterator &&other) noexcept : node_(other.node_) {}
   ~ListIterator() { node_ = nullptr; }
 
-  ListIterator &operator=(const ListIterator &other) {
+  ListIterator &operator=
+    (const ListIterator &other) {
     node_ = other.node_;
     return *this;
   }

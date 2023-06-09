@@ -301,7 +301,22 @@ class List {
   }
   // Bonus part!
   template <class... Args>
-  iterator emplace(const_iterator pos, Args &&...args) {}
+  iterator emplace(const_iterator pos, Args &&...args) {
+      return insert(pos, std::forward<Args>(args)...);
+
+  }
+
+  template <class... Args>
+  iterator emplace_back(Args &&...args) {
+      return insert(end(), std::forward<Args>(args)...);
+  }
+
+
+  template <class... Args>
+  iterator emplace_front(Args &&...args) {
+      return insert(begin(), std::forward<Args>(args)...);
+
+  }
 
  private:
   // Variables
