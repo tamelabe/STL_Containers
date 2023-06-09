@@ -20,15 +20,16 @@ class ListIterator {
   ListIterator() : node_(nullptr){};
   explicit ListIterator(n_pointer ptr) : node_(ptr){};
   ListIterator(const ListIterator &other) : node_(other.node_) {}
+  ListIterator(const ListConstIterator<T> &other) : node_(other.getNode()) {}
   ListIterator(ListIterator &&other) noexcept : node_(other.node_) {}
-  explicit ListIterator(ListConstIterator<T> other) { node_ = other.getNode(); }
   ~ListIterator() { node_ = nullptr; }
+
   ListIterator &operator=(const ListIterator &other) {
     node_ = other.node_;
     return *this;
   }
 
-  n_pointer getNode() { return node_; }
+  n_pointer getNode() const { return node_; }
   /**
    * gets the element pointed to by the iterator
    */
@@ -90,11 +91,14 @@ class ListConstIterator {
   ListConstIterator() : node_(nullptr){};
   explicit ListConstIterator(n_pointer ptr) : node_(ptr){};
   ListConstIterator(const ListConstIterator &other) : node_(other.node_) {}
+  ListConstIterator(const ListIterator<value_type> &other)
+      : node_(other.getNode()) {}
   ListConstIterator(ListConstIterator &&other) noexcept : node_(other.node_) {
     other.node_ = nullptr;
   }
-  ListConstIterator(ListIterator<T> other) { node_ = other.getNode(); }
+
   ~ListConstIterator() { node_ = nullptr; }
+
   ListConstIterator &operator=(const ListConstIterator &other) {
     node_ = other.node_;
     return *this;
@@ -155,7 +159,7 @@ class ListConstIterator {
     node_ = node_->prev_;
     return tmp;
   }
-  n_pointer getNode() { return node_; }
+  n_pointer getNode() const { return node_; }
 
  private:
   n_pointer node_;

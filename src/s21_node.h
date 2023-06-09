@@ -21,11 +21,12 @@ class Node {
   // Aliases
   using value_type = T;
   using node_ptr = Node *;
+  using const_reference = const value_type &;
   // Constructors and destructor
   Node() : prev_(this), next_(this), data_(value_type{}) {}
-  explicit Node(value_type value)
+  explicit Node(const_reference value)
       : prev_(nullptr), next_(nullptr), data_(value) {}
-  Node(Node *prev, Node *next, value_type value)
+  Node(Node *prev, Node *next, const_reference value)
       : prev_(prev), next_(next), data_(value) {}
   ~Node() {}
 
