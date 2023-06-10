@@ -43,6 +43,9 @@
 *.pdb
 *.idea/
 *.DS_Store
+*.gcda
+*.gcno
+
 
 # Kernel Module Compile Results
 *.mod*

@@ -12,8 +12,9 @@
 namespace s21 {
 template <class T>
 class List {
- public:
+public:
   // Aliases declaration
+
   using difference_type = std::ptrdiff_t;
   using value_type = T;
   using size_type = std::size_t;
@@ -29,7 +30,8 @@ class List {
    * default constructor, creates empty List and "fake" node
    */
   List() : begin_(nullptr), end_(new Node<value_type>), size_(0) {
-    initList();
+      end_->data_ = new value_type;
+      initList();
   };
   /**
    * parameterized constructor
@@ -64,7 +66,7 @@ class List {
   /**
    * destructor
    */
-  ~List() { deallocate(true); }
+  ~List() { deallocate(1); }
 
   List &operator=(const List &l) {
     if (&l == this) return *this;
@@ -87,7 +89,7 @@ class List {
    */
   const_reference front() {
     if (begin_ == end_) throw std::out_of_range("List is empty");
-    return begin_->data_;
+    return *(begin_->data_);
   }
   /**
    * Returns a reference to the last element in the container.
@@ -95,7 +97,7 @@ class List {
    */
   const_reference back() {
     if (begin_ == end_) throw std::out_of_range("List is empty");
-    return end_->prev_->data_;
+    return *(end_->prev_->data_);
   }
 
   // List Iterators
@@ -133,7 +135,7 @@ class List {
    * @return Maximum number of elements.
    */
   size_type max_size() const noexcept {
-    return std::numeric_limits<difference_type>::max() / sizeof(node);
+      return std::numeric_limits<difference_type>::max() / (sizeof(node));
   }
 
   // List Modifiers
@@ -141,7 +143,7 @@ class List {
    * clears the contents
    */
   void clear() noexcept {
-    deallocate(false);
+    deallocate(0);
     initList();
   }
   /**
@@ -176,7 +178,7 @@ class List {
       node_ptr temp = pos.node_->prev_;
       temp->next_ = pos.node_->next_;
       pos.node_->next_->prev_ = temp;
-      delete pos.node_;
+        deallocate(2, pos.node_);
       --size_;
     }
   }
@@ -201,7 +203,7 @@ class List {
     node_ptr tmp = end_->prev_;
     tmp->prev_->next_ = end_;
     end_->prev_ = tmp->prev_;
-    delete tmp;
+    deallocate(2, tmp);
     begin_ = end_->next_;
     --size_;
   }
@@ -226,7 +228,7 @@ class List {
   void pop_front() noexcept {
     end_->next_ = begin_->next_;
     begin_->next_->prev_ = end_;
-    delete begin_;
+    deallocate(2, begin_);
     begin_ = end_->next_;
     --size_;
   }
@@ -289,7 +291,7 @@ class List {
    */
   void unique() {
     for (auto i = begin(); i != end();)
-      if (*i == *(++i)) erase(i);
+      if (*i == *(++i)) erase(--i);
   }
   /**
    * Merge Sort algorithm based onion brand principle
@@ -336,19 +338,26 @@ class List {
   }
   /**
    * Deallocator
-   * @param mode false - deallocate all non fake nodes,
-   *             true - fully deallocation
+   * @param mode 0 - deallocate all non fake nodes,
+   *             1 - fully deallocation
+   *             2 - one node deallocation
+   * @param node - node to deallocate when mode 2 chosen
    */
-  void deallocate(bool mode) {
-    if (begin_ != end_)
-      for (auto i = begin(); i != end(); ++i) {
-        delete i.node_;
-        --size_;
+  void deallocate(int mode, node_ptr node = nullptr) {
+      if (!mode || mode == 1) {
+          if (begin_ != end_)
+              for (auto i = begin(); i != end(); ++i) {
+                  deallocate(2, i.node_);
+                  --size_;
+              }
+          if (mode) {
+              delete end_;
+              end_ = begin_ = nullptr;
+          }
+      } else if (mode == 2) {
+          delete node->data_;
+          delete node;
       }
-    if (mode) {
-      delete end_;
-      end_ = begin_ = nullptr;
-    }
   }
   /**
    * Using when pushing node in empty List
@@ -429,7 +438,7 @@ class List {
   node_ptr mergeNodes(node_ptr first, node_ptr second) {
     if (first == end_) return second;
     if (second == end_) return first;
-    if (first->data_ < second->data_) {
+    if (*first->data_ < *second->data_) {
       first->next_ = mergeNodes(first->next_, second);
       return first;
     } else {
@@ -446,5 +455,9 @@ class List {
     }
   }
 };
+
+
+
+
 }  // namespace s21
 #endif  // CPP2_S21_CONTAINERS_1_SRC_S21_LIST_H_

@@ -23,11 +23,15 @@ class Node {
   using node_ptr = Node *;
   using const_reference = const value_type &;
   // Constructors and destructor
-  Node() : prev_(this), next_(this), data_(value_type{}) {}
+  Node() : prev_(this), next_(this), data_(nullptr) {}
   explicit Node(const_reference value)
-      : prev_(nullptr), next_(nullptr), data_(value) {}
+      : prev_(nullptr), next_(nullptr), data_(new value_type) {
+      *data_ = value;
+  }
   Node(Node *prev, Node *next, const_reference value)
-      : prev_(prev), next_(next), data_(value) {}
+      : prev_(prev), next_(next), data_(new value_type) {
+      *data_ = value;
+  }
   ~Node() {}
 
   Node &operator=(const Node &other) {
@@ -40,7 +44,7 @@ class Node {
  private:
   node_ptr prev_;
   node_ptr next_;
-  value_type data_;
+  value_type* data_;
 };
 }  // namespace s21
 #endif  // CPP2_S21_CONTAINERS_1_SRC_S21_NODE_H_

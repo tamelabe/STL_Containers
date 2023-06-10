@@ -11,7 +11,6 @@ class List;
 template <class T>
 class ListIterator {
   friend class List<T>;
-
  public:
   using value_type = T;
   using n_pointer = Node<T> *;
@@ -34,7 +33,7 @@ class ListIterator {
   /**
    * gets the element pointed to by the iterator
    */
-  reference operator*() const { return node_->data_; }
+  reference operator*() const { return *(node_->data_); }
   /**
    * two iterators are not equal if they point to different elements
    */
@@ -112,7 +111,7 @@ class ListConstIterator {
   /**
    * gets the element pointed to by the iterator
    */
-  reference operator*() const { return node_->data_; }
+  reference operator*() const { return *(node_->data_); }
   /**
    * two iterators are not equal if they point to different elements
    */
