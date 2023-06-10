@@ -20,9 +20,9 @@ TEST(Constructor, initializer_list) {
     std::pair<int, char> {3, 'c'},
     std::pair<int, char> {7, 'd'}
   };
-  std::cout << map.size() << std::endl;
   ASSERT_TRUE(map.size() == 4);
-  // ASSERT_TRUE(map.at(4) == 'a');
+  ASSERT_TRUE(map.at(4) == 'a');
+  ASSERT_TRUE(map.at(7) == 'd');
 }
 
 

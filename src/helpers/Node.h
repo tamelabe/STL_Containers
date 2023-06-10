@@ -1,22 +1,22 @@
 namespace s21 {
 
-template <typename K, typename V = K>
+template <typename KT, typename V = KT>
 class Node {
  public:
-  K key;
+  KT key;
   V value;
-  Node<K, V> *left;
-  Node<K, V> *right;
-  Node<K, V> *parent;
+  Node<KT, V> *left;
+  Node<KT, V> *right;
+  Node<KT, V> *parent;
 
-  Node(K& key) 
+  Node(KT& key) 
     : key{key}, value{}, left{nullptr}, right{nullptr}, parent{nullptr} {}
   
-  Node(K& key, V& value) 
+  Node(KT& key, V& value) 
     : key{key}, value{value}, left{nullptr}, right{nullptr}, parent{nullptr} {}
 
   Node() 
-    : key(K{}), value(V{}), left{nullptr}, right{nullptr}, parent{nullptr} {}
+    : key(KT{}), value(V{}), left{nullptr}, right{nullptr}, parent{nullptr} {}
 
 };
 

@@ -26,22 +26,22 @@ limitations under the License.
 
 namespace s21 {
 
-template <typename K, typename V = K>
+template <typename KT, typename VT = KT>
 class BinaryTree {
  
  public: 
-  using node_type = Node<K, V>;
+  using node_type = Node<KT, VT>;
 
   BinaryTree();
   
-  void insert(K key, V value);
+  void insert(KT key, VT value);
   node_type *getRoot();
+  VT* search(const KT& key);
   void print(node_type *);
-  node_type *search();
 
   class iterator {
    public:
-    explicit iterator(Node<K, V>* node) {
+    explicit iterator(Node<KT, VT>* node) {
       if (node) {
         stack.push(node);
         current = node;
@@ -67,7 +67,7 @@ class BinaryTree {
       return *this;
     }
 
-    V& operator*() const {
+    VT& operator*() const {
       return current->value;
     }
 
@@ -86,7 +86,7 @@ class BinaryTree {
 
   class const_iterator {
    public:
-    explicit const_iterator(Node<K, V>* node) {
+    explicit const_iterator(Node<KT, VT>* node) {
       if (node) {
         stack.push(node);
         current = node;
@@ -139,47 +139,44 @@ class BinaryTree {
 
  private:
   node_type *root = nullptr;
-  void insert(node_type *, K, V);
+  void insert(node_type *, KT, VT);
 };
 
-template <typename K, typename V>
-BinaryTree<K, V>::BinaryTree() : root(nullptr) {}
+template <typename KT, typename VT>
+BinaryTree<KT, VT>::BinaryTree() : root(nullptr) {}
 
-template <typename K, typename V>
-typename BinaryTree<K, V>::node_type* BinaryTree<K, V>::getRoot() {
+template <typename KT, typename VT>
+typename BinaryTree<KT, VT>::node_type* BinaryTree<KT, VT>::getRoot() {
   return root;
 }
 
-template <typename K, typename V>
-void BinaryTree<K, V>::insert(K key, V value) {
-  insert(root, key, value);
-}
-
-template <typename K, typename V>
-typename BinaryTree<K, V>::node_type* BinaryTree<K, V>::search() {
+template <typename KT, typename VT>
+VT* BinaryTree<KT, VT>::search(const KT& key) {
+  node_type *current = root;
+  while (current) {
+    if (current->key == key) {
+      return &current->value;
+    } else if (std::less<KT>{}(key, current->key)) {
+      current = current->left;
+    } else {
+      current = current->right;
+    }
+  }
   return nullptr;
 }
 
-template <typename K, typename V>
-void BinaryTree<K, V>::print(node_type *node) {
-  if (node == nullptr) {
-    return;
-  }
-  std::cout << "key: " << node->value.first << std::endl;
-  std::cout << "value: " << node->value.second << std::endl;
-  print(node->left);
-  print(node->right);
+template <typename KT, typename VT>
+void BinaryTree<KT, VT>::insert(KT key, VT value) {
+  insert(root, key, value);
 }
 
-template <typename K, typename V>
-void BinaryTree<K, V>::insert(BinaryTree<K, V>::node_type *node, K key, V value) {
-  
+template <typename KT, typename VT>
+void BinaryTree<KT, VT>::insert(BinaryTree<KT, VT>::node_type *node, KT key, VT value) {
   if (root == nullptr) {
     root = new node_type(key, value);
     return;
   }
-  
-  if (std::less<K>{}(key, node->key)) {  // <
+  if (std::less<KT>{}(key, node->key)) {  // <
     if (node->left == nullptr) {
       node->left = new node_type(key, value);
     } else {
@@ -194,7 +191,16 @@ void BinaryTree<K, V>::insert(BinaryTree<K, V>::node_type *node, K key, V value)
   }
 }
 
-
+template <typename KT, typename VT>
+void BinaryTree<KT, VT>::print(node_type *node) {
+  if (node == nullptr) {
+    return;
+  }
+  std::cout << "key: " << node->value.first << std::endl;
+  std::cout << "value: " << node->value.second << std::endl;
+  print(node->left);
+  print(node->right);
+}
 
 }  // namespace s21
 

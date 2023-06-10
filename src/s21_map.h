@@ -30,7 +30,7 @@ class map {
   // Map& operator=(map &&m);
 
   // // Element access methods
-  // VT& at(const KT& key);
+  VT& at(const KT& key);
   // T& operator[](const Key& key);
   // // V operator[](Key k) {
   // //     return find(std::make_pair(k, V{}));
@@ -82,10 +82,10 @@ s21::map<KT, VT>::size() {
   return size_;
 }
 
-// template <typename KT, typename VT>
-// VT& s21::map<KT, VT>::at(const KT& key) {
-//   return NULL;
-// }
+template <typename KT, typename VT>
+VT& s21::map<KT, VT>::at(const KT& key) {
+  return *(tree_.search(key));
+}
 
 template <typename KT, typename VT>
 void s21::map<KT, VT>::print_map() {
