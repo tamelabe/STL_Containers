@@ -41,9 +41,8 @@ class BinaryTree {
 
   class iterator {
    public:
-    explicit iterator(Node<KT, VT>* node) {
+    explicit iterator(Node<KT, VT>* node) : current(nullptr) {
       if (node) {
-        stack.push(node);
         current = node;
       }
     }
@@ -52,7 +51,6 @@ class BinaryTree {
       if (!current) {
         return *this;
       }
-
       if (current->right) {
         current = current->right;
         while (current->left) {
@@ -66,7 +64,6 @@ class BinaryTree {
             current = current->parent;
         }
       }
-
       return *this;
     }
 
@@ -82,54 +79,12 @@ class BinaryTree {
       return !(*this == other);
     }
 
-   private:
-    node_type* current;
-    std::stack<node_type*> stack;
-  };
-
-  class const_iterator {
-   public:
-    explicit const_iterator(Node<KT, VT>* node) {
-      if (node) {
-        stack.push(node);
-        current = node;
-      }
-    }
-
-    const_iterator& operator++() {
-      if (stack.empty()) {
-        current = nullptr;
-        return *this;
-      }
-
-      current = stack.top();
-      stack.pop();
-
-      if (current->right) {
-        stack.push(current->right);
-      }
-      if (current->left) {
-        stack.push(current->left);
-      }
-
-      return *this;
-    }
-
-    node_type& operator*() const {
-      return current->value;
-    }
-
-    bool operator==(const const_iterator& other) const {
-      return current == other.current;
-    }
-
-    bool operator!=(const const_iterator& other) const {
-      return !(*this == other);
+    node_type* getNode() {
+      return current;
     }
 
    private:
     node_type* current;
-    std::stack<node_type*> stack;
   };
 
   iterator begin() const {
@@ -144,14 +99,7 @@ class BinaryTree {
   }
 
   iterator end() const {
-    if (root == nullptr) {
-      return iterator(root);
-    }
-    node_type *current = root;
-    while (current->right) {
-      current = current->right;
-    }
-    return iterator(current);
+    return iterator(nullptr);
   }
 
  private:
@@ -161,26 +109,6 @@ class BinaryTree {
 
 template <typename KT, typename VT>
 BinaryTree<KT, VT>::BinaryTree() : root(nullptr) {}
-
-template <typename KT, typename VT>
-typename BinaryTree<KT, VT>::node_type* BinaryTree<KT, VT>::getRoot() {
-  return root;
-}
-
-template <typename KT, typename VT>
-VT* BinaryTree<KT, VT>::search(const KT& key) {
-  node_type *current = root;
-  while (current) {
-    if (current->key == key) {
-      return &current->value;
-    } else if (std::less<KT>{}(key, current->key)) {
-      current = current->left;
-    } else {
-      current = current->right;
-    }
-  }
-  return nullptr;
-}
 
 template <typename KT, typename VT>
 void BinaryTree<KT, VT>::insert(KT key, VT value) {
@@ -206,6 +134,26 @@ void BinaryTree<KT, VT>::insert(BinaryTree<KT, VT>::node_type *node, KT key, VT 
       insert(node->right, key, value);
     }
   }
+}
+
+template <typename KT, typename VT>
+typename BinaryTree<KT, VT>::node_type* BinaryTree<KT, VT>::getRoot() {
+  return root;
+}
+
+template <typename KT, typename VT>
+VT* BinaryTree<KT, VT>::search(const KT& key) {
+  node_type *current = root;
+  while (current) {
+    if (current->key == key) {
+      return &current->value;
+    } else if (std::less<KT>{}(key, current->key)) {
+      current = current->left;
+    } else {
+      current = current->right;
+    }
+  }
+  return nullptr;
 }
 
 template <typename KT, typename VT>

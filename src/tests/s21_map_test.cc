@@ -37,6 +37,24 @@ TEST(Constructor, copy) {
   };
   s21::map<int, char> map2(map);
   ASSERT_TRUE(map2.size() == 7);
+  ASSERT_TRUE(map2.at(5) == 'a');
+  ASSERT_TRUE(map2.at(8) == 'g');
+  ASSERT_TRUE(map2.at(2) == 'd');
+}
+
+TEST(Constructor, move) {
+  s21::map<int, char> map{
+    std::pair<int, char> {5, 'a'},
+    std::pair<int, char> {3, 'b'},
+    std::pair<int, char> {7, 'c'},
+    std::pair<int, char> {2, 'd'},
+    std::pair<int, char> {4, 'e'}
+  };
+  s21::map<int, char> map2(std::move(map));
+  ASSERT_TRUE(map2.size() == 5);
+  ASSERT_TRUE(map2.at(5) == 'a');
+  ASSERT_TRUE(map2.at(7) == 'c');
+  ASSERT_TRUE(map2.at(2) == 'd');
 }
 
 // // Modifiers

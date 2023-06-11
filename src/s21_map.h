@@ -17,7 +17,7 @@ class map {
   using const_reference = const value_type &;
   using tree_type       = s21::BinaryTree<KT, VT>;
   using iterator        = typename tree_type::iterator;
-  using const_iterator  = typename tree_type::const_iterator;
+  // using const_iterator  = typename tree_type::const_iterator;
   using size_type       = size_t;
 
  public:
@@ -25,7 +25,7 @@ class map {
   map();
   explicit map(std::initializer_list<value_type> const &items);
   map(const map &m);
-  // map(map &&m);
+  map(map &&m);
   // ~map();
   // Map& operator=(map &&m);
 
@@ -51,7 +51,7 @@ class map {
   // std::pair<iterator, bool> insert(const Key& key, const T& obj);
   // std::pair<iterator, bool> insert_or_assign(const Key& key, const T& obj);
   // void erase(iterator pos);
-  // void swap(map& other);
+  void swap(map& other);
   // void merge(map& other);
 
   // // Lookup
@@ -65,9 +65,11 @@ class map {
   size_type size_;
 };
 
+// Base constructor
 template <typename KT, typename VT>
 s21::map<KT, VT>::map() : tree_(), size_(0) {}
 
+// Initializer list constructor
 template <typename KT, typename VT>
 s21::map<KT, VT>::map(std::initializer_list<value_type> const &items) : tree_(), size_(0) {
   for (auto item : items) {
@@ -76,11 +78,19 @@ s21::map<KT, VT>::map(std::initializer_list<value_type> const &items) : tree_(),
   }
 }
 
+// Copy constructor
 template <typename KT, typename VT>
-s21::map<KT, VT>::map(const s21::map<KT, VT> &other) {
+s21::map<KT, VT>::map(const map &other) : size_(0) {
   for (auto it = other.tree_.begin(); it != other.tree_.end(); ++it) {
-    std::cout << "123" << std::endl;
+    tree_.insert(it.getNode()->key, *it);
+    size_++;
   }
+}
+
+// Move constructor
+template <typename KT, typename VT>
+s21::map<KT, VT>::map(map &&other) : map() {
+  swap(other);
 }
 
 template <typename KT, typename VT>
@@ -98,6 +108,15 @@ template <typename KT, typename VT>
 void s21::map<KT, VT>::print_map() {
   tree_.print(tree_.getRoot());
 }
+
+// swaps the contents
+template <typename KT, typename VT>
+void s21::map<KT, VT>::swap(map &other) {
+  using std::swap;
+  swap(size_, other.size_);
+  swap(tree_, other.tree_);
+}
+
 
 }  // namespace s21
 

@@ -13,7 +13,7 @@ class Node {
     : key{key}, value{}, left{nullptr}, right{nullptr}, parent{nullptr} {}
   
   Node(KT& key, VT& value, Node<KT, VT>& parent) 
-    : key{key}, value{value}, left{nullptr}, right{nullptr}, parent{nullptr} {}
+    : key{key}, value{value}, left{nullptr}, right{nullptr}, parent(&parent) {}
 
   Node() 
     : key(KT{}), value(VT{}), left{nullptr}, right{nullptr}, parent{nullptr} {}
