@@ -31,18 +31,28 @@ public:
     }
 
     const_reference top() {
-        return;
+        return container_.back();
     }
-    bool empty();
-    size_type size();
+    bool empty() {
+        return container_.empty();
+    }
+    size_type size() {
+        return container_.size();
+    }
     void push(const_reference value) {
-        cont
+        container_.push_back(value);
     }
-    void pop();
-    void swap(Stack& other);
+    void pop() {
+        return container_.pop_back();
+    }
+    void swap(Stack& other) {
+        container_.swap(other.container_);
+    }
 
     template<class... Args>
-    iterator emplace_front(Args &&...args);
+    void emplace_front(Args &&...args) {
+        container_.emplace_back(std::forward<Args>(args)...);
+    }
 
 private:
     Container container_;
