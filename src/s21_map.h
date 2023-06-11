@@ -24,7 +24,7 @@ class map {
   // Member functions (constructors, destructor)
   map();
   explicit map(std::initializer_list<value_type> const &items);
-  // map(const map &m);
+  map(const map &m);
   // map(map &&m);
   // ~map();
   // Map& operator=(map &&m);
@@ -66,13 +66,20 @@ class map {
 };
 
 template <typename KT, typename VT>
-s21::map<KT, VT>::map()  : tree_(), size_(0) {}
+s21::map<KT, VT>::map() : tree_(), size_(0) {}
 
 template <typename KT, typename VT>
 s21::map<KT, VT>::map(std::initializer_list<value_type> const &items) : tree_(), size_(0) {
   for (auto item : items) {
     tree_.insert(item.first, item.second);
     size_++;
+  }
+}
+
+template <typename KT, typename VT>
+s21::map<KT, VT>::map(const s21::map<KT, VT> &other) {
+  for (auto it = other.tree_.begin(); it != other.tree_.end(); ++it) {
+    std::cout << "123" << std::endl;
   }
 }
 

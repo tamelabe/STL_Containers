@@ -14,7 +14,7 @@ TEST(Constructor, base) {
 }
 
 TEST(Constructor, initializer_list) {
-  s21::map<int, int> map{
+  s21::map<int, char> map{
     std::pair<int, char> {4, 'a'},
     std::pair<int, char> {2, 'b'},
     std::pair<int, char> {3, 'c'},
@@ -25,6 +25,19 @@ TEST(Constructor, initializer_list) {
   ASSERT_TRUE(map.at(7) == 'd');
 }
 
+TEST(Constructor, copy) {
+  s21::map<int, char> map{
+    std::pair<int, char> {5, 'a'},
+    std::pair<int, char> {3, 'b'},
+    std::pair<int, char> {7, 'c'},
+    std::pair<int, char> {2, 'd'},
+    std::pair<int, char> {4, 'e'},
+    std::pair<int, char> {6, 'f'},
+    std::pair<int, char> {8, 'g'}
+  };
+  s21::map<int, char> map2(map);
+  ASSERT_TRUE(map2.size() == 7);
+}
 
 // // Modifiers
 // TEST(Modifiers, insert) {

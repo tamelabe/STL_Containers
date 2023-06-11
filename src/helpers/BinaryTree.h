@@ -49,19 +49,22 @@ class BinaryTree {
     }
 
     iterator& operator++() {
-      if (stack.empty()) {
-        current = nullptr;
+      if (!current) {
         return *this;
       }
 
-      current = stack.top();
-      stack.pop();
-
       if (current->right) {
-        stack.push(current->right);
-      }
-      if (current->left) {
-        stack.push(current->left);
+        current = current->right;
+        while (current->left) {
+            current = current->left;
+        }
+      } else {
+        Node<KT, VT>* prev = current;
+        current = current->parent;
+        while (current && current->right == prev) {
+            prev = current;
+            current = current->parent;
+        }
       }
 
       return *this;
@@ -130,15 +133,29 @@ class BinaryTree {
   };
 
   iterator begin() const {
-    return iterator(root);
+    if (root == nullptr) {
+      return iterator(root);
+    }
+    node_type *current = root;
+    while (current->left) {
+      current = current->left;
+    }
+    return iterator(current);
   }
 
   iterator end() const {
-    return iterator(nullptr);
+    if (root == nullptr) {
+      return iterator(root);
+    }
+    node_type *current = root;
+    while (current->right) {
+      current = current->right;
+    }
+    return iterator(current);
   }
 
  private:
-  node_type *root = nullptr;
+  node_type *root;
   void insert(node_type *, KT, VT);
 };
 
@@ -173,18 +190,18 @@ void BinaryTree<KT, VT>::insert(KT key, VT value) {
 template <typename KT, typename VT>
 void BinaryTree<KT, VT>::insert(BinaryTree<KT, VT>::node_type *node, KT key, VT value) {
   if (root == nullptr) {
-    root = new node_type(key, value);
+    root = new node_type(key, value, *node);
     return;
   }
   if (std::less<KT>{}(key, node->key)) {  // <
     if (node->left == nullptr) {
-      node->left = new node_type(key, value);
+      node->left = new node_type(key, value, *node);
     } else {
       insert(node->left, key, value);
     }
   } else {  // >=
     if (node->right == nullptr) {
-      node->right = new node_type(key, value);
+      node->right = new node_type(key, value, *node);
     } else {
       insert(node->right, key, value);
     }
@@ -196,8 +213,8 @@ void BinaryTree<KT, VT>::print(node_type *node) {
   if (node == nullptr) {
     return;
   }
-  std::cout << "key: " << node->value.first << std::endl;
-  std::cout << "value: " << node->value.second << std::endl;
+  std::cout << "key: " << node->key << std::endl;
+  std::cout << "value: " << node->value << std::endl;
   print(node->left);
   print(node->right);
 }
