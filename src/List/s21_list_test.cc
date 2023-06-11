@@ -1,9 +1,7 @@
 #include "./s21_list.h"
 
-#include <gtest/gtest-spi.h>
 #include <gtest/gtest.h>
 
-#include <iostream>
 #include <list>
 
 template <class T>

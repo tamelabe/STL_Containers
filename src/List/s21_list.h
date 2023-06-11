@@ -1,8 +1,7 @@
-#ifndef CPP2_S21_CONTAINERS_1_SRC_S21_LIST_H_
-#define CPP2_S21_CONTAINERS_1_SRC_S21_LIST_H_
+#ifndef CPP2_S21_CONTAINERS_1_SRC_LIST_S21_LIST_H_
+#define CPP2_S21_CONTAINERS_1_SRC_LIST_S21_LIST_H_
 
 #include <initializer_list>
-#include <iostream>
 #include <iterator>
 #include <limits>
 
@@ -14,11 +13,9 @@ template <class T>
 class List {
  public:
   // Aliases declaration
-
   using difference_type = std::ptrdiff_t;
   using value_type = T;
   using size_type = std::size_t;
-  using reference = value_type &;
   using const_reference = const value_type &;
   using iterator = ListIterator<value_type>;
   using const_iterator = ListConstIterator<value_type>;
@@ -30,7 +27,6 @@ class List {
    * default constructor, creates empty List and "fake" node
    */
   List() : begin_(nullptr), end_(new Node<value_type>), size_(0) {
-    end_->data_ = new value_type;
     initList();
   };
   /**
@@ -172,6 +168,7 @@ class List {
    * @param pos - position of iterator
    */
   void erase(iterator pos) {
+    if (!pos.node_->data_) return;
     if (pos == begin()) {
       pop_front();
     } else if (pos != end()) {
@@ -251,8 +248,8 @@ class List {
     }
     for (auto node_ths = begin(), node_oth = other.begin();
          node_ths != end() || node_oth != other.end(); ++node_ths) {
-      while ((*node_ths > *node_oth || node_ths == end()) &&
-             node_oth != other.end()) {
+      while (node_oth != other.end() &&
+             (*node_ths > *node_oth || node_ths == end())) {
         iterator last_oth = sortCheck(node_oth, other.end());
         node_oth = insSubList(node_ths, node_oth, last_oth);
       }
@@ -290,7 +287,7 @@ class List {
    * Removes all consecutive duplicate elements from the container
    */
   void unique() {
-    for (auto i = begin(); i != end();)
+    for (auto i = begin(); i != --end();)
       if (*i == *(++i)) erase(--i);
   }
   /**
@@ -324,7 +321,7 @@ class List {
     return --end();
   }
 
-   /**
+  /**
    * appends new elements to the top of the container
    */
   template <class... Args>
@@ -364,7 +361,6 @@ class List {
           --size_;
         }
       if (mode) {
-        delete end_->data_;
         delete end_;
       }
     } else if (mode == 2) {
@@ -389,9 +385,10 @@ class List {
    */
   iterator sortCheck(iterator current, const iterator &end) {
     auto start_pos = current;
-    while (*start_pos > *(++current) && current != end) {
+    ++current;
+    while (current.node_->next_ != end.node_ && *start_pos > *(current)) {
+      ++current;
     }
-    --current;
     return current;
   }
   /**
@@ -405,8 +402,6 @@ class List {
   iterator insSubList(const_iterator pos, iterator first, iterator last) {
     iterator next = last;
     ++next;
-    //            first.node_->prev_->next_ = last.node_->next_;
-    //            last.node_->next_->prev_ = first.node_->prev_;
     pos.node_->prev_->next_ = first.node_;
     first.node_->prev_ = pos.node_->prev_;
     pos.node_->prev_ = last.node_;
@@ -463,11 +458,12 @@ class List {
    * repairs prev pointer of the List (makes it double-linked)
    */
   void nodesPrevRepair() {
-    for (auto iter = begin(); iter != end(); ++iter) {
+    for (auto iter = iterator(begin_); iter != end(); ++iter) {
       iter.node_->next_->prev_ = iter.node_;
     }
+    end_->next_ = begin_;
   }
 };
 
 }  // namespace s21
-#endif  // CPP2_S21_CONTAINERS_1_SRC_S21_LIST_H_
+#endif  // CPP2_S21_CONTAINERS_1_SRC_LIST_S21_LIST_H_

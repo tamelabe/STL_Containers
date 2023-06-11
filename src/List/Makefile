@@ -9,7 +9,7 @@ list: clean check list_test leaks gcov_report
 
 
 check:
-	cp ../materials/linters/.clang-format . && clang-format --style="Google" *.cc *.h -n
+	cp ../../materials/linters/.clang-format . && clang-format --style="Google" *.cc *.h -n
 	rm -f .clang-format
 
 list_test: $(LIST_TEST_SOURCE)
