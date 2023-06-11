@@ -11,6 +11,7 @@ class List;
 template <class T>
 class ListIterator {
   friend class List<T>;
+
  public:
   using value_type = T;
   using n_pointer = Node<T> *;
@@ -23,8 +24,7 @@ class ListIterator {
   ListIterator(ListIterator &&other) noexcept : node_(other.node_) {}
   ~ListIterator() { node_ = nullptr; }
 
-  ListIterator &operator=
-    (const ListIterator &other) {
+  ListIterator &operator=(const ListIterator &other) {
     node_ = other.node_;
     return *this;
   }

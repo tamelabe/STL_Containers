@@ -9,9 +9,8 @@ list: clean check list_test leaks gcov_report
 
 
 check:
-	cp ../materials/linters/.clang-format . && clang-format *.cc *.h -i
+	cp ../materials/linters/.clang-format . && clang-format --style="Google" *.cc *.h -n
 	rm -f .clang-format
-	#cppcheck --std=c++17 --language=c++ --enable=all --suppress=missingIncludeSystem *.cc *.h
 
 list_test: $(LIST_TEST_SOURCE)
 	@gcc $(FLAGS) --coverage $(LIST_TEST_SOURCE) -o $(LIST_TEST_OUTPUT) -lgtest

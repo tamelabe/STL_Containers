@@ -12,7 +12,7 @@
 namespace s21 {
 template <class T>
 class List {
-public:
+ public:
   // Aliases declaration
 
   using difference_type = std::ptrdiff_t;
@@ -30,8 +30,8 @@ public:
    * default constructor, creates empty List and "fake" node
    */
   List() : begin_(nullptr), end_(new Node<value_type>), size_(0) {
-      end_->data_ = new value_type;
-      initList();
+    end_->data_ = new value_type;
+    initList();
   };
   /**
    * parameterized constructor
@@ -104,11 +104,11 @@ public:
   /**
    * returns an iterator to the beginning
    */
-  iterator begin() noexcept { return iterator(begin_); }
+  iterator begin() noexcept { return iterator(end_->next_); }
   /**
    * returns an const iterator to the beginning
    */
-  const_iterator begin() const noexcept { return const_iterator(begin_); }
+  const_iterator begin() const noexcept { return const_iterator(end_->next_); }
   /**
    * returns an iterator to the end (next from the last element)
    */
@@ -135,7 +135,7 @@ public:
    * @return Maximum number of elements.
    */
   size_type max_size() const noexcept {
-      return std::numeric_limits<difference_type>::max() / (sizeof(node));
+    return std::numeric_limits<difference_type>::max() / (sizeof(node));
   }
 
   // List Modifiers
@@ -178,7 +178,7 @@ public:
       node_ptr temp = pos.node_->prev_;
       temp->next_ = pos.node_->next_;
       pos.node_->next_->prev_ = temp;
-        deallocate(2, pos.node_);
+      deallocate(2, pos.node_);
       --size_;
     }
   }
@@ -301,23 +301,36 @@ public:
     begin_ = mergeSort(begin().node_);
     nodesPrevRepair();
   }
-  // Bonus part!
+  /**
+   * inserts new elements into the container directly before pos
+   * @tparam Args Parameter pack
+   * @param pos iterator position
+   * @param args variadic template parameter
+   * @return iterator for last inserted elem
+   */
   template <class... Args>
   iterator emplace(const_iterator pos, Args &&...args) {
-      return insert(pos, std::forward<Args>(args)...);
-
+    auto iter = begin();
+    ([&] { iter = insert(pos, std::forward<T>(args)); }(), ...);
+    return iter;
   }
 
+  /**
+   * appends new elements to the end of the container
+   */
   template <class... Args>
   iterator emplace_back(Args &&...args) {
-      return insert(end(), std::forward<Args>(args)...);
+    ([&] { push_back(std::forward<T>(args)); }(), ...);
+    return --end();
   }
 
-
+   /**
+   * appends new elements to the top of the container
+   */
   template <class... Args>
   iterator emplace_front(Args &&...args) {
-      return insert(begin(), std::forward<Args>(args)...);
-
+    ([&] { push_front(std::forward<T>(args)); }(), ...);
+    return begin();
   }
 
  private:
@@ -344,20 +357,20 @@ public:
    * @param node - node to deallocate when mode 2 chosen
    */
   void deallocate(int mode, node_ptr node = nullptr) {
-      if (!mode || mode == 1) {
-          if (begin_ != end_)
-              for (auto i = begin(); i != end(); ++i) {
-                  deallocate(2, i.node_);
-                  --size_;
-              }
-          if (mode) {
-              delete end_;
-              end_ = begin_ = nullptr;
-          }
-      } else if (mode == 2) {
-          delete node->data_;
-          delete node;
+    if ((!mode || mode == 1) && end_) {
+      if (begin_ != end_)
+        for (auto i = begin(); i != end(); ++i) {
+          deallocate(2, i.node_);
+          --size_;
+        }
+      if (mode) {
+        delete end_->data_;
+        delete end_;
       }
+    } else if (mode == 2) {
+      delete node->data_;
+      delete node;
+    }
   }
   /**
    * Using when pushing node in empty List
@@ -455,9 +468,6 @@ public:
     }
   }
 };
-
-
-
 
 }  // namespace s21
 #endif  // CPP2_S21_CONTAINERS_1_SRC_S21_LIST_H_

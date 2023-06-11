@@ -8,12 +8,14 @@
 
 template <class T>
 bool comparisonLists(s21::List<T> &s21_List, std::list<T> &STL_List);
+template <class T>
+bool comparisonLists(s21::List<T> &s21_List, s21::List<T> &STL_List);
 
 TEST(List, Constructor_default) {
   s21::List<int> s21_test;
   std::list<int> std_test;
   EXPECT_EQ(s21_test.size(), std_test.size());
-//  EXPECT_EQ(s21_test.max_size(), std_test.max_size());
+  //  EXPECT_EQ(s21_test.max_size(), std_test.max_size());
 }
 
 TEST(List, Constructor_param) {
@@ -282,6 +284,31 @@ TEST(List, ConstIterator) {
   EXPECT_EQ(*s21_it, *std_it);
 }
 
+TEST(List, Method_emplace) {
+  s21::List<int> s21_test{1, 9, -1, 5};
+  s21::List<int> s21_test_1{1, 9, -1, 5};
+  auto iter = ++s21_test.begin();
+  auto iter1 = ++s21_test_1.begin();
+  s21_test.emplace(iter, 7, 7, 7);
+  for (auto i = 0; i < 3; i++) s21_test_1.insert(iter1, 7);
+  EXPECT_TRUE(comparisonLists(s21_test, s21_test_1));
+}
+
+TEST(List, Method_emplace_back) {
+  s21::List<int> s21_test{1, 9, -1, 5};
+  s21::List<int> s21_test_1{1, 9, -1, 5};
+  s21_test.emplace_back(7, 7, 7);
+  for (auto i = 0; i < 3; i++) s21_test_1.push_back(7);
+  EXPECT_TRUE(comparisonLists(s21_test, s21_test_1));
+}
+
+TEST(List, Method_emplace_front) {
+  s21::List<int> s21_test{1, 9, -1, 5};
+  s21::List<int> s21_test_1{1, 9, -1, 5};
+  s21_test.emplace_front(7, 7, 7);
+  for (auto i = 0; i < 3; i++) s21_test_1.push_front(7);
+  EXPECT_TRUE(comparisonLists(s21_test, s21_test_1));
+}
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
@@ -290,6 +317,18 @@ int main(int argc, char **argv) {
 
 template <class T>
 bool comparisonLists(s21::List<T> &s21_List, std::list<T> &STL_List) {
+  if (s21_List.size() != STL_List.size() ||
+      s21_List.empty() != STL_List.empty())
+    return false;
+  auto it1 = s21_List.begin();
+  auto it2 = STL_List.begin();
+  for (size_t i = 0; i < s21_List.size(); ++i, ++it1, ++it2)
+    if (*it1 != *it2) return false;
+  return true;
+}
+
+template <class T>
+bool comparisonLists(s21::List<T> &s21_List, s21::List<T> &STL_List) {
   if (s21_List.size() != STL_List.size() ||
       s21_List.empty() != STL_List.empty())
     return false;
