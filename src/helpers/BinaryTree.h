@@ -38,6 +38,7 @@ class BinaryTree {
   node_type *getRoot();
   VT* search(const KT& key);
   void print(node_type *);
+  void destroy(node_type *node);
 
   class iterator {
    public:
@@ -87,6 +88,8 @@ class BinaryTree {
     node_type* current;
   };
 
+  // TODO: const_iterator
+
   iterator begin() const {
     if (root == nullptr) {
       return iterator(root);
@@ -113,6 +116,17 @@ BinaryTree<KT, VT>::BinaryTree() : root(nullptr) {}
 template <typename KT, typename VT>
 void BinaryTree<KT, VT>::insert(KT key, VT value) {
   insert(root, key, value);
+}
+
+template <typename KT, typename VT>
+void BinaryTree<KT, VT>::destroy(node_type *node) {
+  if (!node) {
+      return;
+  }
+  destroy(node->left);
+  destroy(node->right);
+
+  delete node;
 }
 
 template <typename KT, typename VT>

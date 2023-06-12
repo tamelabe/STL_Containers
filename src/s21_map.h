@@ -5,11 +5,13 @@
 
 #include <initializer_list>
 #include <utility>
+#include <limits>
 
 namespace s21 {
   
 template<typename KT, typename VT>
 class map {
+  using difference_type = std::ptrdiff_t;
   using key_type        = KT;
   using mapped_type     = VT;
   using value_type      = std::pair<const key_type, mapped_type>;
@@ -26,24 +28,21 @@ class map {
   explicit map(std::initializer_list<value_type> const &items);
   map(const map &m);
   map(map &&m);
-  // ~map();
-  // Map& operator=(map &&m);
+  ~map();
+  map& operator=(map &&m);
 
-  // // Element access methods
+  // Element access methods
   VT& at(const KT& key);
-  // T& operator[](const Key& key);
-  // // V operator[](Key k) {
-  // //     return find(std::make_pair(k, V{}));
-  // // }
+  VT& operator[](const KT& key);
 
-  // // Iterators
-  // iterator begin();
-  // iterator end();
+  // Iterators
+  iterator begin();
+  iterator end();
 
   // // Capacity
-  // bool empty();
+  bool empty();
   size_type size();
-  // size_type max_size();
+  size_type max_size() const noexcept;
 
   // // Modifiers
   // void clear();
@@ -93,20 +92,63 @@ s21::map<KT, VT>::map(map &&other) : map() {
   swap(other);
 }
 
+// Destructor
+template <typename KT, typename VT>
+s21::map<KT, VT>::~map() {
+  size_ = 0;
+  tree_.destroy(tree_.getRoot());
+}
+
+// Move operator
+template <typename KT, typename VT>
+s21::map<KT, VT>& s21::map<KT, VT>::operator=(map &&m) {
+  swap(m);
+}
+
+// At element access method
+template <typename KT, typename VT>
+VT& s21::map<KT, VT>::at(const KT& key) {
+  return *(tree_.search(key));
+}
+
+// operator [] access method
+template <typename KT, typename VT>
+VT& s21::map<KT, VT>::operator[](const KT& key) {
+  return *(tree_.search(key));
+}
+
+// returns an iterator to the beginning
+template <typename KT, typename VT>
+typename s21::map<KT, VT>::iterator
+s21::map<KT, VT>::begin() {
+  return tree_.begin();
+}
+
+// returns an iterator to the end
+template <typename KT, typename VT>
+typename s21::map<KT, VT>::iterator
+s21::map<KT, VT>::end() {
+  return tree_.end();
+}
+
+// Empty
+template <typename KT, typename VT>
+bool s21::map<KT, VT>::empty() {
+  return size_ == 0;
+}
+
+// Size
 template <typename KT, typename VT>
 typename s21::map<KT, VT>::size_type 
 s21::map<KT, VT>::size() {
   return size_;
 }
 
+// Max size
 template <typename KT, typename VT>
-VT& s21::map<KT, VT>::at(const KT& key) {
-  return *(tree_.search(key));
-}
-
-template <typename KT, typename VT>
-void s21::map<KT, VT>::print_map() {
-  tree_.print(tree_.getRoot());
+typename s21::map<KT, VT>::size_type 
+s21::map<KT, VT>::max_size() const noexcept {
+  return std::numeric_limits<difference_type>::max() / (sizeof(Node<KT, VT>));
 }
 
 // swaps the contents
@@ -115,6 +157,12 @@ void s21::map<KT, VT>::swap(map &other) {
   using std::swap;
   swap(size_, other.size_);
   swap(tree_, other.tree_);
+}
+
+// HELPER: print_map
+template <typename KT, typename VT>
+void s21::map<KT, VT>::print_map() {
+  tree_.print(tree_.getRoot());
 }
 
 

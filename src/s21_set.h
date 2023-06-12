@@ -1,4 +1,4 @@
-#include "s21_tree.h"
+#include "helpers/BinaryTree.h"
 
 namespace s21 {
     template<typename V, typename Compare = std::less<V>>

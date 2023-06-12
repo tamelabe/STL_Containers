@@ -9,7 +9,7 @@ class Node {
   Node<KT, VT> *right;
   Node<KT, VT> *parent;
 
-  Node(KT& key) 
+  explicit Node(KT& key) 
     : key{key}, value{}, left{nullptr}, right{nullptr}, parent{nullptr} {}
   
   Node(KT& key, VT& value, Node<KT, VT>& parent) 
