@@ -1,5 +1,5 @@
 FLAGS=-ggdb -std=c++17 -Wall -Werror -Wextra -lstdc++
-# STASK
+# STACK
 stack_TEST_SOURCE=s21_stack_test.cc
 stack_TEST_OUTPUT=s21_stack_test.o
 

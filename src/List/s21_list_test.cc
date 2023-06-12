@@ -13,7 +13,6 @@ TEST(List, Constructor_default) {
   s21::List<int> s21_test;
   std::list<int> std_test;
   EXPECT_EQ(s21_test.size(), std_test.size());
-  //  EXPECT_EQ(s21_test.max_size(), std_test.max_size());
 }
 
 TEST(List, Constructor_param) {

@@ -197,6 +197,7 @@ class List {
    * removes the last element
    */
   void pop_back() noexcept {
+    if (!end_->prev_->data_) return;
     node_ptr tmp = end_->prev_;
     tmp->prev_->next_ = end_;
     end_->prev_ = tmp->prev_;
@@ -223,6 +224,7 @@ class List {
    * removes the first element
    */
   void pop_front() noexcept {
+    if (!end_->prev_->data_) return;
     end_->next_ = begin_->next_;
     begin_->next_->prev_ = end_;
     deallocate(2, begin_);
@@ -316,18 +318,16 @@ class List {
    * appends new elements to the end of the container
    */
   template <class... Args>
-  iterator emplace_back(Args &&...args) {
+  void emplace_back(Args &&...args) {
     ([&] { push_back(std::forward<T>(args)); }(), ...);
-    return --end();
   }
 
   /**
    * appends new elements to the top of the container
    */
   template <class... Args>
-  iterator emplace_front(Args &&...args) {
+  void emplace_front(Args &&...args) {
     ([&] { push_front(std::forward<T>(args)); }(), ...);
-    return begin();
   }
 
  private:
