@@ -117,21 +117,56 @@ TEST(Capacity, empty) {
 
 TEST(Capacity, max_size) {
   s21::map<int, char> map;
-  ASSERT_TRUE(map.max_size() == 288230376151711743);
+  ASSERT_TRUE(map.max_size() == TREE_MAX_SIZE);  // TODO: fix hardcode!
 }
 
-// // Modifiers
-// TEST(Modifiers, insert) {
-//   s21::map<int, int> map;
-//   map.insert(std::make_pair(3, 10));
-//   map.insert(std::make_pair(2, 20));
-//   map.insert(std::make_pair(5, 30));
+// Modifiers
+TEST(Modifiers, empty) {
+  s21::map<int, char> map{
+    std::pair<int, char> {5, 'a'},
+    std::pair<int, char> {3, 'b'},
+    std::pair<int, char> {7, 'c'},
+    std::pair<int, char> {2, 'd'}
+  };
+  map.clear();
+  ASSERT_TRUE(map.size() == 0);
+}
 
-//   ASSERT_TRUE(map.getRoot()->left->key.first == 2);
-//   ASSERT_TRUE(map.getRoot()->left->key.second == 20);
-//   ASSERT_TRUE(map.getRoot()->right->key.first == 5);
-//   ASSERT_TRUE(map.getRoot()->right->key.second == 30);
-// }
+TEST(Modifiers, insert_pair_max_size) {
+  s21::map<int, int> map;
+  map.insert(std::make_pair(3, 10));
+  map.insert(std::make_pair(4, 40));
+  map.insert(std::make_pair(5, 50));
+  map.insert(std::make_pair(6, 60));
+  map.insert(std::make_pair(7, 70));
+  ASSERT_TRUE(map.at(7) == 70);
+  std::pair<s21::BinaryTree<int, int>::iterator, bool> result = map.insert(std::make_pair(8, 80));
+  ASSERT_TRUE(result.second == false);
+}
+
+TEST(Modifiers, insert_pair) {
+  s21::map<int, int> map;
+  map.insert(std::make_pair(3, 10));
+  ASSERT_TRUE(map.at(3) == 10);
+}
+
+TEST(Modifiers, insert_key_value) {
+  s21::map<int, char> map;
+  map.insert(3, 'a');
+  map.insert(2, 'b');
+  ASSERT_TRUE(map.at(3) == 'a');
+  ASSERT_TRUE(map.at(2) == 'b');
+}
+
+TEST(Modifiers, insert_or_assign_key_value) {
+  s21::map<int, char> map;
+  map.insert(3, 'a');
+  ASSERT_TRUE(map.at(3) == 'a');
+  map.insert_or_assign(2, 'c');
+  ASSERT_TRUE(map.at(2) == 'c');
+  map.insert_or_assign(2, 'G');
+  ASSERT_TRUE(map.at(2) == 'G');
+}
 
 
 int main(int argc, char** argv) {

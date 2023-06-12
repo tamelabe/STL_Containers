@@ -32,14 +32,6 @@ class BinaryTree {
  public: 
   using node_type = Node<KT, VT>;
 
-  BinaryTree();
-  
-  void insert(KT key, VT value);
-  node_type *getRoot();
-  VT* search(const KT& key);
-  void print(node_type *);
-  void destroy(node_type *node);
-
   class iterator {
    public:
     explicit iterator(Node<KT, VT>* node) : current(nullptr) {
@@ -88,6 +80,15 @@ class BinaryTree {
     node_type* current;
   };
 
+  BinaryTree();
+  
+  iterator insert(KT key, VT value);
+  node_type *getRoot();
+  VT* search(const KT& key);
+  iterator searchNode(const KT& key);
+  void print(node_type *);
+  void destroy(node_type *node);
+
   // TODO: const_iterator
 
   iterator begin() const {
@@ -107,15 +108,18 @@ class BinaryTree {
 
  private:
   node_type *root;
-  void insert(node_type *, KT, VT);
+
+  iterator insert(node_type *, KT, VT);
 };
 
 template <typename KT, typename VT>
 BinaryTree<KT, VT>::BinaryTree() : root(nullptr) {}
 
+// public
 template <typename KT, typename VT>
-void BinaryTree<KT, VT>::insert(KT key, VT value) {
-  insert(root, key, value);
+typename BinaryTree<KT, VT>::iterator
+BinaryTree<KT, VT>::insert(KT key, VT value) {
+  return insert(root, key, value);
 }
 
 template <typename KT, typename VT>
@@ -129,29 +133,34 @@ void BinaryTree<KT, VT>::destroy(node_type *node) {
   delete node;
 }
 
+// private
 template <typename KT, typename VT>
-void BinaryTree<KT, VT>::insert(BinaryTree<KT, VT>::node_type *node, KT key, VT value) {
+typename BinaryTree<KT, VT>::iterator 
+BinaryTree<KT, VT>::insert(BinaryTree<KT, VT>::node_type *node, KT key, VT value) {
   if (root == nullptr) {
     root = new node_type(key, value, *node);
-    return;
+    return iterator(root);
   }
   if (std::less<KT>{}(key, node->key)) {  // <
     if (node->left == nullptr) {
       node->left = new node_type(key, value, *node);
+      return iterator(node->left);
     } else {
-      insert(node->left, key, value);
+      return insert(node->left, key, value);
     }
   } else {  // >=
     if (node->right == nullptr) {
       node->right = new node_type(key, value, *node);
+      return iterator(node->right);
     } else {
-      insert(node->right, key, value);
+      return insert(node->right, key, value);
     }
   }
 }
 
 template <typename KT, typename VT>
-typename BinaryTree<KT, VT>::node_type* BinaryTree<KT, VT>::getRoot() {
+typename BinaryTree<KT, VT>::node_type* 
+BinaryTree<KT, VT>::getRoot() {
   return root;
 }
 
@@ -161,13 +170,31 @@ VT* BinaryTree<KT, VT>::search(const KT& key) {
   while (current) {
     if (current->key == key) {
       return &current->value;
-    } else if (std::less<KT>{}(key, current->key)) {
+    } 
+    if (std::less<KT>{}(key, current->key)) {
       current = current->left;
     } else {
       current = current->right;
     }
   }
   return nullptr;
+}
+
+template <typename KT, typename VT>
+typename BinaryTree<KT, VT>::iterator 
+BinaryTree<KT, VT>::searchNode(const KT& key) {
+  node_type *current = root;
+  while (current) {
+    if (current->key == key) {
+      return iterator(current);
+    } 
+    if (std::less<KT>{}(key, current->key)) {
+      current = current->left;
+    } else {
+      current = current->right;
+    }
+  }
+  return iterator(nullptr);
 }
 
 template <typename KT, typename VT>

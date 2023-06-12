@@ -7,6 +7,8 @@
 #include <utility>
 #include <limits>
 
+#define TREE_MAX_SIZE 5
+
 namespace s21 {
   
 template<typename KT, typename VT>
@@ -45,10 +47,10 @@ class map {
   size_type max_size() const noexcept;
 
   // // Modifiers
-  // void clear();
-  // std::pair<iterator, bool> insert(const value_type& value);
-  // std::pair<iterator, bool> insert(const Key& key, const T& obj);
-  // std::pair<iterator, bool> insert_or_assign(const Key& key, const T& obj);
+  void clear();
+  std::pair<iterator, bool> insert(const value_type& value);
+  std::pair<iterator, bool> insert(const KT& key, const VT& obj);
+  std::pair<iterator, bool> insert_or_assign(const KT& key, const VT& obj);
   // void erase(iterator pos);
   void swap(map& other);
   // void merge(map& other);
@@ -95,8 +97,10 @@ s21::map<KT, VT>::map(map &&other) : map() {
 // Destructor
 template <typename KT, typename VT>
 s21::map<KT, VT>::~map() {
-  size_ = 0;
-  tree_.destroy(tree_.getRoot());
+  if (size_ > 0 && tree_.getRoot()) {
+    size_ = 0;
+    tree_.destroy(tree_.getRoot());
+  }
 }
 
 // Move operator
@@ -114,7 +118,7 @@ VT& s21::map<KT, VT>::at(const KT& key) {
 // operator [] access method
 template <typename KT, typename VT>
 VT& s21::map<KT, VT>::operator[](const KT& key) {
-  return *(tree_.search(key));
+  return at(key);
 }
 
 // returns an iterator to the beginning
@@ -148,7 +152,46 @@ s21::map<KT, VT>::size() {
 template <typename KT, typename VT>
 typename s21::map<KT, VT>::size_type 
 s21::map<KT, VT>::max_size() const noexcept {
-  return std::numeric_limits<difference_type>::max() / (sizeof(Node<KT, VT>));
+  return TREE_MAX_SIZE;
+  // return std::numeric_limits<difference_type>::max() / (sizeof(Node<KT, VT>));
+}
+
+// Clear
+template <typename KT, typename VT>
+void s21::map<KT, VT>::clear() {
+  tree_.destroy(tree_.getRoot());
+  size_ = 0;
+}
+
+// insert value_type
+template <typename KT, typename VT>
+std::pair<typename s21::map<KT, VT>::iterator, bool> 
+s21::map<KT, VT>::insert(const value_type& v) {
+  return insert(v.first, v.second);
+}
+
+// insert key value
+template <typename KT, typename VT>
+std::pair<typename s21::map<KT, VT>::iterator, bool> 
+s21::map<KT, VT>::insert(const KT& key, const VT& value) {
+  if (size_ >= TREE_MAX_SIZE) {
+    return std::pair<iterator, bool> {nullptr, false};
+  }
+  auto it = tree_.insert(key, value);
+  size_++;
+  return std::pair<iterator, bool> {it, true};
+}
+
+// insert or assign key value
+template <typename KT, typename VT>
+std::pair<typename s21::map<KT, VT>::iterator, bool> 
+s21::map<KT, VT>::insert_or_assign(const KT& key, const VT& value) {
+  auto it = tree_.searchNode(key);
+  if (it.getNode() != nullptr) {
+    (*this)[key] = value;
+    return std::pair<iterator, bool> {it, true};
+  }
+  return insert(key, value);
 }
 
 // swaps the contents
