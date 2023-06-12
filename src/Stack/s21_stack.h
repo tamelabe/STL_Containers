@@ -1,8 +1,6 @@
 #ifndef CPP2_S21_CONTAINERS_1_SRC_STACK_S21_STACK_H_
 #define CPP2_S21_CONTAINERS_1_SRC_STACK_S21_STACK_H_
 
-#include <initializer_list>
-
 #include "../List/s21_list.h"
 
 namespace s21 {
