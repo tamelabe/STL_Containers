@@ -168,6 +168,12 @@ TEST(Modifiers, insert_or_assign_key_value) {
   ASSERT_TRUE(map.at(2) == 'G');
 }
 
+TEST(Modifiers, erase) {
+  s21::map<int, char> map;
+  map.insert(3, 'a');
+  ASSERT_TRUE(map.at(3) == 'a');
+}
+
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);

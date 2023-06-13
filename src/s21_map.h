@@ -51,7 +51,7 @@ class map {
   std::pair<iterator, bool> insert(const value_type& value);
   std::pair<iterator, bool> insert(const KT& key, const VT& obj);
   std::pair<iterator, bool> insert_or_assign(const KT& key, const VT& obj);
-  // void erase(iterator pos);
+  void erase(iterator pos);
   void swap(map& other);
   // void merge(map& other);
 
@@ -152,7 +152,7 @@ s21::map<KT, VT>::size() {
 template <typename KT, typename VT>
 typename s21::map<KT, VT>::size_type 
 s21::map<KT, VT>::max_size() const noexcept {
-  return TREE_MAX_SIZE;
+  return TREE_MAX_SIZE;  // TODO: 
   // return std::numeric_limits<difference_type>::max() / (sizeof(Node<KT, VT>));
 }
 
@@ -192,6 +192,15 @@ s21::map<KT, VT>::insert_or_assign(const KT& key, const VT& value) {
     return std::pair<iterator, bool> {it, true};
   }
   return insert(key, value);
+}
+
+// erases element at pos
+template <typename KT, typename VT>
+void s21::map<KT, VT>::erase(iterator pos) {
+  auto it = tree_.searchNode(key);
+  if (it.getNode() == nullptr) {
+    return;
+  }
 }
 
 // swaps the contents
