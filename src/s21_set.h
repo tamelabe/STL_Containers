@@ -16,11 +16,11 @@ class set {
 
 public:
   set();
-  set(std::initializer_list<value_type> const &items);
-// | set(const set &s);
-// | set(set &&s);
-// | ~set();
-// | operator=(set &&s);
+  explicit set(std::initializer_list<value_type> const &items);
+//  set(const set &s);
+//  set(set &&s);
+  ~set();
+//  operator=(set &&s);
 
   // iterator begin();
   // iterator end();
@@ -53,6 +53,15 @@ s21::set<KT>::set(std::initializer_list<value_type> const &items) : tree_(), siz
   for (auto item : items) {
     tree_.insert(item, item);
     size_++;
+  }
+}
+
+// Destructor
+template <typename KT>
+s21::set<KT>::~set() {
+  if (size_ > 0 && tree_.getRoot()) {
+    size_ = 0;
+    tree_.destroy(tree_.getRoot());
   }
 }
 
