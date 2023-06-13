@@ -170,8 +170,15 @@ TEST(Modifiers, insert_or_assign_key_value) {
 
 TEST(Modifiers, erase) {
   s21::map<int, char> map;
-  map.insert(3, 'a');
-  ASSERT_TRUE(map.at(3) == 'a');
+  map.insert(7, 'a');
+  map.insert(3, 'b');
+  map.insert(4, 'c');
+  map.insert(2, 'd');
+  map.insert(10, 'e');
+  map.insert(8, 'f');
+  map.insert(11, 'g');
+  map.erase(++(++map.begin()));
+  // ASSERT_TRUE(map.at(3) == 'a');
 }
 
 

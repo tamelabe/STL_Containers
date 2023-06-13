@@ -197,10 +197,11 @@ s21::map<KT, VT>::insert_or_assign(const KT& key, const VT& value) {
 // erases element at pos
 template <typename KT, typename VT>
 void s21::map<KT, VT>::erase(iterator pos) {
-  auto it = tree_.searchNode(key);
-  if (it.getNode() == nullptr) {
+  auto node = pos.getNode();
+  if (node == nullptr) {
     return;
   }
+  tree_.removeNode(node);
 }
 
 // swaps the contents

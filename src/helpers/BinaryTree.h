@@ -86,6 +86,7 @@ class BinaryTree {
   node_type *getRoot();
   VT* search(const KT& key);
   iterator searchNode(const KT& key);
+  void removeNode(node_type *);
   void print(node_type *);
   void destroy(node_type *node);
 
@@ -195,6 +196,17 @@ BinaryTree<KT, VT>::searchNode(const KT& key) {
     }
   }
   return iterator(nullptr);
+}
+
+template <typename KT, typename VT>
+void BinaryTree<KT, VT>::removeNode(node_type *node) {
+  auto it = searchNode(node->key);
+  // case 1: 
+  if (it.getNode()->left == nullptr && it.getNode()->right == nullptr) {
+    // it.getNode()->parent
+  }
+  // case 2: 
+  // case 3: 
 }
 
 template <typename KT, typename VT>
