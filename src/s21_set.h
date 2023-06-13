@@ -10,8 +10,8 @@ class set {
   using value_type      = KT;
   using reference       = value_type &;
   using const_reference = const value_type &;
-  using iterator        = SetIterator<key_type>;
-  using const_iterator  = SetConstIterator<key_type>;
+  // using iterator        = SetIterator<key_type>;
+  // using const_iterator  = SetConstIterator<key_type>;
   using size_type       = size_t;
 
 public:
@@ -26,7 +26,7 @@ public:
   // iterator end();
 
   // bool empty();
-  // size_type size();
+  size_type size();
   // size_type max_size();
 
   // void clear();
@@ -43,15 +43,23 @@ private:
   size_type size_;
 };
 
+// Default constructor
 template <typename KT>
 s21::set<KT>::set() : tree_(), size_(0) {}
 
+// Constructor for initializer list
 template <typename KT>
 s21::set<KT>::set(std::initializer_list<value_type> const &items) : tree_(), size_(0) {
   for (auto item : items) {
-    tree_.insert(item, 0);
+    tree_.insert(item, item);
     size_++;
   }
+}
+
+template <typename KT>
+typename s21::set<KT>::size_type
+s21::set<KT>::size() {
+  return size_;
 }
 
 }  // namespace s21
