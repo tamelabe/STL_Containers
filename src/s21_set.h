@@ -10,7 +10,8 @@ class set {
   using value_type      = KT;
   using reference       = value_type &;
   using const_reference = const value_type &;
-  // using iterator        = SetIterator<key_type>;
+  using tree_type       = s21::BinaryTree<KT>;
+  using iterator        = typename tree_type::iterator;
   // using const_iterator  = SetConstIterator<key_type>;
   using size_type       = size_t;
 
@@ -22,10 +23,10 @@ public:
   ~set();
 //  operator=(set &&s);
 
-  // iterator begin();
-  // iterator end();
+  iterator begin();
+  iterator end();
 
-  // bool empty();
+  bool empty();
   size_type size();
   // size_type max_size();
 
@@ -35,7 +36,7 @@ public:
   // void swap(set& other);
   // void merge(set& other);
 
-  // iterator find(const Key& key);
+  iterator find(const KT& key);
   // bool contains(const Key& key);
 
 private:
@@ -70,6 +71,30 @@ typename s21::set<KT>::size_type
 s21::set<KT>::size() {
   return size_;
 }
+
+template <typename KT>
+typename s21::set<KT>::iterator
+s21::set<KT>::find(const KT& key) {
+  return tree_.searchNode(key);
+}
+
+template <typename KT>
+typename s21::set<KT>::iterator
+s21::set<KT>::begin() {
+  return tree_.begin();
+}
+
+template <typename KT>
+typename s21::set<KT>::iterator
+s21::set<KT>::end() {
+  return tree_.end();
+}
+
+template <typename KT>
+bool s21::set<KT>::empty() {
+  return size_ == 0;
+}
+
 
 }  // namespace s21
 
