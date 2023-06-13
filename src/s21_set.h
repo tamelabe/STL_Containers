@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
 Copyright 2023 darrpama@student.21-school.ru, myregree@student.21-school.ru
 
@@ -15,6 +16,9 @@ limitations under the License.
 **/
 
 #include "s21_tree.h"
+=======
+#include "helpers/BinaryTree.h"
+>>>>>>> 4e19fc7a8e4cdb8bf0807f757cd0e2021d94dbae
 
 namespace s21 {
 
