@@ -61,3 +61,4 @@ template <typename Key>
 s21::set<Key>::set() {}
 
 }
+// mintimir izvrachenec - on lubit VIM
