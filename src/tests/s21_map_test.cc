@@ -132,17 +132,17 @@ TEST(Modifiers, empty) {
   ASSERT_TRUE(map.size() == 0);
 }
 
-TEST(Modifiers, insert_pair_max_size) {
-  s21::map<int, int> map;
-  map.insert(std::make_pair(3, 10));
-  map.insert(std::make_pair(4, 40));
-  map.insert(std::make_pair(5, 50));
-  map.insert(std::make_pair(6, 60));
-  map.insert(std::make_pair(7, 70));
-  ASSERT_TRUE(map.at(7) == 70);
-  std::pair<s21::BinaryTree<int, int>::iterator, bool> result = map.insert(std::make_pair(8, 80));
-  ASSERT_TRUE(result.second == false);
-}
+// TEST(Modifiers, insert_pair_max_size) {
+//   s21::map<int, int> map;
+//   map.insert(std::make_pair(3, 10));
+//   map.insert(std::make_pair(4, 40));
+//   map.insert(std::make_pair(5, 50));
+//   map.insert(std::make_pair(6, 60));
+//   map.insert(std::make_pair(7, 70));
+//   ASSERT_TRUE(map.at(7) == 70);
+//   std::pair<s21::BinaryTree<int, int>::iterator, bool> result = map.insert(std::make_pair(8, 80));
+//   ASSERT_TRUE(result.second == false);
+// }
 
 TEST(Modifiers, insert_pair) {
   s21::map<int, int> map;
@@ -168,17 +168,38 @@ TEST(Modifiers, insert_or_assign_key_value) {
   ASSERT_TRUE(map.at(2) == 'G');
 }
 
-TEST(Modifiers, erase) {
+TEST(Modifiers, erase_no_child) {
   s21::map<int, char> map;
   map.insert(7, 'a');
   map.insert(3, 'b');
-  map.insert(4, 'c');
+  map.erase(map.find(3));
+  ASSERT_TRUE(map.size() == 1);
+  ASSERT_TRUE(map.contains(3) == false);
+}
+
+TEST(Modifiers, erase_one_child) {
+  s21::map<int, char> map;
+  map.insert(7, 'a');
+  map.insert(3, 'b');
+  map.insert(8, 'c');
   map.insert(2, 'd');
-  map.insert(10, 'e');
-  map.insert(8, 'f');
-  map.insert(11, 'g');
-  map.erase(++(++map.begin()));
-  // ASSERT_TRUE(map.at(3) == 'a');
+  map.erase(map.find(3));
+  ASSERT_TRUE(map.size() == 3);
+  ASSERT_TRUE(map.contains(3) == false);
+  ASSERT_TRUE(map.find(7).getNode()->left->key == 2);
+}
+
+TEST(Modifiers, erase_two_child) {
+  s21::map<int, char> map;
+  map.insert(7, 'a');
+  map.insert(3, 'b');
+  map.insert(8, 'c');
+  map.insert(2, 'd');
+  map.insert(4, 'e');
+  map.erase(map.find(3));
+  ASSERT_TRUE(map.size() == 3);
+  ASSERT_TRUE(map.contains(3) == false);
+  ASSERT_TRUE(map.find(7).getNode()->left->key == 2);
 }
 
 

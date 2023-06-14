@@ -18,6 +18,29 @@ class Node {
   Node() 
     : key(KT{}), value(VT{}), left{nullptr}, right{nullptr}, parent{nullptr} {}
 
+  bool hasNoChild() {
+    if (left != nullptr || right != nullptr) {
+      return false;
+    }
+    return true;
+  }
+
+  bool hasOneChild() {
+    if (left == nullptr && right != nullptr) {
+      return true;
+    }
+    if (left != nullptr && right == nullptr) {
+      return true;
+    }
+    return false;
+  }
+
+  bool hasTwoChild() {
+    if (left != nullptr && right != nullptr) {
+      return true;
+    }
+    return false;
+  }
 };
 
 }

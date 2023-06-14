@@ -7,7 +7,7 @@
 #include <utility>
 #include <limits>
 
-#define TREE_MAX_SIZE 5
+#define TREE_MAX_SIZE 1024
 
 namespace s21 {
   
@@ -35,6 +35,7 @@ class map {
 
   // Element access methods
   VT& at(const KT& key);
+  iterator find(const KT& key);
   VT& operator[](const KT& key);
 
   // Iterators
@@ -55,8 +56,8 @@ class map {
   void swap(map& other);
   // void merge(map& other);
 
-  // // Lookup
-  // bool contains(const Key& key);
+  // Lookup
+  bool contains(const KT& key);
 
   // helpers
   void print_map();
@@ -113,6 +114,13 @@ s21::map<KT, VT>& s21::map<KT, VT>::operator=(map &&m) {
 template <typename KT, typename VT>
 VT& s21::map<KT, VT>::at(const KT& key) {
   return *(tree_.search(key));
+}
+
+// find element and return iterator
+template <typename KT, typename VT>
+typename s21::map<KT, VT>::iterator
+s21::map<KT, VT>::find(const KT& key) {
+  return tree_.searchNode(key);
 }
 
 // operator [] access method
@@ -202,6 +210,12 @@ void s21::map<KT, VT>::erase(iterator pos) {
     return;
   }
   tree_.removeNode(node);
+  size_--;
+}
+
+template <typename KT, typename VT>
+bool s21::map<KT, VT>::contains(const KT& key) {
+  return (tree_.search(key) != nullptr);
 }
 
 // swaps the contents
