@@ -11,6 +11,15 @@
 TEST(member_functions, base_constructor) {
   s21::set<int> set;
   ASSERT_TRUE(set.size() == 0);
+  ASSERT_TRUE(set.begin().getNode() == nullptr);
+  ASSERT_TRUE(set.end().getNode() == nullptr);
+}
+
+TEST(member_functions, initializer_list_one_element) {
+  s21::set<int> set { 1 };
+  ASSERT_TRUE(set.size() == 1);
+  ASSERT_TRUE(set.begin().getNode()->key == 1);
+  ASSERT_TRUE(set.end().getNode() == nullptr);
 }
 
 TEST(member_functions, initializer_list) {
@@ -21,6 +30,19 @@ TEST(member_functions, initializer_list) {
     4
   };
   ASSERT_TRUE(set.size() == 4);
+  ASSERT_TRUE(set.begin().getNode()->key == 1);
+  ASSERT_TRUE(set.end().getNode() == nullptr);
+}
+
+TEST(member_functions, copy_constructor) {
+  s21::set<int> set {
+    1,
+    2,
+    3,
+    4
+  };
+  s21::set<int> copySet(set);
+  ASSERT_TRUE(set.begin().getNode()->key == 1);
 }
 
 int main(int argc, char** argv) {

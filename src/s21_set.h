@@ -18,7 +18,7 @@ class set {
 public:
   set();
   explicit set(std::initializer_list<value_type> const &items);
-//  set(const set &s);
+  set(const set &s);
 //  set(set &&s);
   ~set();
 //  operator=(set &&s);
@@ -56,6 +56,15 @@ s21::set<KT>::set(std::initializer_list<value_type> const &items) : tree_(), siz
     size_++;
   }
 }
+
+template <typename KT>
+s21::set<KT>::set(const set &other) : size_(0) {
+  for (auto it = other.tree_.begin(); it != other.tree_.end(); ++ it) {
+    tree_.insert(it.getNode()->key, *it);
+    size_++;
+  }
+}
+
 
 // Destructor
 template <typename KT>
