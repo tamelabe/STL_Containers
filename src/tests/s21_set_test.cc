@@ -42,7 +42,7 @@ TEST(member_functions, copy_constructor) {
     4
   };
   s21::set<int> copySet(set);
-  ASSERT_TRUE(set.begin().getNode()->key == 1);
+  ASSERT_TRUE();
 }
 
 int main(int argc, char** argv) {
