@@ -41,6 +41,15 @@ class Node {
     }
     return false;
   }
+
+  void swap(Node<KT, VT> &other) {
+    using std::swap;
+    swap(key, other.key);
+    swap(value, other.value);
+    swap(left, other.left);
+    swap(right, other.right);
+    swap(parent, other.parent);
+  }
 };
 
 }

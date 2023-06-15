@@ -47,15 +47,15 @@ class BinaryTree {
       if (current->right) {
         current = current->right;
         while (current->left) {
-            current = current->left;
+          current = current->left;
         }
-      } else {
-        Node<KT, VT>* prev = current;
+        return *this;
+      } 
+      Node<KT, VT>* prev = current;
+      current = current->parent;
+      while (current && current->right == prev) {
+        prev = current;
         current = current->parent;
-        while (current && current->right == prev) {
-            prev = current;
-            current = current->parent;
-        }
       }
       return *this;
     }
@@ -202,20 +202,25 @@ BinaryTree<KT, VT>::searchNode(const KT& key) {
 
 template <typename KT, typename VT>
 void BinaryTree<KT, VT>::removeNode(node_type* node) {
-  if (node.hasNoChild()) {
+  // case 1
+  if (node->hasNoChild()) {
     updateParent(node, nullptr);
+    return;
   }
 
-  if (node.hasOneChild()) {
+  // case 2
+  if (node->hasOneChild()) {
     node_type *successor = (node->left != nullptr) 
       ? node->left 
       : node->right;
-    updateParent(it, node);
+    updateParent(successor, node);
+    return;
   }
 
-  if (node.hasTwoChild()) {
-    // TODO:
+  // case 3
+  if (node->hasTwoChild()) {
     node_type *successor = findSuccessor(node);
+    node->swap(successor);
   }
   
   delete node;
@@ -225,7 +230,7 @@ template <typename KT, typename VT>
 typename BinaryTree<KT, VT>::node_type*
 BinaryTree<KT, VT>::findSuccessor(node_type* node) {
   // TODO:
-    
+  
 }
 
 template <typename KT, typename VT>
