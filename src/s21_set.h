@@ -19,7 +19,7 @@ public:
   set();
   explicit set(std::initializer_list<value_type> const &items);
   set(const set &s);
-//  set(set &&s);
+  set(set &&s);
   ~set();
 //  operator=(set &&s);
 
@@ -33,7 +33,7 @@ public:
   // void clear();
   // std::pair<iterator, bool> insert(const value_type& value);
   // void erase(iterator pos);
-  // void swap(set& other);
+  void swap(set& other);
   // void merge(set& other);
 
   iterator find(const KT& key);
@@ -57,6 +57,7 @@ s21::set<KT>::set(std::initializer_list<value_type> const &items) : tree_(), siz
   }
 }
 
+// Cope constructor
 template <typename KT>
 s21::set<KT>::set(const set &other) : size_(0) {
   for (auto it = other.tree_.begin(); it != other.tree_.end(); ++ it) {
@@ -65,6 +66,11 @@ s21::set<KT>::set(const set &other) : size_(0) {
   }
 }
 
+// Move constructor
+template <typename KT>
+s21::set<KT>::set(set &&other) : set() {
+  swap(other);
+}
 
 // Destructor
 template <typename KT>
@@ -102,6 +108,14 @@ s21::set<KT>::end() {
 template <typename KT>
 bool s21::set<KT>::empty() {
   return size_ == 0;
+}
+
+// swap
+template <typename KT>
+void s21::set<KT>::swap(set &other) {
+  using std::swap;
+  swap(size_, other.size_);
+  swap(tree_, other.tree_);
 }
 
 
