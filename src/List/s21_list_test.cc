@@ -224,9 +224,9 @@ TEST(List, Method_reverse) {
 }
 
 TEST(List, Method_unique) {
-  s21::List<int> s21_test{1, 3, 3, 4, 3, 5, 6, 6, 6};
+  s21::List<int> s21_test{1, 3, 3, 3, 4, 3, 5, 6, 6, 6};
   s21::List<char> s21_test_1;
-  std::list<int> std_test{1, 3, 3, 4, 3, 5, 6, 6, 6};
+  std::list<int> std_test{1, 3, 3, 3, 4, 3, 5, 6, 6, 6};
   std::list<char> std_test_1;
   s21_test.unique();
   s21_test_1.unique();

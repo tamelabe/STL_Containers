@@ -34,12 +34,12 @@ class Node {
   }
   ~Node() {}
 
-  Node &operator=(const Node &other) {
-    this->prev_ = other.prev_;
-    this->next_ = other.next_;
-    this->data_ = other.data_;
-    return *this;
-  }
+  //  Node &operator=(const Node &other) {
+  //    this->prev_ = other.prev_;
+  //    this->next_ = other.next_;
+  //    this->data_ = other.data_;
+  //    return *this;
+  //  }
 
  private:
   node_ptr prev_;

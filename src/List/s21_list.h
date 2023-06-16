@@ -24,20 +24,20 @@ class List {
 
   // List Member functions
   /**
-   * default constructor, creates empty List and "fake" node
+   * @brief default constructor, creates empty List and "fake" node
    */
   List() : begin_(nullptr), end_(new Node<value_type>), size_(0) {
     initList();
   };
   /**
-   * parameterized constructor
+   * @brief parameterized constructor
    * @param creates the List of size n
    */
   explicit List(size_type n) : List() {
     for (size_type i = 0; i < n; ++i) push_back(value_type{});
   }
   /**
-   * initializer List constructor, creates List initizialized using
+   * @brief initializer List constructor, creates List initizialized using
    * std::initializer_list
    * @param items
    */
@@ -45,14 +45,14 @@ class List {
     for (auto i = items.begin(); i < items.end(); ++i) push_back(*i);
   }
   /**
-   * copy constructor
+   * @brief copy constructor
    * @param l - List to copy
    */
   List(const List &l) : List() {
     for (auto i = l.begin(); i != l.end(); ++i) push_back(*i);
   }
   /**
-   * move constructor
+   * @brief move constructor
    * @param l - rvalue reference
    */
   List(List &&l) : begin_(l.begin_), end_(l.end_), size_(l.size_) {
@@ -60,9 +60,9 @@ class List {
     l.size_ = 0;
   }
   /**
-   * destructor
+   * @brief destructor
    */
-  ~List() { deallocate(1); }
+  ~List() { deallocate(true); }
 
   List &operator=(const List &l) {
     if (&l == this) return *this;
@@ -80,7 +80,7 @@ class List {
   }
   // List Element access
   /**
-   * Returns a reference to the first element in the container.
+   * @brief Returns a reference to the first element in the container.
    * @return reference to the first element
    */
   const_reference front() {
@@ -88,7 +88,7 @@ class List {
     return *(begin_->data_);
   }
   /**
-   * Returns a reference to the last element in the container.
+   * @brief Returns a reference to the last element in the container.
    * @return reference to the last element.
    */
   const_reference back() {
@@ -98,36 +98,36 @@ class List {
 
   // List Iterators
   /**
-   * returns an iterator to the beginning
+   * @brief returns an iterator to the beginning
    */
   iterator begin() noexcept { return iterator(end_->next_); }
   /**
-   * returns an const iterator to the beginning
+   * @brief returns an const iterator to the beginning
    */
   const_iterator begin() const noexcept { return const_iterator(end_->next_); }
   /**
-   * returns an iterator to the end (next from the last element)
+   * @brief returns an iterator to the end (next from the last element)
    */
   iterator end() noexcept { return iterator(end_); }
   /**
-   * returns an const iterator to the end (next from the last element)
+   * @brief returns an const iterator to the end (next from the last element)
    */
   const_iterator end() const noexcept { return const_iterator(end_); }
 
   // List Capacity
   /**
-   * Checks if the container has no elements
+   * @brief Checks if the container has no elements
    * @return true if the container is empty, false otherwise
    */
   bool empty() const noexcept { return begin_ == end_; }
   /**
-   * The number of elements in the container.
+   * @brief The number of elements in the container.
    * @return the number of elements
    */
   size_type size() const noexcept { return size_; }
   /**
-   * Returns the maximum number of elements the container is able to hold due to
-   * system or library implementation limitations
+   * @brief Returns the maximum number of elements the container is able to hold
+   * due to system or library implementation limitations
    * @return Maximum number of elements.
    */
   size_type max_size() const noexcept {
@@ -136,15 +136,15 @@ class List {
 
   // List Modifiers
   /**
-   * clears the contents
+   * @brief clears the contents
    */
   void clear() noexcept {
-    deallocate(0);
+    deallocate(false);
     initList();
   }
   /**
-   * inserts element into concrete pos and returns the iterator that points to
-   * the new element
+   * @brief inserts element into concrete pos and returns the iterator that
+   * points to the new element
    * @param pos position of iterator to push new element
    * @param value value to push in data field
    * @return iterator that points to the new element
@@ -164,7 +164,7 @@ class List {
     return ret_iter;
   }
   /**
-   * erases element at pos
+   * @brief erases element at pos
    * @param pos - position of iterator
    */
   void erase(iterator pos) {
@@ -175,12 +175,11 @@ class List {
       node_ptr temp = pos.node_->prev_;
       temp->next_ = pos.node_->next_;
       pos.node_->next_->prev_ = temp;
-      deallocate(2, pos.node_);
-      --size_;
+      nodeDestroyer(pos.node_);
     }
   }
   /**
-   * adds an element to the end
+   * @brief adds an element to the end
    * @param value additional element
    */
   void push_back(const_reference value) {
@@ -194,19 +193,18 @@ class List {
     ++size_;
   }
   /**
-   * removes the last element
+   * @brief removes the last element
    */
   void pop_back() noexcept {
     if (!end_->prev_->data_) return;
     node_ptr tmp = end_->prev_;
     tmp->prev_->next_ = end_;
     end_->prev_ = tmp->prev_;
-    deallocate(2, tmp);
+    nodeDestroyer(tmp);
     begin_ = end_->next_;
-    --size_;
   }
   /**
-   * adds an element to the head
+   * @brief adds an element to the head
    * @param value additional element
    */
   void push_front(const_reference value) {
@@ -221,18 +219,17 @@ class List {
     ++size_;
   }
   /**
-   * removes the first element
+   * @brief removes the first element
    */
   void pop_front() noexcept {
     if (!end_->prev_->data_) return;
     end_->next_ = begin_->next_;
     begin_->next_->prev_ = end_;
-    deallocate(2, begin_);
+    nodeDestroyer(begin_);
     begin_ = end_->next_;
-    --size_;
   }
   /**
-   * swaps the contents
+   * @brief swaps the contents
    */
   void swap(List &other) noexcept {
     std::swap(begin_, other.begin_);
@@ -240,16 +237,18 @@ class List {
     std::swap(size_, other.size_);
   }
   /**
-   * Merges two sorted lists into one
-   * @param other another container to merge
+   * @brief Merges two sorted lists into one
+   * @param other - another container to merge
    */
   void merge(List &other) {
     if (&other == this || !other.size_) return;
     if (!size_) {
       swap(other);
+      return;
     }
-    for (auto node_ths = begin(), node_oth = other.begin();
-         node_ths != end() || node_oth != other.end(); ++node_ths) {
+    auto node_ths = begin();
+    auto node_oth = other.begin();
+    for (; node_ths != end() || node_oth != other.end(); ++node_ths) {
       while (node_oth != other.end() &&
              (*node_ths > *node_oth || node_ths == end())) {
         iterator last_oth = sortCheck(node_oth, other.end());
@@ -260,7 +259,7 @@ class List {
     other.initList();
   }
   /**
-   * Transfers elements from one List to another.
+   * @brief Transfers elements from one List to another.
    * @param pos element before which the content will be inserted
    * @param other another container to transfer the content from
    */
@@ -273,7 +272,7 @@ class List {
     other.initList();
   }
   /**
-   * Reverses the order of the elements in the container.
+   * @brief Reverses the order of the elements in the container.
    */
   void reverse() noexcept {
     if (!size_) return;
@@ -286,14 +285,14 @@ class List {
     begin_ = end_->next_;
   }
   /**
-   * Removes all consecutive duplicate elements from the container
+   * @brief Removes all consecutive duplicate elements from the container
    */
   void unique() {
     for (auto i = begin(); i != --end();)
       if (*i == *(++i)) erase(--i);
   }
   /**
-   * Merge Sort algorithm based onion brand principle
+   * @brief Merge Sort algorithm based onion brand principle
    */
   void sort() {
     if (!size_ || size_ == 1) return;
@@ -301,7 +300,7 @@ class List {
     nodesPrevRepair();
   }
   /**
-   * inserts new elements into the container directly before pos
+   * @brief inserts new elements into the container directly before pos
    * @tparam Args Parameter pack
    * @param pos iterator position
    * @param args variadic template parameter
@@ -310,12 +309,18 @@ class List {
   template <class... Args>
   iterator emplace(const_iterator pos, Args &&...args) {
     auto iter = begin();
+    /**
+     * (); - lambda expression
+     * [&] - type of capture (by reference)
+     * {} - body of lambda expression
+     * () - declares function parameters
+     * ... - template parameter pack expansion operator
+     */
     ([&] { iter = insert(pos, std::forward<T>(args)); }(), ...);
     return iter;
   }
-
   /**
-   * appends new elements to the end of the container
+   * @brief appends new elements to the end of the container
    */
   template <class... Args>
   void emplace_back(Args &&...args) {
@@ -323,7 +328,7 @@ class List {
   }
 
   /**
-   * appends new elements to the top of the container
+   * @brief appends new elements to the top of the container
    */
   template <class... Args>
   void emplace_front(Args &&...args) {
@@ -338,7 +343,7 @@ class List {
 
   // Methods
   /**
-   * Create connection of empty List nodes from end_ to begin_
+   * @brief Create connection of empty List nodes from end_ to begin_
    */
   void initList() {
     end_->next_ = end_;
@@ -347,29 +352,26 @@ class List {
     size_ = 0;
   }
   /**
-   * Deallocator
-   * @param mode 0 - deallocate all non fake nodes,
-   *             1 - fully deallocation
-   *             2 - one node deallocation
+   * @brief Deallocator
+   * @param mode false - deallocate all non fake nodes,
+   *             true - fully deallocation
    * @param node - node to deallocate when mode 2 chosen
    */
-  void deallocate(int mode, node_ptr node = nullptr) {
-    if ((!mode || mode == 1) && end_) {
-      if (begin_ != end_)
-        for (auto i = begin(); i != end(); ++i) {
-          deallocate(2, i.node_);
-          --size_;
-        }
-      if (mode) {
-        delete end_;
-      }
-    } else if (mode == 2) {
-      delete node->data_;
-      delete node;
-    }
+  void deallocate(bool mode) {
+    if (!end_) return;
+    for (auto i = begin(); i != end(); ++i) nodeDestroyer(i.node_);
+    if (mode) delete end_;
   }
   /**
-   * Using when pushing node in empty List
+   * Deallocator for separate node
+   */
+  void nodeDestroyer(node_ptr node) {
+    delete node->data_;
+    delete node;
+    --size_;
+  }
+  /**
+   * @brief Using when pushing node in empty List
    * @param value pushing value in data_ field
    */
   void pushFirstNode(const_reference value) {
@@ -378,7 +380,7 @@ class List {
     begin_ = new_node;
   }
   /**
-   * Checks for descending sequence
+   * @brief Checks for descending sequence
    * @param current current iterator position
    * @param end end of List
    * @return last desc sequence iterator
@@ -392,8 +394,8 @@ class List {
     return current;
   }
   /**
-   * Inserts sublist between given iterators inclusive into main List BEFORE
-   * given position
+   * @brief Inserts sublist between given iterators inclusive into main List
+   * BEFORE given position
    * @param pos iterator position of main List
    * @param first iterator that defines first point of sublist
    * @param last iterator that defines last point of sublist
@@ -410,7 +412,7 @@ class List {
     return next;
   }
   /**
-   * main sort recursive function (via mergeSort method)
+   * @brief main sort recursive function (via mergeSort method)
    * @param first - first node of the List or sublist
    * @return sorted single-linked List
    */
@@ -422,7 +424,7 @@ class List {
     return mergeNodes(first, second);
   }
   /**
-   * divides List to two separate List
+   * @brief divides List to two separate List
    * (first = N / 2, sec = N / 2 + N % 2)
    * @param first first node of the List or sublist
    * @return first node of the second List
@@ -438,7 +440,7 @@ class List {
     return sec_begin;
   }
   /**
-   * recursively merges sublists to single-linked asc. ordered List
+   * @brief recursively merges sublists to single-linked asc. ordered List
    * @param first - first node of first sublist
    * @param second - first node of second sublist
    * @return merged or existing List
@@ -455,7 +457,7 @@ class List {
     }
   }
   /**
-   * repairs prev pointer of the List (makes it double-linked)
+   * @brief repairs prev pointer of the List (makes it double-linked)
    */
   void nodesPrevRepair() {
     for (auto iter = iterator(begin_); iter != end(); ++iter) {

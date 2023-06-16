@@ -1,4 +1,4 @@
-FLAGS=-ggdb -std=c++17 -Wall -Werror -Wextra -lstdc++
+FLAGS=-ggdb -std=c++17 -pedantic -Wall -Werror -Wextra -lstdc++
 # LIST
 LIST_TEST_SOURCE=s21_list_test.cc
 LIST_TEST_OUTPUT=s21_list_test.o
@@ -9,7 +9,7 @@ list: clean check list_test leaks gcov_report
 
 
 check:
-	cp ../../materials/linters/.clang-format . && clang-format --style="Google" *.cc *.h -n
+	cp ../../materials/linters/.clang-format . && clang-format --style="Google" *.cc *.h -i
 	rm -f .clang-format
 
 list_test: $(LIST_TEST_SOURCE)
