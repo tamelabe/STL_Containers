@@ -13,7 +13,7 @@ check:
 	cppcheck --check-config --std=c++17 --language=c++ --enable=all --suppress=missingIncludeSystem *.cc *.h
 
 set_test: $(SET_TEST_SOURCE)
-	@clang++ $(FLAGS) --coverage $(SET_TEST_SOURCE) -o $(SET_TEST_OUTPUT) -lgtest
+	@g++ $(FLAGS) --coverage $(SET_TEST_SOURCE) -o $(SET_TEST_OUTPUT) -lgtest
 	@./$(SET_TEST_OUTPUT)
 
 leaks:
