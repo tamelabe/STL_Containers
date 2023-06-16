@@ -42,10 +42,17 @@ TEST(member_functions, copy_constructor) {
     4
   };
   s21::set<int> copySet(set);
-  ASSERT_TRUE();
+  ASSERT_TRUE(copySet.size() == set.size());
+  ASSERT_TRUE(copySet.begin() == set.size());
+
 }
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
+}
+
+template<class T>
+bool comparisonSet(s21::set<T> &s21_set, std::set<T> &stl_set) {
+  if (s21_set.size() != stl_set.size()) {}
 }
