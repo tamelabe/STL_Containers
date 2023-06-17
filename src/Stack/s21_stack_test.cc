@@ -1,8 +1,8 @@
-#include "./s21_stack.h"
-
 #include <gtest/gtest.h>
 
 #include <stack>
+
+#include "../s21_containers.h"
 
 template <class T>
 bool comparisonStacks(s21::Stack<T> &s21_Stack, std::stack<T> &STL_Stack);

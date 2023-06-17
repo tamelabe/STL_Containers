@@ -1,8 +1,8 @@
-#include "./s21_queue.h"
-
 #include <gtest/gtest.h>
 
 #include <queue>
+
+#include "../s21_containers.h"
 
 template <class T>
 bool comparisonQueues(s21::Queue<T> &s21_Queue, std::queue<T> &STL_Queue);

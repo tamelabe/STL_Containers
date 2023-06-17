@@ -1,7 +1,7 @@
 #ifndef CPP2_S21_CONTAINERS_1_SRC_QUEUE_S21_QUEUE_H_
 #define CPP2_S21_CONTAINERS_1_SRC_QUEUE_S21_QUEUE_H_
 
-#include "../List/s21_list.h"
+#include "../s21_containers.h"
 
 namespace s21 {
 template <class T, class Container = s21::List<T>>

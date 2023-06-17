@@ -1,8 +1,8 @@
-#include "./s21_list.h"
-
 #include <gtest/gtest.h>
 
 #include <list>
+
+#include "../s21_containers.h"
 
 template <class T>
 bool comparisonLists(s21::List<T> &s21_List, std::list<T> &STL_List);
