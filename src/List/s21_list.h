@@ -247,11 +247,12 @@ class List {
     }
     auto node_ths = begin();
     auto node_oth = other.begin();
-    for (; node_ths != end() || node_oth != other.end(); ++node_ths) {
-      while (node_oth != other.end() &&
-             (*node_ths > *node_oth || node_ths == end())) {
+    while (node_oth != other.end()) {
+      if (*node_ths > *node_oth || node_ths == end()) {
         iterator last_oth = sortCheck(node_oth, other.end());
         node_oth = insSubList(node_ths, node_oth, last_oth);
+      } else {
+        ++node_ths;
       }
     }
     size_ += other.size_;
