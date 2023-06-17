@@ -5,30 +5,29 @@
 #include <iterator>
 #include <limits>
 
-#include "./s21_iterator.h"
-#include "./s21_node.h"
-
 namespace s21 {
 template <class T>
 class List {
+  struct Node;
+  class ListIterator;
+  class ListConstIterator;
+
  public:
   // Aliases declaration
   using difference_type = std::ptrdiff_t;
   using value_type = T;
   using size_type = std::size_t;
   using const_reference = const value_type &;
-  using iterator = ListIterator<value_type>;
-  using const_iterator = ListConstIterator<value_type>;
-  using node = Node<T>;
+  using iterator = ListIterator;
+  using const_iterator = ListConstIterator;
+  using node = Node;
   using node_ptr = node *;
 
   // List Member functions
   /**
    * @brief default constructor, creates empty List and "fake" node
    */
-  List() : begin_(nullptr), end_(new Node<value_type>), size_(0) {
-    initList();
-  };
+  List() : begin_(nullptr), end_(new Node), size_(0) { initList(); };
   /**
    * @brief parameterized constructor
    * @param creates the List of size n
@@ -85,7 +84,7 @@ class List {
    */
   const_reference front() {
     if (begin_ == end_) throw std::out_of_range("List is empty");
-    return *(begin_->data_);
+    return *(begin_->data);
   }
   /**
    * @brief Returns a reference to the last element in the container.
@@ -93,18 +92,18 @@ class List {
    */
   const_reference back() {
     if (begin_ == end_) throw std::out_of_range("List is empty");
-    return *(end_->prev_->data_);
+    return *(end_->prev->data);
   }
 
   // List Iterators
   /**
    * @brief returns an iterator to the beginning
    */
-  iterator begin() noexcept { return iterator(end_->next_); }
+  iterator begin() noexcept { return iterator(end_->next); }
   /**
    * @brief returns an const iterator to the beginning
    */
-  const_iterator begin() const noexcept { return const_iterator(end_->next_); }
+  const_iterator begin() const noexcept { return const_iterator(end_->next); }
   /**
    * @brief returns an iterator to the end (next from the last element)
    */
@@ -155,9 +154,9 @@ class List {
       push_front(value);
       ret_iter = begin();
     } else {
-      node_ptr new_node = new node(pos.node_->prev_, pos.node_, value);
-      pos.node_->prev_->next_ = new_node;
-      pos.node_->prev_ = new_node;
+      node_ptr new_node = createNode(pos.node_->prev, pos.node_, value);
+      pos.node_->prev->next = new_node;
+      pos.node_->prev = new_node;
       ret_iter = iterator(new_node);
       ++size_;
     }
@@ -168,14 +167,14 @@ class List {
    * @param pos - position of iterator
    */
   void erase(iterator pos) {
-    if (!pos.node_->data_) return;
+    if (!pos.node_->data) return;
     if (pos == begin()) {
       pop_front();
     } else if (pos != end()) {
-      node_ptr temp = pos.node_->prev_;
-      temp->next_ = pos.node_->next_;
-      pos.node_->next_->prev_ = temp;
-      nodeDestroyer(pos.node_);
+      node_ptr temp = pos.node_->prev;
+      temp->next = pos.node_->next;
+      pos.node_->next->prev = temp;
+      destroyNode(pos.node_);
     }
   }
   /**
@@ -186,9 +185,9 @@ class List {
     if (end_ == begin_) {
       pushFirstNode(value);
     } else {
-      node_ptr new_node = new node(end_->prev_, end_, value);
-      end_->prev_->next_ = new_node;
-      end_->prev_ = new_node;
+      node_ptr new_node = createNode(end_->prev, end_, value);
+      end_->prev->next = new_node;
+      end_->prev = new_node;
     }
     ++size_;
   }
@@ -196,12 +195,12 @@ class List {
    * @brief removes the last element
    */
   void pop_back() noexcept {
-    if (!end_->prev_->data_) return;
-    node_ptr tmp = end_->prev_;
-    tmp->prev_->next_ = end_;
-    end_->prev_ = tmp->prev_;
-    nodeDestroyer(tmp);
-    begin_ = end_->next_;
+    if (!end_->prev->data) return;
+    node_ptr tmp = end_->prev;
+    tmp->prev->next = end_;
+    end_->prev = tmp->prev;
+    destroyNode(tmp);
+    begin_ = end_->next;
   }
   /**
    * @brief adds an element to the head
@@ -211,9 +210,9 @@ class List {
     if (end_ == begin_) {
       pushFirstNode(value);
     } else {
-      node_ptr new_node = new node(end_, begin_, value);
-      end_->next_ = new_node;
-      begin_->prev_ = new_node;
+      node_ptr new_node = createNode(end_, begin_, value);
+      end_->next = new_node;
+      begin_->prev = new_node;
       begin_ = new_node;
     }
     ++size_;
@@ -222,11 +221,11 @@ class List {
    * @brief removes the first element
    */
   void pop_front() noexcept {
-    if (!end_->prev_->data_) return;
-    end_->next_ = begin_->next_;
-    begin_->next_->prev_ = end_;
-    nodeDestroyer(begin_);
-    begin_ = end_->next_;
+    if (!end_->prev->data) return;
+    end_->next = begin_->next;
+    begin_->next->prev = end_;
+    destroyNode(begin_);
+    begin_ = end_->next;
   }
   /**
    * @brief swaps the contents
@@ -280,9 +279,9 @@ class List {
     for (int sz = size_; sz >= 0; --sz) {
       iterator temp = it;
       ++it;
-      std::swap(temp.node_->next_, temp.node_->prev_);
+      std::swap(temp.node_->next, temp.node_->prev);
     }
-    begin_ = end_->next_;
+    begin_ = end_->next;
   }
   /**
    * @brief Removes all consecutive duplicate elements from the container
@@ -346,11 +345,20 @@ class List {
    * @brief Create connection of empty List nodes from end_ to begin_
    */
   void initList() {
-    end_->next_ = end_;
-    end_->prev_ = end_;
+    end_->next = end_;
+    end_->prev = end_;
     begin_ = end_;
     size_ = 0;
   }
+  node_ptr createNode(const node_ptr a_prev, const node_ptr a_next,
+                      const value_type a_data) {
+    node_ptr new_node = new node;
+    new_node->prev = a_prev;
+    new_node->next = a_next;
+    new_node->data = new value_type;
+    *new_node->data = a_data;
+    return new_node;
+  };
   /**
    * @brief Deallocator
    * @param mode false - deallocate all non fake nodes,
@@ -359,14 +367,14 @@ class List {
    */
   void deallocate(bool mode) {
     if (!end_) return;
-    for (auto i = begin(); i != end(); ++i) nodeDestroyer(i.node_);
+    for (auto i = begin(); i != end(); ++i) destroyNode(i.node_);
     if (mode) delete end_;
   }
   /**
    * Deallocator for separate node
    */
-  void nodeDestroyer(node_ptr node) {
-    delete node->data_;
+  void destroyNode(node_ptr node) {
+    delete node->data;
     delete node;
     --size_;
   }
@@ -375,8 +383,8 @@ class List {
    * @param value pushing value in data_ field
    */
   void pushFirstNode(const_reference value) {
-    node_ptr new_node = new node(end_, end_, value);
-    end_->prev_ = end_->next_ = new_node;
+    node_ptr new_node = createNode(end_, end_, value);
+    end_->prev = end_->next = new_node;
     begin_ = new_node;
   }
   /**
@@ -388,7 +396,7 @@ class List {
   iterator sortCheck(iterator current, const iterator &end) {
     auto start_pos = current;
     ++current;
-    while (current.node_->next_ != end.node_ && *start_pos > *(current)) {
+    while (current.node_->next != end.node_ && *start_pos > *(current)) {
       ++current;
     }
     return current;
@@ -404,10 +412,10 @@ class List {
   iterator insSubList(const_iterator pos, iterator first, iterator last) {
     iterator next = last;
     ++next;
-    pos.node_->prev_->next_ = first.node_;
-    first.node_->prev_ = pos.node_->prev_;
-    pos.node_->prev_ = last.node_;
-    last.node_->next_ = pos.node_;
+    pos.node_->prev->next = first.node_;
+    first.node_->prev = pos.node_->prev;
+    pos.node_->prev = last.node_;
+    last.node_->next = pos.node_;
     if (pos == begin()) begin_ = first.node_;
     return next;
   }
@@ -417,7 +425,7 @@ class List {
    * @return sorted single-linked List
    */
   node_ptr mergeSort(node_ptr first) {
-    if (first->next_ == end_ || first == end_) return first;
+    if (first->next == end_ || first == end_) return first;
     node_ptr second = splitList(first);
     first = mergeSort(first);
     second = mergeSort(second);
@@ -431,12 +439,12 @@ class List {
    */
   node_ptr splitList(node_ptr first) {
     node_ptr second = first;
-    while (first->next_ != end_ && first->next_->next_ != end_) {
-      first = first->next_->next_;
-      second = second->next_;
+    while (first->next != end_ && first->next->next != end_) {
+      first = first->next->next;
+      second = second->next;
     }
-    node_ptr sec_begin = second->next_;
-    second->next_ = end_;
+    node_ptr sec_begin = second->next;
+    second->next = end_;
     return sec_begin;
   }
   /**
@@ -448,11 +456,11 @@ class List {
   node_ptr mergeNodes(node_ptr first, node_ptr second) {
     if (first == end_) return second;
     if (second == end_) return first;
-    if (*first->data_ < *second->data_) {
-      first->next_ = mergeNodes(first->next_, second);
+    if (*first->data < *second->data) {
+      first->next = mergeNodes(first->next, second);
       return first;
     } else {
-      second->next_ = mergeNodes(second->next_, first);
+      second->next = mergeNodes(second->next, first);
       return second;
     }
   }
@@ -461,11 +469,143 @@ class List {
    */
   void nodesPrevRepair() {
     for (auto iter = iterator(begin_); iter != end(); ++iter) {
-      iter.node_->next_->prev_ = iter.node_;
+      iter.node_->next->prev = iter.node_;
     }
-    end_->next_ = begin_;
+    end_->next = begin_;
   }
-};
+  // Struct for DL list
+  struct Node {
+    Node *prev;
+    Node *next;
+    T *data;
+  };
+  // Iterator
+  // Сделал ради ТЗ, лучше конечно вынести в отдельный класс
+  class ListIterator {
+    friend class List<T>;
 
+   public:
+    using value_type = T;
+    using reference = const value_type &;
+    using node_ptr = Node *;
+    ListIterator() : node_(nullptr){};
+    explicit ListIterator(node_ptr ptr) : node_(ptr){};
+    ListIterator(const ListIterator &other) : node_(other.node_) {}
+    ListIterator(const ListConstIterator &other) : node_(other.getNode()) {}
+    ListIterator(ListIterator &&other) noexcept : node_(other.node_) {}
+    ~ListIterator() { node_ = nullptr; }
+
+    ListIterator &operator=(const ListIterator &other) {
+      node_ = other.node_;
+      return *this;
+    }
+
+    node_ptr getNode() const { return node_; }
+    /**
+     * gets the element pointed to by the iterator
+     */
+    reference operator*() const { return *(node_->data); }
+    /**
+     * two iterators are not equal if they point to different elements
+     */
+    bool operator!=(const ListIterator &other) { return node_ != other.node_; }
+    /**
+     * two iterators are equal if they point to the same element
+     */
+    bool operator==(const ListIterator &other) { return node_ == other.node_; }
+    /**
+     * moves the iterator forward to the next element
+     * @return incremented value
+     */
+    ListIterator operator++() {
+      node_ = node_->next;
+      return *this;
+    }
+    /**
+     * @return original value
+     */
+    ListIterator operator++(int) {
+      ListIterator tmp = *this;
+      node_ = node_->next;
+      return tmp;
+    }
+    /**
+     * moves the iterator backwards to the previous element
+     * @return decremented value
+     */
+    ListIterator operator--() {
+      node_ = node_->prev;
+      return *this;
+    }
+    /**
+     * @return original value
+     */
+    ListIterator operator--(int) {
+      ListIterator tmp = *this;
+      node_ = node_->prev;
+      return tmp;
+    }
+
+   private:
+    node_ptr node_;
+  };
+  // Const iterator
+  class ListConstIterator {
+    friend class List<T>;
+
+   public:
+    using value_type = T;
+    using reference = const value_type &;
+    using node_ptr = Node *;
+
+    ListConstIterator() : node_(nullptr){};
+    explicit ListConstIterator(node_ptr ptr) : node_(ptr){};
+    ListConstIterator(const ListConstIterator &other) : node_(other.node_) {}
+    ListConstIterator(const ListIterator &other) : node_(other.getNode()) {}
+    ListConstIterator(ListConstIterator &&other) noexcept : node_(other.node_) {
+      other.node_ = nullptr;
+    }
+
+    ~ListConstIterator() { node_ = nullptr; }
+
+    ListConstIterator &operator=(const ListConstIterator &other) {
+      node_ = other.node_;
+      return *this;
+    }
+    ListConstIterator &operator=(ListConstIterator &&other) noexcept {
+      node_ = other.node_;
+      return *this;
+    }
+    reference operator*() const { return *(node_->data); }
+    bool operator!=(const ListConstIterator &other) {
+      return node_ != other.node_;
+    }
+    bool operator==(const ListConstIterator &other) {
+      return node_ == other.node_;
+    }
+    ListConstIterator operator++() {
+      node_ = node_->next;
+      return *this;
+    }
+    ListConstIterator operator++(int) {
+      ListConstIterator tmp = *this;
+      node_ = node_->next;
+      return tmp;
+    }
+    ListConstIterator operator--() {
+      node_ = node_->prev;
+      return *this;
+    }
+    ListConstIterator operator--(int) {
+      ListConstIterator tmp = *this;
+      node_ = node_->prev;
+      return tmp;
+    }
+    node_ptr getNode() const { return node_; }
+
+   private:
+    node_ptr node_;
+  };
+};
 }  // namespace s21
 #endif  // CPP2_S21_CONTAINERS_1_SRC_LIST_S21_LIST_H_
