@@ -1,5 +1,6 @@
-namespace s21 {
+#include <utility>
 
+namespace s21 {
 template <typename KT, typename VT = KT>
 class Node {
  public:
@@ -42,14 +43,13 @@ class Node {
     return false;
   }
 
+  // swaps the contents
   void swap(Node<KT, VT> &other) {
     using std::swap;
     swap(key, other.key);
     swap(value, other.value);
-    swap(left, other.left);
-    swap(right, other.right);
-    swap(parent, other.parent);
   }
+
 };
 
 }

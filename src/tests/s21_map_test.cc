@@ -174,7 +174,7 @@ TEST(Modifiers, erase_no_child) {
   map.insert(3, 'b');
   map.erase(map.find(3));
   ASSERT_TRUE(map.size() == 1);
-  ASSERT_TRUE(map.contains(3) == false);
+  ASSERT_FALSE(map.contains(3));
 }
 
 TEST(Modifiers, erase_one_child) {
@@ -197,10 +197,29 @@ TEST(Modifiers, erase_two_child) {
   map.insert(2, 'd');
   map.insert(4, 'e');
   map.erase(map.find(3));
-  ASSERT_TRUE(map.size() == 3);
+  ASSERT_TRUE(map.size() == 4);
   ASSERT_TRUE(map.contains(3) == false);
-  ASSERT_TRUE(map.find(7).getNode()->left->key == 2);
 }
+
+TEST(Modifiers, erase_two_child_2) {
+  s21::map<int, char> map;
+  map.insert(8, 'a');
+  map.insert(4, 'b');
+  map.insert(11, 'c');
+  map.insert(2, 'd');
+  map.insert(6, 'e');
+  map.insert(9, 'e');
+  map.insert(12, 'e');
+  map.insert(1, 'e');
+  map.insert(3, 'e');
+  map.insert(5, 'e');
+  map.insert(7, 'e');
+  map.insert(10, 'e');
+  map.erase(map.find(4));
+  ASSERT_TRUE(map.size() == 11);
+  ASSERT_TRUE(map.contains(4) == false);
+}
+
 
 
 int main(int argc, char** argv) {

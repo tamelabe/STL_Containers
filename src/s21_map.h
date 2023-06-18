@@ -206,10 +206,7 @@ s21::map<KT, VT>::insert_or_assign(const KT& key, const VT& value) {
 template <typename KT, typename VT>
 void s21::map<KT, VT>::erase(iterator pos) {
   auto node = pos.getNode();
-  if (node == nullptr) {
-    return;
-  }
-  tree_.removeNode(node);
+  tree_.removeNode(node, node->key);
   size_--;
 }
 
