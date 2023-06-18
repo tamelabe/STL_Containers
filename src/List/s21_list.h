@@ -2,6 +2,7 @@
 #define CPP2_S21_CONTAINERS_1_SRC_LIST_S21_LIST_H_
 
 #include <initializer_list>
+#include <iostream>
 #include <iterator>
 #include <limits>
 
@@ -288,8 +289,11 @@ class List {
    * @brief Removes all consecutive duplicate elements from the container
    */
   void unique() {
-    for (auto i = begin(); i != --end();)
-      if (*i == *(++i)) erase(--i);
+    auto i = begin(), temp = i;
+    while (i != --end()) {
+      if (*i == *(++i)) erase(temp);
+      temp = i;
+    }
   }
   /**
    * @brief Merge Sort algorithm based onion brand principle
@@ -307,7 +311,7 @@ class List {
    * @return iterator for last inserted elem
    */
   template <class... Args>
-  iterator emplace(const_iterator pos, Args &&...args) {
+  iterator emplace(const_iterator pos, Args &&... args) {
     auto iter = begin();
     /**
      * (); - lambda expression
@@ -323,7 +327,7 @@ class List {
    * @brief appends new elements to the end of the container
    */
   template <class... Args>
-  void emplace_back(Args &&...args) {
+  void emplace_back(Args &&... args) {
     ([&] { push_back(std::forward<T>(args)); }(), ...);
   }
 
@@ -331,7 +335,7 @@ class List {
    * @brief appends new elements to the top of the container
    */
   template <class... Args>
-  void emplace_front(Args &&...args) {
+  void emplace_front(Args &&... args) {
     ([&] { push_front(std::forward<T>(args)); }(), ...);
   }
 
@@ -368,7 +372,7 @@ class List {
    */
   void deallocate(bool mode) {
     if (!end_) return;
-    for (auto i = begin(); i != end(); ++i) destroyNode(i.node_);
+    for (auto i = ++begin(); i != begin(); ++i) destroyNode(i.node_->prev);
     if (mode) delete end_;
   }
   /**
