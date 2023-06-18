@@ -1,16 +1,12 @@
-.PHONY : clean check stack_test
-
-OS := $(shell uname -s)
+.PHONY : clean check tests leaks tests_linux leaks_linux gcov_report
 
 CC = gcc
 CPPFLAGS = -ggdb -std=c++17 -pedantic -Wall -Werror -Wextra -lstdc++
 TEST_FLAGS = -lgtest --coverage
 LINUX_FLAGS = -lrt -lpthread -lm -lsubunit
 VG_FLAGS = CK_FORK=no valgrind --trace-children=yes --track-fds=yes --track-origins=yes --leak-check=full --show-leak-kinds=all --verbose
-#TESTS
-LIST_TEST_SOURCE=./List/s21_list_test.cc
-STACK_TEST_SOURCE=./Stack/s21_stack_test.cc
-QUEUE_TEST_SOURCE=./Queue/s21_queue_test.cc
+
+OS := $(shell uname -s)
 
 ifeq ($(OS), Darwin)
 all: clean check tests leaks gcov_report
@@ -39,12 +35,12 @@ tests_linux:
 	done
 
 leaks:
-	for file in $(shell find . -type f -name "*.o"); do \
+	for file in $(shell find . -maxdepth 1 -type f -name "*.o"); do \
    		leaks -atExit --  $$file; \
     done
 
 leaks_linux:
-	for file in $(shell find . -type f -name "*.o"); do \
+	for file in $(shell find . -maxdepth 1 -type f -name "*.o"); do \
     		base_name=$$(basename $$file); \
     		file_name=$$(echo $${base_name%.*} | tr '[:lower:]' '[:upper:]'); \
     		$(VG_FLAGS) --log-file=RESULT_$$file_name.txt $$file; \

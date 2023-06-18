@@ -311,7 +311,7 @@ class List {
    * @return iterator for last inserted elem
    */
   template <class... Args>
-  iterator emplace(const_iterator pos, Args &&... args) {
+  iterator emplace(const_iterator pos, Args &&...args) {
     auto iter = begin();
     /**
      * (); - lambda expression
@@ -327,7 +327,7 @@ class List {
    * @brief appends new elements to the end of the container
    */
   template <class... Args>
-  void emplace_back(Args &&... args) {
+  void emplace_back(Args &&...args) {
     ([&] { push_back(std::forward<T>(args)); }(), ...);
   }
 
@@ -335,7 +335,7 @@ class List {
    * @brief appends new elements to the top of the container
    */
   template <class... Args>
-  void emplace_front(Args &&... args) {
+  void emplace_front(Args &&...args) {
     ([&] { push_front(std::forward<T>(args)); }(), ...);
   }
 
@@ -485,7 +485,6 @@ class List {
     T *data;
   };
   // Iterator
-  // Сделал ради ТЗ, лучше конечно вынести в отдельный класс
   class ListIterator {
     friend class List<T>;
 
