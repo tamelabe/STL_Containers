@@ -1,41 +1,58 @@
-FLAGS=-ggdb -std=c++17 -Wall -Werror -Wextra -lstdc++
-# Vector
-VECTOR_TEST_SOURCE=s21_vector_test.cc
-VECTOR_TEST_OUTPUT=s21_vector_test.o
-# Array
-ARRAY_TEST_SOURCE=s21_array_test.cc
-ARRAY_TEST_OUTPUT=s21_array_test.o
+.PHONY : clean check tests leaks tests_linux leaks_linux gcov_report
 
-all: array
+CC = gcc
+CPPFLAGS = -ggdb -std=c++17 -pedantic -Wall -Werror -Wextra -lstdc++
+TEST_FLAGS = -lgtest --coverage
+LINUX_FLAGS = -lrt -lpthread -lm -lsubunit
+VG_FLAGS = CK_FORK=no valgrind --trace-children=yes --track-fds=yes --track-origins=yes --leak-check=full --show-leak-kinds=all --verbose
 
-array: clean check array_test leaks gcov_report
+OS := $(shell uname -s)
+
+ifeq ($(OS), Darwin)
+all: clean check tests leaks gcov_report
+else ifeq ($(OS), Linux)
+all: clean check tests_linux leaks_linux gcov_report
+else
+all:
+	@echo "Unsupported operating system: $(OS)"
+endif
 
 check:
-	cp ../materials/linters/.clang-format . && clang-format *.cc *.h -i
+	cp ../materials/linters/.clang-format .
+	find . -type f \( -name "*.cc" -o -name "*.h" \) -exec clang-format -n --style="Google" {} \;
 	rm -f .clang-format
-	cppcheck --std=c++17 --language=c++ --enable=all --suppress=missingIncludeSystem *.cc *.h
 
-vector_test: $(VECTOR_TEST_SOURCE)
-	@gcc $(FLAGS) --coverage $(VECTOR_TEST_SOURCE) -o $(VECTOR_TEST_OUTPUT) -lgtest
-	@./$(VECTOR_TEST_OUTPUT)
+tests:
+	for TEST_SRC in $(shell find . -type f -name "*test.cc"); do \
+		base_name=$$(basename $$TEST_SRC); \
+		$(CC) $(CPPFLAGS)  $$TEST_SRC -o $$base_name.o $(TEST_FLAGS); \
+	done
 
-array_test: $(ARRAY_TEST_SOURCE)
-	@gcc $(FLAGS) --coverage $(ARRAY_TEST_SOURCE) -o $(ARRAY_TEST_OUTPUT) -lgtest
-	@./$(ARRAY_TEST_OUTPUT)
+tests_linux:
+	for TEST_SRC in $(shell find . -type f -name "*test.cc"); do \
+		base_name=$$(basename $$TEST_SRC); \
+		$(CC) $$TEST_SRC $(CPPFLAGS) $(TEST_FLAGS) -o $$base_name.o $(LINUX_FLAGS); \
+	done
 
 leaks:
-	leaks -atExit -- ./*.o
+	for file in $(shell find . -maxdepth 1 -type f -name "*.o"); do \
+   		leaks -atExit --  $$file; \
+    done
+
+leaks_linux:
+	for file in $(shell find . -maxdepth 1 -type f -name "*.o"); do \
+    		base_name=$$(basename $$file); \
+    		file_name=$$(echo $${base_name%.*} | tr '[:lower:]' '[:upper:]'); \
+    		$(VG_FLAGS) --log-file=RESULT_$$file_name.txt $$file; \
+    done
 
 gcov_report:
-	lcov -t "test" -o test.info -c -d ./
-	lcov --remove test.info "/usr*" -o test.info
-	genhtml -o report test.info
-	open -a "Safari" ./report/index.html
+	lcov -t "test" -o s21_test.info -c -d ./ --no-external
+	genhtml ./s21_test.info --output-directory ./report/
+	open ./report/index.html
 
 clean:
-	@rm -rf report
-	@rm -rf *.gcda
-	@rm -rf *.gcno
-	@rm -rf *.info
-	@rm -rf *.a
-	@rm -rf *.o
+	@rm -rf report *.txt
+	@rm -rf *.gcda *.gcno *.info *.gch *.dSYM
+	@rm -rf ../*.idea ../.run ../*.dSYM
+	@rm -rf *.a *.o
