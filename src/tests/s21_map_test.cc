@@ -5,7 +5,7 @@
 
 #include <cstring>
 #include <iostream>
-#include <vector>
+#include <map>
 
 // Constructors
 TEST(member_functions, base_constructor) {
@@ -218,6 +218,21 @@ TEST(Modifiers, erase_two_child_2) {
   map.erase(map.find(4));
   ASSERT_TRUE(map.size() == 11);
   ASSERT_TRUE(map.contains(4) == false);
+}
+
+TEST(Modifiers, merge) {
+  s21::map<int, char> s21_map{
+    {8, 'a'},
+    {4, 'b'},
+    {11, 'c'}
+  };
+  s21::map<int, char> s21_map2{
+    {1, 'd'},
+    {10, 'e'},
+    {11, 'f'}
+  };
+  s21_map.merge(s21_map2);
+  ASSERT_TRUE(s21_map.size() == 5);
 }
 
 

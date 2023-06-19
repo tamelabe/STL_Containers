@@ -54,7 +54,7 @@ class map {
   std::pair<iterator, bool> insert_or_assign(const KT& key, const VT& obj);
   void erase(iterator pos);
   void swap(map& other);
-  // void merge(map& other);
+  void merge(map& other);
 
   // Lookup
   bool contains(const KT& key);
@@ -182,6 +182,9 @@ s21::map<KT, VT>::insert(const value_type& v) {
 template <typename KT, typename VT>
 std::pair<typename s21::map<KT, VT>::iterator, bool> 
 s21::map<KT, VT>::insert(const KT& key, const VT& value) {
+  if (tree_.search(key) != nullptr) {
+    return std::pair<iterator, bool> {nullptr, false};
+  }
   if (size_ >= TREE_MAX_SIZE) {
     return std::pair<iterator, bool> {nullptr, false};
   }
@@ -221,6 +224,14 @@ void s21::map<KT, VT>::swap(map &other) {
   using std::swap;
   swap(size_, other.size_);
   swap(tree_, other.tree_);
+}
+
+// swaps the contents
+template <typename KT, typename VT>
+void s21::map<KT, VT>::merge(map &other) {
+  for (auto it = other.tree_.begin(); it != other.tree_.end(); ++it) {
+    insert(it.getNode()->key, *it);
+  }
 }
 
 // HELPER: print_map
