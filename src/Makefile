@@ -24,13 +24,13 @@ check:
 
 tests:
 	for TEST_SRC in $(shell find . -type f -name "*test.cc"); do \
-		base_name=$$(basename $$TEST_SRC); \
+		base_name=$$(basename $${TEST_SRC%%.cc}); \
 		$(CC) $(CPPFLAGS)  $$TEST_SRC -o $$base_name.o $(TEST_FLAGS); \
 	done
 
 tests_linux:
 	for TEST_SRC in $(shell find . -type f -name "*test.cc"); do \
-		base_name=$$(basename $$TEST_SRC); \
+		base_name=$$(basename $${TEST_SRC%%.cc}); \
 		$(CC) $$TEST_SRC $(CPPFLAGS) $(TEST_FLAGS) -o $$base_name.o $(LINUX_FLAGS); \
 	done
 
@@ -42,7 +42,7 @@ leaks:
 leaks_linux:
 	for file in $(shell find . -maxdepth 1 -type f -name "*.o"); do \
     		base_name=$$(basename $$file); \
-    		file_name=$$(echo $${base_name%.*} | tr '[:lower:]' '[:upper:]'); \
+    		file_name=$$(echo $${base_name%_test.o} | tr '[:lower:]' '[:upper:]'); \
     		$(VG_FLAGS) --log-file=RESULT_$$file_name.txt $$file; \
     done
 
