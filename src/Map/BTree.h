@@ -201,7 +201,7 @@ class BTree {
       : node->parent->right = successor;
   }
 
-  insert(node_type *node, KT key, VT value) {
+  iterator insert(node_type *node, KT key, VT value) {
     if (root == nullptr) {
       root = new node_type(key, value, *node);
       return iterator(root);
