@@ -27,7 +27,7 @@ limitations under the License.
 namespace s21 {
 
 template <class T>
-class Vector {
+class vector {
  public:
   using value_type = T;
   using reference = T &;
@@ -37,7 +37,7 @@ class Vector {
   using size_type = size_t;
 
   // CONSTRUCTORS
-  Vector();
+  vector();
   explicit vector(size_type);
   explicit vector(std::initializer_list<value_type> const &);
   vector(const vector &);
@@ -79,7 +79,7 @@ class Vector {
   void swap(vector &);
 
   // HELPER methods
-  void vrintVector();
+  void printVector();
 
  private:
   size_type size_;
@@ -347,8 +347,7 @@ void s21::vector<T>::printVector() {
 }
 
 template <typename T>
-void s21::vector<T>::reallocate(size_type capacity, size_type size,
-                                const iterator storage) {
+void s21::vector<T>::reallocate(size_type capacity, size_type size, const iterator storage) {
   storage_ = new T[capacity];
   capacity_ = capacity;
   for (size_type i = 0; i < size; ++i) {

@@ -1,4 +1,4 @@
-#include "../s21_map.h"
+#include "s21_map.h"
 
 #include <gtest/gtest-spi.h>
 #include <gtest/gtest.h>
@@ -140,7 +140,7 @@ TEST(Modifiers, empty) {
 //   map.insert(std::make_pair(6, 60));
 //   map.insert(std::make_pair(7, 70));
 //   ASSERT_TRUE(map.at(7) == 70);
-//   std::pair<s21::BinaryTree<int, int>::iterator, bool> result = map.insert(std::make_pair(8, 80));
+//   std::pair<s21::BTree<int, int>::iterator, bool> result = map.insert(std::make_pair(8, 80));
 //   ASSERT_TRUE(result.second == false);
 // }
 

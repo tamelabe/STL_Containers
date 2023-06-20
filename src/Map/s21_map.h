@@ -1,11 +1,11 @@
 #ifndef CPP2_S21_CONTAINERS_S21_MAP_H_
 #define CPP2_S21_CONTAINERS_S21_MAP_H_
 
-#include "helpers/BinaryTree.h"
-
 #include <initializer_list>
 #include <utility>
 #include <limits>
+
+#include "BTree.h"
 
 #define TREE_MAX_SIZE 1024
 
@@ -19,7 +19,7 @@ class map {
   using value_type      = std::pair<const key_type, mapped_type>;
   using reference       = value_type &;
   using const_reference = const value_type &;
-  using tree_type       = s21::BinaryTree<KT, VT>;
+  using tree_type       = s21::BTree<KT, VT>;
   using iterator        = typename tree_type::iterator;
   // using const_iterator  = typename tree_type::const_iterator;
   using size_type       = size_t;
@@ -63,7 +63,7 @@ class map {
   void print_map();
 
  private:
-  s21::BinaryTree<KT, VT> tree_;
+  s21::BTree<KT, VT> tree_;
   size_type size_;
 };
 

@@ -22,7 +22,6 @@ limitations under the License.
 #include <utility>
 
 namespace s21 {
-
 template <class T, size_t N>
 class Array {
  public:

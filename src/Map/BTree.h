@@ -13,21 +13,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 **/
-
 #ifndef CPP2_S21_CONTAINERS_BINARY_TREE_H
 #define CPP2_S21_CONTAINERS_BINARY_TREE_H
-
-#include "Node.h"
 
 #include <iostream>
 #include <string>
 #include <utility>
 #include <stack>
 
+#include "Node.h"
+
 namespace s21 {
 
 template <typename KT, typename VT = KT>
-class BinaryTree {
+class BTree {
  
  public: 
   using node_type = Node<KT, VT>;
@@ -81,7 +80,7 @@ class BinaryTree {
   };
   // TODO: const_iterator
 
-  BinaryTree();
+  BTree();
   
   iterator insert(KT, VT);
   node_type *getRoot();
@@ -116,17 +115,17 @@ class BinaryTree {
 };
 
 template <typename KT, typename VT>
-BinaryTree<KT, VT>::BinaryTree() : root(nullptr) {}
+BTree<KT, VT>::BTree() : root(nullptr) {}
 
 // public
 template <typename KT, typename VT>
-typename BinaryTree<KT, VT>::iterator
-BinaryTree<KT, VT>::insert(KT key, VT value) {
+typename BTree<KT, VT>::iterator
+BTree<KT, VT>::insert(KT key, VT value) {
   return insert(root, key, value);
 }
 
 template <typename KT, typename VT>
-void BinaryTree<KT, VT>::destroy(node_type *node) {
+void BTree<KT, VT>::destroy(node_type *node) {
   if (!node) {
       return;
   }
@@ -138,8 +137,8 @@ void BinaryTree<KT, VT>::destroy(node_type *node) {
 
 // private
 template <typename KT, typename VT>
-typename BinaryTree<KT, VT>::iterator 
-BinaryTree<KT, VT>::insert(node_type *node, KT key, VT value) {
+typename BTree<KT, VT>::iterator 
+BTree<KT, VT>::insert(node_type *node, KT key, VT value) {
   if (root == nullptr) {
     root = new node_type(key, value, *node);
     return iterator(root);
@@ -162,13 +161,13 @@ BinaryTree<KT, VT>::insert(node_type *node, KT key, VT value) {
 }
 
 template <typename KT, typename VT>
-typename BinaryTree<KT, VT>::node_type* 
-BinaryTree<KT, VT>::getRoot() {
+typename BTree<KT, VT>::node_type* 
+BTree<KT, VT>::getRoot() {
   return root;
 }
 
 template <typename KT, typename VT>
-VT* BinaryTree<KT, VT>::search(const KT& key) {
+VT* BTree<KT, VT>::search(const KT& key) {
   node_type *current = root;
   while (current) {
     if (current->key == key) {
@@ -184,8 +183,8 @@ VT* BinaryTree<KT, VT>::search(const KT& key) {
 }
 
 template <typename KT, typename VT>
-typename BinaryTree<KT, VT>::iterator 
-BinaryTree<KT, VT>::searchNode(const KT& key) {
+typename BTree<KT, VT>::iterator 
+BTree<KT, VT>::searchNode(const KT& key) {
   node_type *current = root;
   while (current) {
     if (current->key == key) {
@@ -201,7 +200,7 @@ BinaryTree<KT, VT>::searchNode(const KT& key) {
 }
 
 template <typename KT, typename VT>
-void BinaryTree<KT, VT>::removeNode(node_type* node, KT key) {
+void BTree<KT, VT>::removeNode(node_type* node, KT key) {
 
   if (node == nullptr) {
     return;
@@ -238,14 +237,14 @@ void BinaryTree<KT, VT>::removeNode(node_type* node, KT key) {
 }
 
 template <typename KT, typename VT>
-void BinaryTree<KT, VT>::updateParent(node_type* node, node_type* successor) {
+void BTree<KT, VT>::updateParent(node_type* node, node_type* successor) {
   (node->key == node->parent->left->key) 
     ? node->parent->left = successor
     : node->parent->right = successor;
 }
 
 template <typename KT, typename VT>
-void BinaryTree<KT, VT>::print(node_type *node) {
+void BTree<KT, VT>::print(node_type *node) {
   if (node == nullptr) {
     return;
   }
