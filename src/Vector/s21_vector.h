@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-
 #ifndef CPP2_S21_CONTAINERS_S21_VECTOR_H_
 #define CPP2_S21_CONTAINERS_S21_VECTOR_H_
 
@@ -93,11 +92,11 @@ class vector {
 // CONSTRUCTORS AND MEMBER FUNCTIONS
 // default constructor, creates empty vector
 template <class T>
-vector<T>::vector() : size_(0U), capacity_(0U), storage_(nullptr) {}
+s21::vector<T>::vector() : size_(0U), capacity_(0U), storage_(nullptr) {}
 
 // parameterized constructor, creates the vector of size n
 template <class T>
-vector<T>::vector(size_type n)
+s21::vector<T>::vector(size_type n)
     : size_(n), capacity_(n), storage_(new T[capacity_]) {
   for (size_type i = 0; i < n; ++i) storage_[i] = T();
 }
@@ -105,7 +104,7 @@ vector<T>::vector(size_type n)
 // initializer list constructor,
 // creates vector initizialized using std::initializer_list
 template <class T>
-vector<T>::vector(std::initializer_list<T> const &items) : size_(0) {
+s21::vector<T>::vector(std::initializer_list<T> const &items) : size_(0) {
   size_type count = items.size();
   capacity_ = count;
   storage_ = new T[capacity_];
@@ -115,27 +114,27 @@ vector<T>::vector(std::initializer_list<T> const &items) : size_(0) {
 
 // copy constructor
 template <class T>
-vector<T>::vector(const vector &v)
+s21::vector<T>::vector(const vector &v)
     : size_(v.size_), capacity_(v.capacity_), storage_(new T[capacity_]) {
   for (size_type i = 0; i < size_; ++i) storage_[i] = v.storage_[i];
-};
+}
 
 // move constructor
 template <class T>
-vector<T>::vector(vector &&origin) noexcept : vector() {
+s21::vector<T>::vector(vector &&origin) noexcept : vector() {
   swap(origin);
 }
 
 // destructor
 template <class T>
-vector<T>::~vector() {
+s21::vector<T>::~vector() {
   delete[] storage_;
 }
 
 // OPERATOR OVERLOADS
 // assignment operator overload for vector initizialized list
 template <class T>
-vector<T> &vector<T>::operator=(
+s21::vector<T> &vector<T>::operator=(
     std::initializer_list<value_type> const &items) {
   swap(vector<T>(items));
   return *this;
@@ -143,14 +142,14 @@ vector<T> &vector<T>::operator=(
 
 // assignment operator overload for copy object
 template <class T>
-vector<T> &vector<T>::operator=(const vector<T> &origin) {
+s21::vector<T> &vector<T>::operator=(const vector<T> &origin) {
   swap(vector<T>(origin));
   return *this;
 }
 
 // assignment operator overload for moving object
 template <class T>
-vector<T> &vector<T>::operator=(vector<T> &&origin) {
+s21::vector<T> &vector<T>::operator=(vector<T> &&origin) {
   swap(origin);
   return *this;
 }

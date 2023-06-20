@@ -79,17 +79,87 @@ class BTree {
     node_type* current;
   };
   // TODO: const_iterator
-
-  BTree();
   
-  iterator insert(KT, VT);
-  node_type *getRoot();
-  VT* search(const KT&);
-  iterator searchNode(const KT&);
-  void removeNode(node_type*, KT);
-  void print(node_type*);
-  void destroy(node_type*);
+  BTree() : root(nullptr) {}
+  
+  iterator insert(KT key, VT value) {
+    return insert(root, key, value);
+  }
 
+  node_type *getRoot() {
+    return root;
+  }
+
+  VT* search(const KT& key) {
+    node_type *current = root;
+    while (current) {
+      if (current->key == key) {
+        return &current->value;
+      } 
+      if (std::less<KT>{}(key, current->key)) {
+        current = current->left;
+      } else {
+        current = current->right;
+      }
+    }
+    return nullptr;
+  }
+
+  iterator searchNode(const KT& key) {
+    node_type *current = root;
+    while (current) {
+      if (current->key == key) {
+        return iterator(current);
+      } 
+      if (std::less<KT>{}(key, current->key)) {
+        current = current->left;
+      } else {
+        current = current->right;
+      }
+    }
+    return iterator(nullptr);
+  }
+
+  void removeNode(node_type* node, KT key) {
+    if (node == nullptr) {
+      return;
+    }
+    // case 1
+    if (node->hasNoChild()) {
+      if (node->key != key) {
+        auto dNode = searchNode(key).getNode();
+        node->swap(*dNode);
+      }
+      updateParent(node, nullptr);
+      delete node;
+      return;
+    }
+    // case 2
+    if (node->hasOneChild()) {
+      node_type *successor = (node->left != nullptr) 
+        ? node->left 
+        : node->right;
+      removeNode(successor, key);
+    }
+    // case 3
+    if (node->hasTwoChild()) {
+      if (node->key > key) {
+        removeNode(node->left, key);
+      } else {
+        removeNode(node->right, key);
+      }
+    }
+  }
+  
+  void destroy(node_type *node) {
+    if (!node) {
+        return;
+    }
+    destroy(node->left);
+    destroy(node->right);
+
+    delete node;
+  }
 
   iterator begin() const {
     if (root == nullptr) {
@@ -106,159 +176,53 @@ class BTree {
     return iterator(nullptr);
   }
 
+  void print(node_type *node) {
+    if (node == nullptr) {
+      return;
+    }
+    std::cout 
+      << "NODE: " 
+      << node->key 
+      << " value: " 
+      << node->value 
+      << " parent: " 
+      << ((node->parent != nullptr) ? node->parent->key : 0 ) 
+      << std::endl;
+    print(node->left);
+    print(node->right);
+  }
+
  private:
   node_type *root;
 
-  void updateParent(node_type*, node_type*);
-  node_type* findSuccessor(node_type*);
-  iterator insert(node_type*, KT, VT);
+  void updateParent(node_type* node, node_type* successor) {
+    (node->key == node->parent->left->key) 
+      ? node->parent->left = successor
+      : node->parent->right = successor;
+  }
+
+  insert(node_type *node, KT key, VT value) {
+    if (root == nullptr) {
+      root = new node_type(key, value, *node);
+      return iterator(root);
+    }
+    if (std::less<KT>{}(key, node->key)) {  // <
+      if (node->left == nullptr) {
+        node->left = new node_type(key, value, *node);
+        return iterator(node->left);
+      } else {
+        return insert(node->left, key, value);
+      }
+    } else {  // >=
+      if (node->right == nullptr) {
+        node->right = new node_type(key, value, *node);
+        return iterator(node->right);
+      } else {
+        return insert(node->right, key, value);
+      }
+    }
+  }
 };
-
-template <typename KT, typename VT>
-BTree<KT, VT>::BTree() : root(nullptr) {}
-
-// public
-template <typename KT, typename VT>
-typename BTree<KT, VT>::iterator
-BTree<KT, VT>::insert(KT key, VT value) {
-  return insert(root, key, value);
-}
-
-template <typename KT, typename VT>
-void BTree<KT, VT>::destroy(node_type *node) {
-  if (!node) {
-      return;
-  }
-  destroy(node->left);
-  destroy(node->right);
-
-  delete node;
-}
-
-// private
-template <typename KT, typename VT>
-typename BTree<KT, VT>::iterator 
-BTree<KT, VT>::insert(node_type *node, KT key, VT value) {
-  if (root == nullptr) {
-    root = new node_type(key, value, *node);
-    return iterator(root);
-  }
-  if (std::less<KT>{}(key, node->key)) {  // <
-    if (node->left == nullptr) {
-      node->left = new node_type(key, value, *node);
-      return iterator(node->left);
-    } else {
-      return insert(node->left, key, value);
-    }
-  } else {  // >=
-    if (node->right == nullptr) {
-      node->right = new node_type(key, value, *node);
-      return iterator(node->right);
-    } else {
-      return insert(node->right, key, value);
-    }
-  }
-}
-
-template <typename KT, typename VT>
-typename BTree<KT, VT>::node_type* 
-BTree<KT, VT>::getRoot() {
-  return root;
-}
-
-template <typename KT, typename VT>
-VT* BTree<KT, VT>::search(const KT& key) {
-  node_type *current = root;
-  while (current) {
-    if (current->key == key) {
-      return &current->value;
-    } 
-    if (std::less<KT>{}(key, current->key)) {
-      current = current->left;
-    } else {
-      current = current->right;
-    }
-  }
-  return nullptr;
-}
-
-template <typename KT, typename VT>
-typename BTree<KT, VT>::iterator 
-BTree<KT, VT>::searchNode(const KT& key) {
-  node_type *current = root;
-  while (current) {
-    if (current->key == key) {
-      return iterator(current);
-    } 
-    if (std::less<KT>{}(key, current->key)) {
-      current = current->left;
-    } else {
-      current = current->right;
-    }
-  }
-  return iterator(nullptr);
-}
-
-template <typename KT, typename VT>
-void BTree<KT, VT>::removeNode(node_type* node, KT key) {
-
-  if (node == nullptr) {
-    return;
-  }
-
-  // case 1
-  if (node->hasNoChild()) {
-    if (node->key != key) {
-      auto dNode = searchNode(key).getNode();
-      node->swap(*dNode);
-    }
-    updateParent(node, nullptr);
-    delete node;
-    return;
-  }
-
-  // case 2
-  if (node->hasOneChild()) {
-    node_type *successor = (node->left != nullptr) 
-      ? node->left 
-      : node->right;
-    removeNode(successor, key);
-  }
-
-  // case 3
-  if (node->hasTwoChild()) {
-    if (node->key > key) {
-      removeNode(node->left, key);
-    } else {
-      removeNode(node->right, key);
-    }
-  }
-  
-}
-
-template <typename KT, typename VT>
-void BTree<KT, VT>::updateParent(node_type* node, node_type* successor) {
-  (node->key == node->parent->left->key) 
-    ? node->parent->left = successor
-    : node->parent->right = successor;
-}
-
-template <typename KT, typename VT>
-void BTree<KT, VT>::print(node_type *node) {
-  if (node == nullptr) {
-    return;
-  }
-  std::cout 
-    << "NODE: " 
-    << node->key 
-    << " value: " 
-    << node->value 
-    << " parent: " 
-    << ((node->parent != nullptr) ? node->parent->key : 0 ) 
-    << std::endl;
-  print(node->left);
-  print(node->right);
-}
 
 }  // namespace s21
 
