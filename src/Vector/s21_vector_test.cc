@@ -7,7 +7,6 @@
 #include <iostream>
 #include <vector>
 
-
 // Constructors
 TEST(Constructor, base) {
   s21::vector<int> vec;
