@@ -1,6 +1,7 @@
 #ifndef CPP2_S21_CONTAINERS_S21_SET_H_
 #define CPP2_S21_CONTAINERS_S21_SET_H_
-#include "helpers/BinaryTree.h"
+
+#include "../Map/BTree.h"
 
 namespace s21 {
 
@@ -10,7 +11,7 @@ class set {
   using value_type      = KT;
   using reference       = value_type &;
   using const_reference = const value_type &;
-  using tree_type       = s21::BinaryTree<KT>;
+  using tree_type       = s21::BTree<KT>;
   using iterator        = typename tree_type::iterator;
   // using const_iterator  = SetConstIterator<key_type>;
   using size_type       = size_t;
@@ -40,7 +41,7 @@ public:
   // bool contains(const Key& key);
 
 private:
-  s21::BinaryTree<key_type, value_type> tree_;
+  s21::BTree<key_type, value_type> tree_;
   size_type size_;
 };
 

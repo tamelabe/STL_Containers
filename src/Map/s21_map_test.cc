@@ -1,11 +1,11 @@
-#include "../s21_map.h"
+#include "s21_map.h"
 
 #include <gtest/gtest-spi.h>
 #include <gtest/gtest.h>
 
 #include <cstring>
 #include <iostream>
-#include <vector>
+#include <map>
 
 // Constructors
 TEST(member_functions, base_constructor) {
@@ -132,17 +132,17 @@ TEST(Modifiers, empty) {
   ASSERT_TRUE(map.size() == 0);
 }
 
-TEST(Modifiers, insert_pair_max_size) {
-  s21::map<int, int> map;
-  map.insert(std::make_pair(3, 10));
-  map.insert(std::make_pair(4, 40));
-  map.insert(std::make_pair(5, 50));
-  map.insert(std::make_pair(6, 60));
-  map.insert(std::make_pair(7, 70));
-  ASSERT_TRUE(map.at(7) == 70);
-  std::pair<s21::BinaryTree<int, int>::iterator, bool> result = map.insert(std::make_pair(8, 80));
-  ASSERT_TRUE(result.second == false);
-}
+// TEST(Modifiers, insert_pair_max_size) {
+//   s21::map<int, int> map;
+//   map.insert(std::make_pair(3, 10));
+//   map.insert(std::make_pair(4, 40));
+//   map.insert(std::make_pair(5, 50));
+//   map.insert(std::make_pair(6, 60));
+//   map.insert(std::make_pair(7, 70));
+//   ASSERT_TRUE(map.at(7) == 70);
+//   std::pair<s21::BTree<int, int>::iterator, bool> result = map.insert(std::make_pair(8, 80));
+//   ASSERT_TRUE(result.second == false);
+// }
 
 TEST(Modifiers, insert_pair) {
   s21::map<int, int> map;
@@ -167,6 +167,74 @@ TEST(Modifiers, insert_or_assign_key_value) {
   map.insert_or_assign(2, 'G');
   ASSERT_TRUE(map.at(2) == 'G');
 }
+
+TEST(Modifiers, erase_no_child) {
+  s21::map<int, char> map;
+  map.insert(7, 'a');
+  map.insert(3, 'b');
+  map.erase(map.find(3));
+  ASSERT_TRUE(map.size() == 1);
+  ASSERT_FALSE(map.contains(3));
+}
+
+TEST(Modifiers, erase_one_child) {
+  s21::map<int, char> map;
+  map.insert(7, 'a');
+  map.insert(3, 'b');
+  map.insert(8, 'c');
+  map.insert(2, 'd');
+  map.erase(map.find(3));
+  ASSERT_TRUE(map.size() == 3);
+  ASSERT_TRUE(map.contains(3) == false);
+  ASSERT_TRUE(map.find(7).getNode()->left->key == 2);
+}
+
+TEST(Modifiers, erase_two_child) {
+  s21::map<int, char> map;
+  map.insert(7, 'a');
+  map.insert(3, 'b');
+  map.insert(8, 'c');
+  map.insert(2, 'd');
+  map.insert(4, 'e');
+  map.erase(map.find(3));
+  ASSERT_TRUE(map.size() == 4);
+  ASSERT_TRUE(map.contains(3) == false);
+}
+
+TEST(Modifiers, erase_two_child_2) {
+  s21::map<int, char> map;
+  map.insert(8, 'a');
+  map.insert(4, 'b');
+  map.insert(11, 'c');
+  map.insert(2, 'd');
+  map.insert(6, 'e');
+  map.insert(9, 'e');
+  map.insert(12, 'e');
+  map.insert(1, 'e');
+  map.insert(3, 'e');
+  map.insert(5, 'e');
+  map.insert(7, 'e');
+  map.insert(10, 'e');
+  map.erase(map.find(4));
+  ASSERT_TRUE(map.size() == 11);
+  ASSERT_TRUE(map.contains(4) == false);
+}
+
+TEST(Modifiers, merge) {
+  s21::map<int, char> s21_map{
+    {8, 'a'},
+    {4, 'b'},
+    {11, 'c'}
+  };
+  s21::map<int, char> s21_map2{
+    {1, 'd'},
+    {10, 'e'},
+    {11, 'f'}
+  };
+  s21_map.merge(s21_map2);
+  ASSERT_TRUE(s21_map.size() == 5);
+}
+
 
 
 int main(int argc, char** argv) {

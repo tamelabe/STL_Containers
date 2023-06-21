@@ -1,4 +1,4 @@
-#include "../s21_set.h"
+#include "s21_set.h"
 
 #include <gtest/gtest-spi.h>
 #include <gtest/gtest.h>
