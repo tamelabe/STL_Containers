@@ -33,7 +33,7 @@ class array {
   using size_type = size_t;
 
   // 
-  array() : size_(N), data_() {}
+  array() : size_(N), data_(new T[N]) {}
 
   // 
   explicit array(std::initializer_list<value_type> const &items) : size_(N) {
@@ -41,6 +41,7 @@ class array {
     if (count > size_) {
       throw std::length_error{"Count of items is bigger than size."};
     }
+    data_ = new T[count];
     int index = 0;
     for (const T &item : items) {
       data_[index] = item;
@@ -48,17 +49,14 @@ class array {
     }
   }
 
-  //
-  array(const array &a) : size_(a.size_), data_() {
+  // copy constructor
+  array(const array &a) : size_(a.size_), data_(nullptr) {
     for (size_type i = 0; i < size_; ++i) data_[i] = a.data_[i];
   }
 
   // move constructor
-  array(array &&origin) noexcept : array() {
-    swap(origin);
-  }
+  array(array &&origin) noexcept : array() {swap(origin);}
 
-  // ASSIGNMENTS
   // assignment operator overload for moving object
   array<T, N> &operator=(array<T, N> &&origin) {
     swap(origin);
@@ -66,7 +64,7 @@ class array {
   }
 
   // destructor
-  ~array() {}
+  ~array() {delete[] data_;}
 
   //
   reference at(size_type pos) {
@@ -93,34 +91,22 @@ class array {
   }
   
   //
-  iterator data() {
-    return data_;
-  }
+  iterator data() {return data_;}
 
   //
-  iterator begin() {
-    return data_;
-  }
+  iterator begin() {return data_;}
 
   //
-  iterator end() {
-    return data_ + size_;
-  }
+  iterator end() {return data_ + size_;}
 
   //
-  bool empty() {
-    return size_ == 0;
-  }
+  bool empty() {return size_ == 0;}
 
   //
-  size_type size() const noexcept {
-    return size_;
-  }
+  size_type size() const noexcept {return size_;}
 
   //
-  size_type max_size() const noexcept {
-    return size_;
-  }
+  size_type max_size() const noexcept {return size_;}
 
   //
   void swap(s21::array<T, N> &v) {
@@ -136,7 +122,7 @@ class array {
 
  private:
   size_type size_;
-  T data_[N]{};
+  iterator data_;
 };
 }  // namespace s21
 
