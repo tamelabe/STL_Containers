@@ -75,11 +75,8 @@ TEST(ElementAccess, at) {
 }
 
 TEST(ElementAccess, at_error) {
-  EXPECT_THROW(({
-                 s21::array<int, 3> arr{1, 2, 3};
-                 arr.at(4);
-               }),
-               std::out_of_range);
+  s21::array<int, 3> arr{1, 2, 3};
+  EXPECT_THROW(arr.at(4), std::out_of_range);
 }
 
 TEST(ElementAccess, at_operator) {
@@ -89,11 +86,8 @@ TEST(ElementAccess, at_operator) {
 }
 
 TEST(ElementAccess, at_operator_error) {
-  EXPECT_THROW(({
-                 s21::array<int, 3> arr{1, 2, 3};
-                 arr[4];
-               }),
-               std::out_of_range);
+  s21::array<int, 3> arr{1, 2, 3};
+  EXPECT_THROW(arr[4], std::out_of_range);
 }
 
 TEST(ElementAccess, front) {
@@ -103,11 +97,8 @@ TEST(ElementAccess, front) {
 }
 
 TEST(ElementAccess, front_empty) {
-  EXPECT_THROW(({
-                 s21::array<int, 0> arr;
-                 arr.front();
-               }),
-               std::out_of_range);
+  s21::array<int, 0> arr;
+  EXPECT_THROW(arr.front(), std::out_of_range);
 }
 
 TEST(ElementAccess, back) {
@@ -117,11 +108,8 @@ TEST(ElementAccess, back) {
 }
 
 TEST(ElementAccess, back_empty) {
-  EXPECT_THROW(({
-                 s21::array<int, 0> arr;
-                 arr.back();
-               }),
-               std::out_of_range);
+  s21::array<int, 0> arr;
+  EXPECT_THROW(arr.back(), std::out_of_range);
 }
 
 // Iterators
