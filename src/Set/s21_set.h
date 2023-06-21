@@ -1,7 +1,25 @@
+/**
+Copyright 2023 darrpama
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 #ifndef CPP2_S21_CONTAINERS_S21_SET_H_
 #define CPP2_S21_CONTAINERS_S21_SET_H_
 
 #include "../Map/BTree.h"
+
+#define TREE_MAX_SIZE 1024
 
 namespace s21 {
 
@@ -22,7 +40,9 @@ public:
   set(const set &s);
   set(set &&s);
   ~set();
-//  operator=(set &&s);
+  reference operator=(std::initializer_list<value_type> const &items) { swap(set<KT>(items)); return *this; }
+  reference operator=(const set &s) { swap(set<KT>(s)); return *this; }
+  reference operator=(set &&s) { swap s; return *this; }
 
   iterator begin();
   iterator end();
@@ -31,14 +51,25 @@ public:
   size_type size();
   // size_type max_size();
 
-  // void clear();
-  // std::pair<iterator, bool> insert(const value_type& value);
+  void clear();
+
+  std::pair<iterator, bool> insert(const value_type& value) {
+    if (tree_.search(key) != nullptr) {
+      return std::pair<iterator, bool> {nullptr, false};
+    }
+    if (size_ >= TREE_MAX_SIZE) {
+      return std::pair<iterator, bool> {nullptr, false};
+    }
+    auto it = tree_.insert(value);
+    size_++;
+    return std::pair<iterator, bool> {it, true};
+  };
   // void erase(iterator pos);
   void swap(set& other);
   // void merge(set& other);
 
   iterator find(const KT& key);
-  // bool contains(const Key& key);
+  bool contains(const KT& key);
 
 private:
   s21::BTree<key_type, value_type> tree_;
@@ -58,7 +89,7 @@ s21::set<KT>::set(std::initializer_list<value_type> const &items) : tree_(), siz
   }
 }
 
-// Cope constructor
+// Copy constructor
 template <typename KT>
 s21::set<KT>::set(const set &other) : size_(0) {
   for (auto it = other.tree_.begin(); it != other.tree_.end(); ++ it) {
@@ -119,6 +150,16 @@ void s21::set<KT>::swap(set &other) {
   swap(tree_, other.tree_);
 }
 
+template <typename KT>
+void s21::set<KT>::clear() {
+  tree_.destroy(tree_.getRoot());
+  size_ = 0;
+}
+
+template <typename KT>
+bool s21::set<KT>::contains(const KT& key) {
+  return (tree_.search(key) != nullptr);
+}
 
 }  // namespace s21
 
