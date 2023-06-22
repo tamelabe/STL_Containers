@@ -84,10 +84,10 @@ TEST(Capacity, empty) {
   ASSERT_TRUE(set2.empty() == false);
 }
 
-// TEST(Capacity, max_size) {
-//   s21::set<int> set;
-//   ASSERT_TRUE(set.max_size() == TREE_MAX_SIZE);  // TODO: fix hardcode!
-// }
+TEST(Capacity, max_size) {
+  s21::set<int> set;
+  ASSERT_TRUE(set.max_size() == TREE_MAX_SIZE);  // TODO: fix hardcode!
+}
 
 // Modifiers
 // TEST(Modifiers, empty) {
