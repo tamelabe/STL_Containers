@@ -103,47 +103,55 @@ s21::set<KT>::~set() {
   }
 }
 
+// Getter size_
 template <typename KT>
 typename s21::set<KT>::size_type
 s21::set<KT>::size() {
   return size_;
 }
 
+// Getter maxsize
 template <typename KT>
 typename s21::set<KT>::size_type
 s21::set<KT>::max_size() {
   return TREE_MAX_SIZE;
 }
 
+// Method to find iterator to specific node
 template <typename KT>
 typename s21::set<KT>::iterator
 s21::set<KT>::find(const KT& key) {
   return tree_.searchNode(key);
 }
 
+// Returns iterator to begin
 template <typename KT>
 typename s21::set<KT>::iterator
 s21::set<KT>::begin() {
   return tree_.begin();
 }
 
+// Returns iterator after end node
 template <typename KT>
 typename s21::set<KT>::iterator
 s21::set<KT>::end() {
   return tree_.end();
 }
 
+// Method to check, is set empty
 template <typename KT>
 bool s21::set<KT>::empty() {
   return size_ == 0;
 }
 
+// Destroy the all set
 template <typename KT>
 void s21::set<KT>::clear() {
   tree_.destroy(tree_.getRoot());
   size_ = 0;
 }
 
+// Insert a new unique value into set
 template <typename KT>
 std::pair<typename s21::set<KT>::iterator, bool>
 s21::set<KT>::insert(const KT& value) {
@@ -158,6 +166,7 @@ s21::set<KT>::insert(const KT& value) {
   return std::pair<iterator, bool> {it, true};
 };
 
+// Delete one node by getting iterator
 template <typename KT>
 void s21::set<KT>::erase(typename s21::set<KT>::iterator pos) {
   auto node = pos.getNode();
@@ -165,7 +174,7 @@ void s21::set<KT>::erase(typename s21::set<KT>::iterator pos) {
   size_--;
 }
 
-// swap
+// Swap two sets
 template <typename KT>
 void s21::set<KT>::swap(set &other) {
   using std::swap;
@@ -173,6 +182,7 @@ void s21::set<KT>::swap(set &other) {
   swap(tree_, other.tree_);
 }
 
+// Merge two sets
 template <typename KT>
 void s21::set<KT>::merge(set& other) {
   for (auto it = other.tree_.begin(); it != other.tree_.end(); ++it) {
@@ -180,6 +190,7 @@ void s21::set<KT>::merge(set& other) {
   }
 }
 
+// Check is key containing in set
 template <typename KT>
 bool s21::set<KT>::contains(const KT& key) {
   return (tree_.search(key) != nullptr);
