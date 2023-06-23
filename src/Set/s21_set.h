@@ -161,7 +161,7 @@ s21::set<KT>::insert(const KT& value) {
   if (size_ >= TREE_MAX_SIZE) {
     return std::pair<iterator, bool> {nullptr, false};
   }
-  auto it = tree_.insert(value);
+  auto it = tree_.insert(value, KT{});
   size_++;
   return std::pair<iterator, bool> {it, true};
 };

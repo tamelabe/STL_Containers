@@ -57,16 +57,6 @@ TEST(member_functions, move_operator) {
   ASSERT_TRUE(comparisonSet(moveSet, copySet));
 }
 
-// TEST(element_access, accessor_inserter_element_operator) {
-//   s21::set<int> set { 1, 2, 3, 4 };
-//   ASSERT_TRUE(set.size() == 4);
-//   ASSERT_TRUE(set[1] == 1);
-//   ASSERT_TRUE(set[2] == 2);
-//   ASSERT_TRUE(set[3] == 3);
-//   set[2] = 55;
-//   ASSERT_TRUE(set[2] == 55);
-// }
-
 TEST(Iterators, begin) {
   s21::set<int> set { 1, 2, 3, 4 };
   ASSERT_TRUE(set.begin().getNode()->key == 1);
@@ -90,35 +80,92 @@ TEST(Capacity, max_size) {
 }
 
 // Modifiers
-// TEST(Modifiers, empty) {
-//   s21::set<int> set { 1, 2, 3, 4 };
-//   set.clear();
-//   ASSERT_TRUE(set.size() == 0);
-// }
+TEST(Modifiers, empty) {
+  s21::set<int> set { 1, 2, 3, 4 };
+  set.clear();
+  ASSERT_TRUE(set.size() == 0);
+}
 
-// TEST(Modifiers, insert_pair) {
-//   s21::set<int> set;
-//   set.insert(std::make_pair(3, 10));
-//   ASSERT_TRUE(set.at(3) == 10);
-// }
+TEST(Modifiers, insert_pair) {
+  s21::set<std::pair<int, int>> set;
+  set.insert(std::make_pair(3, 10));
+  ASSERT_TRUE(set.contains(std::make_pair(3, 10)) == true);
+}
 
-// TEST(Modifiers, insert_key_value) {
-//   s21::set<char> set;
-//   set.insert('a');
-//   set.insert('b');
-//   ASSERT_TRUE(set.at(3) == 'a');
-//   ASSERT_TRUE(set.at(2) == 'b');
-// }
+TEST(Modifiers, insert_key_value) {
+  s21::set<char> set;
+  set.insert('a');
+  set.insert('b');
+  ASSERT_TRUE(set.contains('a') == true);
+  ASSERT_TRUE(set.contains('b') == true);
+}
 
-// TEST(Modifiers, insert_or_assign_key_value) {
-//   s21::set<char> set;
-//   set.insert('a');
-//   ASSERT_TRUE(set.at(3) == 'a');
-//   set.insert_or_assign('c');
-//   ASSERT_TRUE(set.at(2) == 'c');
-//   set.insert_or_assign(2, 'G');
-//   ASSERT_TRUE(set.at(2) == 'G');
-// }
+TEST(Modifiers, erase_no_child) {
+  s21::set<int> set;
+  set.insert(7);
+  set.insert(3);
+  set.erase(set.find(3));
+  ASSERT_TRUE(set.size() == 1);
+  ASSERT_FALSE(set.contains(3));
+}
+
+TEST(Modifiers, erase_one_child) {
+  s21::set<int> set;
+  set.insert(7);
+  set.insert(3);
+  set.insert(8);
+  set.insert(2);
+  set.erase(set.find(3));
+  ASSERT_TRUE(set.size() == 3);
+  ASSERT_TRUE(set.contains(3) == false);
+  ASSERT_TRUE(set.find(7).getNode()->left->key == 2);
+}
+
+TEST(Modifiers, erase_two_child) {
+  s21::set<int> set;
+  set.insert(7);
+  set.insert(3);
+  set.insert(8);
+  set.insert(2);
+  set.insert(4);
+  set.erase(set.find(3));
+  ASSERT_TRUE(set.size() == 4);
+  ASSERT_TRUE(set.contains(3) == false);
+}
+
+TEST(Modifiers, erase_two_child_2) {
+  s21::set<int> set;
+  set.insert(8);
+  set.insert(4);
+  set.insert(11);
+  set.insert(2);
+  set.insert(6);
+  set.insert(9);
+  set.insert(12);
+  set.insert(1);
+  set.insert(3);
+  set.insert(5);
+  set.insert(7);
+  set.insert(10);
+  set.erase(set.find(4));
+  ASSERT_TRUE(set.size() == 11);
+  ASSERT_TRUE(set.contains(4) == false);
+}
+
+TEST(Modifiers, merge) {
+  s21::set<int> set{
+    {8},
+    {4},
+    {11}
+  };
+  s21::set<int> set1{
+    {1},
+    {10},
+    {11}
+  };
+  set.merge(set1);
+  ASSERT_TRUE(set.size() == 5);
+}
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
