@@ -20,7 +20,6 @@ limitations under the License.
 #include "../Map/BTree.h"
 
 #include <limits>
-#define TREE_MAX_SIZE 1024
 
 namespace s21 {
 
@@ -160,7 +159,7 @@ s21::set<KT>::insert(const KT& value) {
   if (tree_.search(value) != nullptr) {
     return std::pair<iterator, bool> {nullptr, false};
   }
-  if (size_ >= TREE_MAX_SIZE) {
+  if (size_ >= max_size()) {
     return std::pair<iterator, bool> {nullptr, false};
   }
   auto it = tree_.insert(value, KT{});
