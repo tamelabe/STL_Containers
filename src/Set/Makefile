@@ -8,7 +8,7 @@ all: clean check set_test leaks
 # all: clean map_test
 
 check:
-	# cp ../../materials/linters/.clang-format . && clang-format *.cc *.h */*.cc */*.h
+	cp ../../materials/linters/.clang-format . && clang-format -n *.cc *.h
 	# rm -f .clang-format
 	cppcheck --check-config --std=c++17 --language=c++ --enable=all --suppress=missingIncludeSystem *.cc *.h
 
