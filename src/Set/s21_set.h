@@ -19,6 +19,7 @@ limitations under the License.
 
 #include "../Map/BTree.h"
 
+#include <limits>
 #define TREE_MAX_SIZE 1024
 
 namespace s21 {
@@ -114,7 +115,8 @@ s21::set<KT>::size() {
 template <typename KT>
 typename s21::set<KT>::size_type
 s21::set<KT>::max_size() {
-  return TREE_MAX_SIZE;
+  return ((std::numeric_limits<size_type>::max() / 2) - sizeof(s21::BTree<KT>)
+  - sizeof(s21::Node<KT>)) / sizeof(s21::Node<KT>);
 }
 
 // Method to find iterator to specific node

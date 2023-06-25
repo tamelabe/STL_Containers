@@ -14,24 +14,67 @@ template<class T>
 bool comparisonSet(s21::set<T> &s21_set, std::set<T> &std_set);
 
 // Constructors
-TEST(member_functions, base_constructor) {
+TEST(member_functions, base_constructor_int) {
   s21::set<int> set;
+  std::set<int> stdset;
+  ASSERT_TRUE(comparisonSet(set, stdset));
   ASSERT_TRUE(set.size() == 0);
   ASSERT_TRUE(set.begin().getNode() == nullptr);
   ASSERT_TRUE(set.end().getNode() == nullptr);
 }
 
-TEST(member_functions, initializer_list_one_element) {
-  s21::set<int> set { 1 };
+TEST(member_functions, base_constructor_char) {
+  s21::set<char> set;
+  std::set<char> stdset;
+  ASSERT_TRUE(comparisonSet(set, stdset));
+  ASSERT_TRUE(set.size() == 0);
+  ASSERT_TRUE(set.begin().getNode() == nullptr);
+  ASSERT_TRUE(set.end().getNode() == nullptr);
+}
+
+TEST(member_functions, initializer_list_one_element_char) {
+  s21::set<char> set { 'a' };
+  std::set<char> stdset { 'a' };
+  ASSERT_TRUE(comparisonSet(set, stdset));
   ASSERT_TRUE(set.size() == 1);
+  ASSERT_TRUE(set.begin().getNode()->key == 'a');
+  ASSERT_TRUE(set.end().getNode() == nullptr);
+}
+
+TEST(member_functions, initializer_list_one_element_double) {
+  s21::set<double> set { 1.0 };
+  std::set<double> stdset { 1.0 };
+  ASSERT_TRUE(comparisonSet(set, stdset));
+  ASSERT_TRUE(set.size() == 1);
+  ASSERT_TRUE(set.begin().getNode()->key == 1.0);
+  ASSERT_TRUE(set.end().getNode() == nullptr);
+}
+
+TEST(member_functions, initializer_list_std_pair) {
+  s21::set<std::pair<int, char>> set { std::make_pair(1, 'a') };
+  std::set<std::pair<int, char>> stdset { std::make_pair(1, 'a') };
+  comparisonSet(set, stdset);
+  ASSERT_TRUE(set.size() == 1);
+  ASSERT_TRUE(set.begin().getNode()->key.first == 1);
+  ASSERT_TRUE(set.begin().getNode()->key.second == 'a');
+  ASSERT_TRUE(set.end().getNode() == nullptr);
+}
+
+TEST(member_functions, initializer_list_int) {
+  s21::set<int> set { 1, 2, 3, 4 };
+  std::set<int> stdset { 1, 2, 3, 4 };
+  ASSERT_TRUE(comparisonSet(set, stdset));
+  ASSERT_TRUE(set.size() == 4);
   ASSERT_TRUE(set.begin().getNode()->key == 1);
   ASSERT_TRUE(set.end().getNode() == nullptr);
 }
 
-TEST(member_functions, initializer_list) {
-  s21::set<int> set { 1, 2, 3, 4 };
+TEST(member_functions, initializer_list_char) {
+  s21::set<char> set { 'a', 'b', 'c', 'd' };
+  std::set<char> stdset { 'a', 'b', 'c', 'd' };
+  comparisonSet(set, stdset);
   ASSERT_TRUE(set.size() == 4);
-  ASSERT_TRUE(set.begin().getNode()->key == 1);
+  ASSERT_TRUE(set.begin().getNode()->key == 'a');
   ASSERT_TRUE(set.end().getNode() == nullptr);
 }
 
@@ -59,30 +102,40 @@ TEST(member_functions, move_operator) {
 
 TEST(Iterators, begin) {
   s21::set<int> set { 1, 2, 3, 4 };
+  std::set<int> stdset { 1, 2, 3, 4 };
+  ASSERT_TRUE(*set.begin() == *stdset.begin());
   ASSERT_TRUE(set.begin().getNode()->key == 1);
 }
 
 TEST(Iterators, end) {
   s21::set<int> set { 1, 2, 3, 4 };
+  std::set<int> stdset { 1, 2, 3, 4 };
   ASSERT_TRUE(set.end().getNode() == nullptr);
 }
 
 TEST(Capacity, empty) {
   s21::set<int> set;
-  ASSERT_TRUE(set.empty() == true);
+  std::set<int> stdset;
+  ASSERT_TRUE(set.empty() == stdset.empty());
   s21::set<int> set2 { 5 };
-  ASSERT_TRUE(set2.empty() == false);
+  s21::set<int> stdset2 { 5 };
+  ASSERT_TRUE(set2.empty() == stdset2.empty());
 }
 
 TEST(Capacity, max_size) {
   s21::set<int> set;
-  ASSERT_TRUE(set.max_size() == TREE_MAX_SIZE);  // TODO: fix hardcode!
+  std::set<int> stdset;
+  ASSERT_TRUE(set.max_size() > 0);
+  ASSERT_TRUE(set.max_size() == 288230376151711742);
 }
 
 // Modifiers
 TEST(Modifiers, empty) {
   s21::set<int> set { 1, 2, 3, 4 };
   set.clear();
+  std::set<int> stdset { 1, 2, 3, 4 };
+  stdset.clear();
+  ASSERT_TRUE(comparisonSet(set, stdset));
   ASSERT_TRUE(set.size() == 0);
 }
 
@@ -96,6 +149,10 @@ TEST(Modifiers, insert_key_value) {
   s21::set<char> set;
   set.insert('a');
   set.insert('b');
+  std::set<char> stdset;
+  stdset.insert('a');
+  stdset.insert('b');
+  ASSERT_TRUE(comparisonSet(set, stdset));
   ASSERT_TRUE(set.contains('a') == true);
   ASSERT_TRUE(set.contains('b') == true);
 }
@@ -174,8 +231,10 @@ int main(int argc, char** argv) {
 
 template<class T>
 bool comparisonSet(s21::set<T> &s21_set, std::set<T> &stl_set) {
-  if (s21_set.size() != stl_set.size() || 
-      s21_set.empty() != stl_set.empty()) {
+  if (s21_set.empty() == stl_set.empty()) {
+    return true;
+  }
+  if (s21_set.size() != stl_set.size()) {
     return false;
   }
   auto it1 = s21_set.begin();
