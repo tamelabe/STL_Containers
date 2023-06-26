@@ -36,7 +36,9 @@ tests_linux:
 
 leaks:
 	for file in $(shell find . -maxdepth 1 -type f -name "*.o"); do \
-   		leaks -atExit --  $$file; \
+   		base_name=$$(basename $$file); \
+        file_name=$$(echo $${base_name%_test.o} | tr '[:lower:]' '[:upper:]'); \
+   		leaks -atExit --  $$file > ./RESULT_$$file_name.txt; \
     done
 
 leaks_linux:
