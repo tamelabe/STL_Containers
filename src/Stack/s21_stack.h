@@ -38,8 +38,8 @@ class Stack {
   void swap(Stack &other) { container_.swap(other.container_); }
   //  Stack bonus
   template <class... Args>
-  void emplace_front(Args &&...args) {
-    container_.emplace_back(std::forward<Args>(args)...);
+  void insert_many_front(Args &&...args) {
+    container_.insert_many_back(std::forward<Args>(args)...);
   }
 
  private:

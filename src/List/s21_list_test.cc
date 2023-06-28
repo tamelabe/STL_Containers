@@ -281,28 +281,28 @@ TEST(List, ConstIterator) {
   EXPECT_EQ(*s21_it, *std_it);
 }
 
-TEST(List, Method_emplace) {
+TEST(List, Method_insert_many) {
   s21::List<int> s21_test{1, 9, -1, 5};
   s21::List<int> s21_test_1{1, 9, -1, 5};
   auto iter = ++s21_test.begin();
   auto iter1 = ++s21_test_1.begin();
-  s21_test.emplace(iter, 7, 7, 7);
+  s21_test.insert_many(iter, 7, 7, 7);
   for (auto i = 0; i < 3; i++) s21_test_1.insert(iter1, 7);
   EXPECT_TRUE(comparisonLists(s21_test, s21_test_1));
 }
 
-TEST(List, Method_emplace_back) {
+TEST(List, Method_insert_many_back) {
   s21::List<int> s21_test{1, 9, -1, 5};
   s21::List<int> s21_test_1{1, 9, -1, 5};
-  s21_test.emplace_back(7, 7, 7);
+  s21_test.insert_many_back(7, 7, 7);
   for (auto i = 0; i < 3; i++) s21_test_1.push_back(7);
   EXPECT_TRUE(comparisonLists(s21_test, s21_test_1));
 }
 
-TEST(List, Method_emplace_front) {
+TEST(List, Method_insert_many_front) {
   s21::List<int> s21_test{1, 9, -1, 5};
   s21::List<int> s21_test_1{1, 9, -1, 5};
-  s21_test.emplace_front(7, 7, 7);
+  s21_test.insert_many_front(7, 7, 7);
   for (auto i = 0; i < 3; i++) s21_test_1.push_front(7);
   EXPECT_TRUE(comparisonLists(s21_test, s21_test_1));
 }

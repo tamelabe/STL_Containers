@@ -157,10 +157,10 @@ TEST(Stack, Method_swap) {
   EXPECT_TRUE(comparisonStacks(s21_test_1, std_test_1));
 }
 
-TEST(List, Method_emplace_front) {
+TEST(Stack, Method_insert_many_front) {
   s21::Stack<int> s21_test{1, 9, -1, 5};
   s21::Stack<int> s21_test_1{1, 9, -1, 5};
-  s21_test.emplace_front(7, 7, 7);
+  s21_test.insert_many_front(7, 7, 7);
   for (auto i = 0; i < 3; i++) s21_test_1.push(7);
   EXPECT_TRUE(comparisonStacks(s21_test, s21_test_1));
 }

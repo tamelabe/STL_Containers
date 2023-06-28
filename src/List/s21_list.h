@@ -66,11 +66,11 @@ class List {
   void sort();
 
   template <class... Args>
-  iterator emplace(const_iterator pos, Args &&...args);
+  iterator insert_many(const_iterator pos, Args &&...args);
   template <class... Args>
-  void emplace_back(Args &&...args);
+  void insert_many_back(Args &&...args);
   template <class... Args>
-  void emplace_front(Args &&...args);
+  void insert_many_front(Args &&...args);
 
  private:
   // Variables
@@ -446,7 +446,7 @@ void List<T>::sort() {
  */
 template <class T>
 template <class... Args>
-typename List<T>::iterator List<T>::emplace(const_iterator pos,
+typename List<T>::iterator List<T>::insert_many(const_iterator pos,
                                             Args &&...args) {
   auto iter = begin();
   /**
@@ -465,7 +465,7 @@ typename List<T>::iterator List<T>::emplace(const_iterator pos,
  */
 template <class T>
 template <class... Args>
-void List<T>::emplace_back(Args &&...args) {
+void List<T>::insert_many_back(Args &&...args) {
   ([&] { push_back(std::forward<T>(args)); }(), ...);
 }
 
@@ -474,7 +474,7 @@ void List<T>::emplace_back(Args &&...args) {
  */
 template <class T>
 template <class... Args>
-void List<T>::emplace_front(Args &&...args) {
+void List<T>::insert_many_front(Args &&...args) {
   ([&] { push_front(std::forward<T>(args)); }(), ...);
 }
 

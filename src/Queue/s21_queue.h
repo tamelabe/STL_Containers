@@ -41,8 +41,8 @@ class Queue {
   void swap(Queue &other) { container_.swap(other.container_); }
   //  Queue bonus
   template <class... Args>
-  void emplace_back(Args &&...args) {
-    container_.emplace_back(std::forward<Args>(args)...);
+  void insert_many_back(Args &&...args) {
+    container_.insert_many_back(std::forward<Args>(args)...);
   }
 
  private:
