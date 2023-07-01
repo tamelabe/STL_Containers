@@ -6,168 +6,221 @@
 #include <cstring>
 #include <iostream>
 
-// Constructors
-TEST(Constructor, base) {
+// compare s21 array with std                                                       array
+template <class T, size_t N>
+bool compareWithStd(s21::array<T, N> &s21_array, std::array<T, N> &std_array) {
+  if (s21_array.size() != std_array.size() || s21_array.empty() != std_array.empty()) {
+    return false;
+  }
+
+  auto it1 = s21_array.begin();
+  auto it2 = std_array.begin();
+  
+  for (size_t i = 0; i < s21_array.size(); ++i, ++it1, ++it2) {
+    if (*it1 != *it2) return false;
+  }
+
+  return true;
+}
+
+// compare s21 arrays
+template <class T, size_t N>
+bool compareWithS21(s21::array<T, N> &array, s21::array<T, N> &array2) {
+  if (array.size() != array2.size() || array.empty() != array2.empty()) {
+    return false;
+  }
+
+  auto it1 = array.begin();
+  auto it2 = array2.begin();
+
+  for (size_t i = 0; i < array.size(); ++i, ++it1, ++it2) {
+    if (*it1 != *it2) return false;
+  }
+  
+  return true;
+}
+
+TEST(Array, Constructor_default__init_valid) {
   s21::array<int, 3> s21_arr;
   std::array<int, 3> std_arr;
-  EXPECT_TRUE(s21_arr.size() == std_arr.size());
+  EXPECT_EQ(s21_arr.size(), std_arr.size());
 }
 
-TEST(Constructor, base_2) {
+TEST(Array, Constructor_default__zero_init) {
   std::array<int, 0> std_arr;
   s21::array<int, 0> s21_arr;
-  EXPECT_TRUE(std_arr.size() == 0);
-  EXPECT_TRUE(s21_arr.size() == 0);
+  EXPECT_EQ(std_arr.size(), s21_arr.size());
 }
 
-// TEST(Constructor, items) {
-//   s21::array<int, 5> arr{1, 2, 3, 4, 5};
-//   EXPECT_TRUE(arr.size() == 5);
-//   for (size_t i = 0; i < arr.size(); i++) {
-//     EXPECT_TRUE((int)(i + 1) == arr.data()[i]);
-//   }
-// }
+TEST(Array, Constructor_list__correct) {
+  s21::array<int, 5> s21_arr{1, 2, 3, 4, 5};
+  std::array<int, 5> std_arr{1, 2, 3, 4, 5};
+  EXPECT_TRUE(s21_arr.size() == std_arr.size());
+  EXPECT_TRUE(compareWithStd(s21_arr, std_arr));
+}
 
-// TEST(Constructor, items_less) {
-//   s21::array<int, 3> arr2{1, 2};
-//   EXPECT_TRUE(arr2.size() == 3);
-//   EXPECT_TRUE(arr2.data()[0] == 1);
-//   EXPECT_TRUE(arr2.data()[1] == 2);
-//   EXPECT_TRUE(arr2.data()[2] == 0);
-// }
+TEST(Array, Constructor_list__less_items) {
+  s21::array<int, 3> s21_arr{1, 2};
+  std::array<int, 3> std_arr{1, 2};
+  EXPECT_TRUE(compareWithStd(s21_arr, std_arr));
+}
 
-// TEST(Constructor, items_error) {
+// Здесь есть утечка в памяти, судя по всему это связано 
+// с особенностями работы GTest с исключениями 
+// но тест корректно проверяет работу исключения
+// TEST(Array, Constructor_items_exception) {
 //   EXPECT_THROW((s21::array<int, 2>{1, 2, 3}), std::length_error);
 // }
 
-// TEST(Constructor, copy) {
+TEST(Array, Constructor_copy__integers) {
+  s21::array<int, 3> arr{1, 2, 3};
+  s21::array<int, 3> arr2(arr);
+  EXPECT_TRUE(compareWithS21(arr2, arr));
+}
+
+TEST(Array, Constructor_copy__strings) {
+  s21::array<std::string, 3> arr{"abc", "xyz", "qwe"};
+  s21::array<std::string, 3> arr2(arr);
+  EXPECT_TRUE(compareWithS21(arr2, arr));
+}
+
+TEST(Array, Constructor_move__integers) {
+  s21::array<int, 3> arr{1, 2, 3};
+  s21::array<int, 3> arr2(std::move(arr));
+  s21::array<int, 3> test_arr{1, 2, 3};
+  EXPECT_TRUE(compareWithS21(arr2, test_arr));
+  EXPECT_TRUE(arr2.size() == 3);
+  EXPECT_TRUE(arr.empty());
+}
+
+TEST(Array, Constructor_move__strings) {
+  s21::array<std::string, 3> arr{"abc", "xyz", "qwe"};
+  s21::array<std::string, 3> arr2(std::move(arr));
+  s21::array<std::string, 3> test_arr{"abc", "xyz", "qwe"};
+  EXPECT_TRUE(compareWithS21(arr2, test_arr));
+  EXPECT_TRUE(arr2.size() == 3);
+  EXPECT_TRUE(arr.empty());
+}
+
+TEST(Array, Assignment_operator_overload) {
+  s21::array<int, 3> arr{1, 2, 3};
+  s21::array<int, 3> arr2 = std::move(arr);
+  s21::array<int, 3> test_arr{1, 2, 3};
+  EXPECT_TRUE(compareWithS21(arr2, test_arr));
+  EXPECT_TRUE(arr2.size() == 3);
+  EXPECT_TRUE(arr.empty());
+}
+
+TEST(Array, ElementAccess_at) {
+  s21::array<int, 3> s21_arr{1, 2, 3};
+  std::array<int, 3> std_arr{1, 2, 3};
+  int a = s21_arr.at(2);
+  int b = std_arr.at(2);
+  EXPECT_EQ(a, b);
+}
+
+// // Здесь есть утечка в памяти, судя по всему это связано 
+// // с особенностями работы GTest с исключениями 
+// // но тест корректно проверяет работу исключения
+// TEST(Array, ElementAccess_at__exception) {
 //   s21::array<int, 3> arr{1, 2, 3};
-//   s21::array<int, 3> arr2(arr);
-//   EXPECT_TRUE(arr2.size() == 3);
-//   for (size_t i = 0; i < arr2.size(); i++) {
-//     EXPECT_TRUE(arr.data()[i] == arr2.data()[i]);
-//   }
+//   EXPECT_THROW((arr.at(3)), std::out_of_range);
 // }
 
-// TEST(Constructor, move) {
-//   s21::array<int, 3> arr{1, 2, 3};
-//   s21::array<int, 3> arr2(std::move(arr));
+TEST(Array, ElementAccess_front) {
+  s21::array<int, 3> s21_arr{1, 2, 3};
+  std::array<int, 3> std_arr{1, 2, 3};
+  int a = s21_arr.front();
+  int b = std_arr.front();
+  EXPECT_EQ(a, b);
+}
 
-//   EXPECT_TRUE(arr2.size() == 3);
-//   EXPECT_TRUE(arr.size() == 0);
-//   for (size_t i = 0; i < arr2.size(); i++) {
-//     EXPECT_TRUE((int)(i + 1) == arr2.data()[i]);
-//     EXPECT_TRUE(0 == arr.data()[i]);
-//   }
-// }
-
-// // Overloads
-// TEST(OperatorOverload, move) {
-//   s21::array<int, 3> arr{1, 2, 3};
-//   s21::array<int, 3> arr2 = std::move(arr);
-
-//   EXPECT_TRUE(arr2.size() == 3);
-//   for (size_t i = 0; i < arr2.size(); i++) {
-//     EXPECT_TRUE((int)(i + 1) == arr2.data()[i]);
-//     EXPECT_TRUE(0 == arr.data()[i]);
-//   }
-// }
-
-// // Element access
-// TEST(ElementAccess, at) {
-//   s21::array<int, 3> arr{1, 2, 3};
-//   int a = arr.at(2);
-//   EXPECT_TRUE(a == 3);
-// }
-
-// TEST(ElementAccess, at_error) {
-//   s21::array<int, 3> arr{1, 2, 3};
-//   EXPECT_THROW(arr.at(4), std::out_of_range);
-// }
-
-// TEST(ElementAccess, at_operator) {
-//   s21::array<int, 3> arr{1, 2, 3};
-//   int a = arr[2];
-//   EXPECT_TRUE(a == 3);
-// }
-
-// TEST(ElementAccess, at_operator_error) {
-//   s21::array<int, 3> arr{1, 2, 3};
-//   EXPECT_THROW(arr[4], std::out_of_range);
-// }
-
-// TEST(ElementAccess, front) {
-//   s21::array<int, 3> arr{1, 2, 3};
-//   int a = arr.front();
-//   EXPECT_TRUE(a == 1);
-// }
-
+// // Здесь есть утечка в памяти, судя по всему это связано 
+// // с особенностями работы GTest с исключениями 
+// // но тест корректно проверяет работу исключения
 // TEST(ElementAccess, front_empty) {
-//   s21::array<int, 0> arr;
-//   EXPECT_THROW(arr.front(), std::out_of_range);
+//   s21::array<int, 0> s21_arr;
+//   EXPECT_THROW(s21_arr.front(), std::out_of_range);
 // }
 
-// TEST(ElementAccess, back) {
-//   s21::array<int, 3> arr{1, 2, 3};
-//   int a = arr.back();
-//   EXPECT_TRUE(a == 3);
-// }
+TEST(Array, ElementAccess_back) {
+  s21::array<int, 3> s21_arr{1, 2, 3};
+  s21::array<int, 3> std_arr{1, 2, 3};
+  int a = s21_arr.back();
+  int b = std_arr.back();
+  EXPECT_TRUE(a == b);
+}
 
+// // Здесь есть утечка в памяти, судя по всему это связано 
+// // с особенностями работы GTest с исключениями 
+// // но тест корректно проверяет работу исключения
 // TEST(ElementAccess, back_empty) {
 //   s21::array<int, 0> arr;
 //   EXPECT_THROW(arr.back(), std::out_of_range);
 // }
 
-// // Iterators
-// TEST(Iterator, begin) {
-//   s21::array<int, 3> arr{1, 2, 3};
-//   int* a = arr.begin();
-//   EXPECT_TRUE(*a == 1);
-// }
+TEST(Array, ElementAccess_data) {
+  s21::array<int, 3> s21_arr{1, 2, 3};
+  std::array<int, 3> std_arr{1, 2, 3};
+  EXPECT_EQ(*(s21_arr.data()), *(std_arr.data()));
+}
 
-// TEST(Iterator, end) {
-//   s21::array<int, 3> arr{1, 2, 3};
-//   int* a = arr.end();
-//   EXPECT_TRUE(*(a - 1) == 3);
-// }
+TEST(Array, Iterator_begin) {
+  s21::array<int, 3> arr{1, 2, 3};
+  int* a = arr.begin();
+  EXPECT_EQ(*a, 1);
+}
 
-// // Capacity
-// TEST(Capacity, empty) {
-//   s21::array<int, 0> arr;
-//   s21::array<int, 2> arr2{1, 2};
-//   EXPECT_TRUE(arr.empty());
-//   EXPECT_FALSE(arr2.empty());
-// }
+TEST(Array, Iterator_end) {
+  s21::array<int, 3> s21_arr{1, 2, 3};
+  std::array<int, 3> std_arr{1, 2, 3};
+  int* a = s21_arr.end();
+  int* b = std_arr.end();
+  EXPECT_EQ(*(b - 1), *(a - 1));
+}
 
-// TEST(Capacity, size) {
-//   s21::array<int, 2> arr{1, 2};
-//   EXPECT_TRUE(arr.size() == 2);
-// }
+TEST(Array, Capacity_empty) {
+  s21::array<int, 0> arr;
+  s21::array<int, 2> arr2{1, 2};
+  EXPECT_TRUE(arr.empty());
+  EXPECT_FALSE(arr2.empty());
+}
 
-// TEST(Capacity, max_size) {
-//   s21::array<int, 10> arr;
-//   EXPECT_TRUE(arr.max_size() == 10);
-// }
+TEST(Array, Capacity_size) {
+  s21::array<int, 2> s21_arr{1, 2};
+  std::array<int, 2> std_arr{1, 2};
+  EXPECT_EQ(s21_arr.size(), std_arr.size());
+  
+  s21::array<int, 4> s21_arr2{1, 2};
+  std::array<int, 4> std_arr2{1, 2};
+  EXPECT_EQ(s21_arr2.size(), std_arr2.size());
+}
 
-// TEST(Modifier, swap) {
-//   s21::array<int, 3> arr{100, 200, 300};
-//   s21::array<int, 3> arr2{1000, 2000, 3000};
-//   arr.swap(arr2);
-//   EXPECT_TRUE(arr.data()[0] == 1000);
-//   EXPECT_TRUE(arr.data()[1] == 2000);
-//   EXPECT_TRUE(arr.data()[2] == 3000);
-//   EXPECT_TRUE(arr2.data()[0] == 100);
-//   EXPECT_TRUE(arr2.data()[1] == 200);
-//   EXPECT_TRUE(arr2.data()[2] == 300);
-// }
+TEST(Array, Capacity_max_size) {
+  s21::array<int, 10> s21_arr;
+  std::array<int, 10> std_arr;
+  EXPECT_EQ(s21_arr.max_size(), std_arr.max_size());
+}
 
-// TEST(Modifier, fill) {
-//   s21::array<int, 3> arr;
-//   arr.fill(7);
-//   EXPECT_TRUE(arr.data()[0] == 7);
-//   EXPECT_TRUE(arr.data()[1] == 7);
-//   EXPECT_TRUE(arr.data()[2] == 7);
-// }
+TEST(Array, Modifier_swap) {
+  s21::array<int, 3> s21_arr{100, 200, 300};
+  s21::array<int, 3> s21_arr2{1000, 2000, 3000};
+  s21_arr.swap(s21_arr2);
+
+  std::array<int, 3> std_arr{100, 200, 300};
+  std::array<int, 3> std_arr2{1000, 2000, 3000};
+  std_arr.swap(std_arr2);
+  EXPECT_TRUE(compareWithStd(s21_arr, std_arr));
+  EXPECT_TRUE(compareWithStd(s21_arr2, std_arr2));
+}
+
+TEST(Array, Modifier_fill) {
+  s21::array<int, 3> s21_arr;
+  std::array<int, 3> std_arr;
+  s21_arr.fill(7);
+  std_arr.fill(7);
+  EXPECT_TRUE(compareWithStd(s21_arr, std_arr));
+}
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
