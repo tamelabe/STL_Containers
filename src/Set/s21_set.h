@@ -31,7 +31,7 @@ class set {
   using const_reference = const value_type &;
   using tree_type = s21::BTree<KT>;
   using iterator = typename tree_type::iterator;
-  // using const_iterator  = SetConstIterator<key_type>;
+  using const_iterator = const typename tree_type::iterator;
   using size_type = size_t;
 
  public:
@@ -163,9 +163,6 @@ template <typename KT>
 std::pair<typename s21::set<KT>::iterator, bool> s21::set<KT>::insert(
     const KT &value) {
   if (tree_.search(value) != nullptr) {
-    return std::pair<iterator, bool>{nullptr, false};
-  }
-  if (size_ >= max_size()) {
     return std::pair<iterator, bool>{nullptr, false};
   }
   auto it = tree_.insert(value, KT{});

@@ -37,24 +37,27 @@ TEST(member_functions, initializer_list_one_element_char) {
   ASSERT_TRUE(set.size() == 1);
   ASSERT_TRUE(set.begin().getNode()->key == 'a');
   ASSERT_TRUE(set.end().getNode() == nullptr);
+  std::set<int> set2{1};
 }
 
 TEST(member_functions, initializer_list_one_element_double) {
   s21::set<double> set{1.0};
   std::set<double> stdset{1.0};
+  std::set<double> std_another_set{2.0};
   ASSERT_TRUE(comparisonSet(set, stdset));
+  ASSERT_FALSE(comparisonSet(set, std_another_set));
   ASSERT_TRUE(set.size() == 1);
   ASSERT_TRUE(set.begin().getNode()->key == 1.0);
   ASSERT_TRUE(set.end().getNode() == nullptr);
 }
 
 TEST(member_functions, initializer_list_std_pair) {
-  s21::set<std::pair<int, char>> set{std::make_pair(1, 'a')};
-  std::set<std::pair<int, char>> stdset{std::make_pair(1, 'a')};
+  s21::set<std::pair<int, int>> set{std::make_pair(1, 2)};
+  std::set<std::pair<int, int>> stdset{std::make_pair(1, 2)};
   comparisonSet(set, stdset);
   ASSERT_TRUE(set.size() == 1);
   ASSERT_TRUE(set.begin().getNode()->key.first == 1);
-  ASSERT_TRUE(set.begin().getNode()->key.second == 'a');
+  ASSERT_TRUE(set.begin().getNode()->key.second == 2);
   ASSERT_TRUE(set.end().getNode() == nullptr);
 }
 
@@ -221,7 +224,8 @@ int main(int argc, char **argv) {
 
 template <class T>
 bool comparisonSet(s21::set<T> &s21_set, std::set<T> &stl_set) {
-  if (s21_set.empty() == stl_set.empty()) {
+  if (s21_set.empty() == true ||
+      stl_set.empty() == true) {
     return true;
   }
   if (s21_set.size() != stl_set.size()) {
@@ -230,7 +234,10 @@ bool comparisonSet(s21::set<T> &s21_set, std::set<T> &stl_set) {
   auto it1 = s21_set.begin();
   auto it2 = stl_set.begin();
   for (size_t size = 0; size < s21_set.size(); ++size, ++it1, ++it2) {
-    if (*it1 != *it2) return false;
+    std::cout << *it1 << " " << *it2 << std::endl;
+    if (*it1 != *it2) {
+      return false;
+    }
   }
   return true;
 }
@@ -244,6 +251,7 @@ bool comparisonSet(s21::set<T> &s21_set, s21::set<T> &s21_set2) {
   auto it1 = s21_set.begin();
   auto it2 = s21_set2.begin();
   for (size_t size = 0; size < s21_set.size(); ++size, ++it1, ++it2) {
+    std::cout << *it1 << " " << *it2 << std::endl;
     if (*it1 != *it2) return false;
   }
   return true;
