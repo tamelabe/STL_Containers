@@ -54,7 +54,7 @@ TEST(member_functions, initializer_list_one_element_double) {
 TEST(member_functions, initializer_list_std_pair) {
   s21::set<std::pair<int, int>> set{std::make_pair(1, 2)};
   std::set<std::pair<int, int>> stdset{std::make_pair(1, 2)};
-  comparisonSet(set, stdset);
+  ASSERT_TRUE(comparisonSet(set, stdset));
   ASSERT_TRUE(set.size() == 1);
   ASSERT_TRUE(set.begin().getNode()->key.first == 1);
   ASSERT_TRUE(set.begin().getNode()->key.second == 2);
@@ -148,14 +148,24 @@ TEST(Modifiers, insert_pair) {
 
 TEST(Modifiers, insert_key_value) {
   s21::set<char> set;
-  set.insert('a');
   set.insert('b');
+  set.insert('a');
   std::set<char> stdset;
   stdset.insert('a');
   stdset.insert('b');
   ASSERT_TRUE(comparisonSet(set, stdset));
   ASSERT_TRUE(set.contains('a') == true);
   ASSERT_TRUE(set.contains('b') == true);
+}
+
+TEST(Modifiers, insert_key_value_int) {
+  s21::set<int> set;
+  set.insert(1);
+  set.insert(2);
+  std::set<int> stdset;
+  stdset.insert(1);
+  stdset.insert(2);
+  ASSERT_TRUE(comparisonSet(set, stdset));
 }
 
 TEST(Modifiers, erase_no_child) {
@@ -211,8 +221,8 @@ TEST(Modifiers, erase_two_child_2) {
 }
 
 TEST(Modifiers, merge) {
-  s21::set<int> set{{8}, {4}, {11}};
-  s21::set<int> set1{{1}, {10}, {11}};
+  s21::set<int> set{8, 4, 11};
+  s21::set<int> set1{1, 10, 11};
   set.merge(set1);
   ASSERT_TRUE(set.size() == 5);
 }
@@ -234,7 +244,6 @@ bool comparisonSet(s21::set<T> &s21_set, std::set<T> &stl_set) {
   auto it1 = s21_set.begin();
   auto it2 = stl_set.begin();
   for (size_t size = 0; size < s21_set.size(); ++size, ++it1, ++it2) {
-    std::cout << *it1 << " " << *it2 << std::endl;
     if (*it1 != *it2) {
       return false;
     }
@@ -251,7 +260,6 @@ bool comparisonSet(s21::set<T> &s21_set, s21::set<T> &s21_set2) {
   auto it1 = s21_set.begin();
   auto it2 = s21_set2.begin();
   for (size_t size = 0; size < s21_set.size(); ++size, ++it1, ++it2) {
-    std::cout << *it1 << " " << *it2 << std::endl;
     if (*it1 != *it2) return false;
   }
   return true;
