@@ -165,7 +165,7 @@ std::pair<typename s21::set<KT>::iterator, bool> s21::set<KT>::insert(
   if (tree_.search(value) != nullptr) {
     return std::pair<iterator, bool>{nullptr, false};
   }
-  auto it = tree_.insert(value, KT{});
+  auto it = tree_.insert(value, value);
   size_++;
   return std::pair<iterator, bool>{it, true};
 };
