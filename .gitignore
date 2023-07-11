@@ -62,3 +62,7 @@ dkms.conf
 .vscode
 .DS_Store
 .clang-format
+# MISC
+.vscode
+*.gcda
+*.gcno
