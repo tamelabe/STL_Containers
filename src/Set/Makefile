@@ -1,4 +1,4 @@
-# FLAGS=-ggdb -std=c++17 -Wall -Werror -Wextra -lstdc++
+FLAGS=-ggdb -std=c++17 -Wall -Werror -Wextra -lstdc++
 
 SET_TEST_SOURCE=s21_set_test.cc
 SET_TEST_OUTPUT=s21_set_test.o
@@ -8,21 +8,20 @@ all: clean check set_test leaks
 # all: clean map_test
 
 check:
-	# cp ../../materials/linters/.clang-format . && clang-format *.cc *.h */*.cc */*.h
+	cp ../../materials/linters/.clang-format . && clang-format -n *.cc *.h
 	# rm -f .clang-format
 	cppcheck --check-config --std=c++17 --language=c++ --enable=all --suppress=missingIncludeSystem *.cc *.h
 
 set_test: $(SET_TEST_SOURCE)
-	@g++ $(FLAGS) --coverage $(SET_TEST_SOURCE) -o $(SET_TEST_OUTPUT) -lgtest
+	@g++ $(FLAGS) --coverage $(SET_TEST_SOURCE) -o $(SET_TEST_OUTPUT) -lgtest --coverage
 	@./$(SET_TEST_OUTPUT)
 
 leaks:
 	leaks -atExit -- ./$(SET_TEST_OUTPUT)
 
 gcov_report:
-	lcov -t "test" -o test.info -c -d ./
-	lcov --remove test.info "/usr*" -o test.info
-	genhtml -o report test.info
+	lcov -t "test" -o test.info -c -d ./ --no-external
+	genhtml test.info -o report test.info
 	open -a "Safari" ./report/index.html
 
 clean:
