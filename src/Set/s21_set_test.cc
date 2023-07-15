@@ -234,8 +234,7 @@ int main(int argc, char **argv) {
 
 template <class T>
 bool comparisonSet(s21::set<T> &s21_set, std::set<T> &stl_set) {
-  if (s21_set.empty() == true ||
-      stl_set.empty() == true) {
+  if (s21_set.empty() == true || stl_set.empty() == true) {
     return true;
   }
   if (s21_set.size() != stl_set.size()) {

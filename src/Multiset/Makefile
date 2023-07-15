@@ -18,7 +18,7 @@ leaks:
 	leaks -atExit -- ./$(SET_TEST_OUTPUT)
 
 gcov_report:
-	lcov -t "test" -o test.info -c -d ./ --no-external
+	lcov -t "test" -o test.info -c -d ./ --no-external --ignore-errors mismatch
 	genhtml test.info -o report test.info
 	open -a "Safari" ./report/index.html
 

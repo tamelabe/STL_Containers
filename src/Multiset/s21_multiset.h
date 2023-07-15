@@ -168,7 +168,7 @@ std::pair<typename s21::multiset<KT>::iterator, bool> s21::multiset<KT>::insert(
   auto it = tree_.insert(value, value);
   size_++;
   return std::pair<iterator, bool>{it, true};
-};
+}
 
 // Delete one node by getting iterator
 template <typename KT>

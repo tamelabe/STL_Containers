@@ -447,7 +447,7 @@ void List<T>::sort() {
 template <class T>
 template <class... Args>
 typename List<T>::iterator List<T>::insert_many(const_iterator pos,
-                                            Args &&...args) {
+                                                Args &&...args) {
   auto iter = begin();
   /**
    * (); - lambda expression

@@ -9,8 +9,7 @@
 // compare s21 array with std array
 template <class T, size_t N>
 bool compareWithStd(s21::array<T, N>& s21_arr, std::array<T, N>& std_arr) {
-  if (s21_arr.size() != std_arr.size() ||
-      s21_arr.empty() != std_arr.empty()) {
+  if (s21_arr.size() != std_arr.size() || s21_arr.empty() != std_arr.empty()) {
     return false;
   }
 
