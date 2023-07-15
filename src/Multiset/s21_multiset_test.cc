@@ -7,11 +7,11 @@
 #include <iostream>
 
 template <class T>
-bool comparisonMulitset(s21::multiset<T> &s21_multiset,
+bool comparisonMultiset(s21::multiset<T> &s21_multiset,
                         s21::multiset<T> &s21_multiset2);
 template <class T>
 bool comparisonMultiset(s21::multiset<T> &s21_multiset,
-                        std::multiset<T> &std_multiset);
+                        std::multiset<T> &stl_multiset);
 
 // Constructors
 TEST(member_functions, base_constructor_int) {
@@ -81,27 +81,27 @@ TEST(member_functions, initializer_list_char) {
   ASSERT_TRUE(multiset.end().getNode() == nullptr);
 }
 
-// TEST(member_functions, copy_constructor) {
-//   s21::multiset<int> multiset{1, 2, 3, 4};
-//   s21::multiset<int> copymultiSet(multiset);
-//   ASSERT_TRUE(comparisonMultiset(multiset, copymultiSet));
-// }
-//
-// TEST(member_functions, move_constructor) {
-//   s21::multiset<int> multiset{1, 2, 3, 4};
-//   s21::multiset<int> copymultiSet(multiset);
-//   s21::multiset<int> movemultiSet(std::move(multiset));
-//   ASSERT_TRUE(!comparisonMultiset(multiset, movemultiSet));
-//   ASSERT_TRUE(comparisonMultiset(movemultiSet, copymultiSet));
-// }
-//
-// TEST(member_functions, move_operator) {
-//   s21::multiset<int> multiset{1, 2, 3, 4};
-//   s21::multiset<int> copymultiSet(multiset);
-//   s21::multiset<int> movemultiSet = std::move(multiset);
-//   ASSERT_TRUE(!comparisonMultiset(multiset, movemultiSet));
-//   ASSERT_TRUE(comparisonMultiset(movemultiSet, copymultiSet));
-// }
+TEST(member_functions, copy_constructor) {
+  s21::multiset<int> multiset{1, 2, 3, 4};
+  s21::multiset<int> copymultiSet(multiset);
+  ASSERT_TRUE(comparisonMultiset(multiset, copymultiSet));
+}
+
+TEST(member_functions, move_constructor) {
+  s21::multiset<int> multiset{1, 2, 3, 4};
+  s21::multiset<int> copymultiSet(multiset);
+  s21::multiset<int> movemultiSet(std::move(multiset));
+  ASSERT_TRUE(!comparisonMultiset(multiset, movemultiSet));
+  ASSERT_TRUE(comparisonMultiset(movemultiSet, copymultiSet));
+}
+
+TEST(member_functions, move_operator) {
+  s21::multiset<int> multiset{1, 2, 3, 4};
+  s21::multiset<int> copymultiSet(multiset);
+  s21::multiset<int> movemultiSet = std::move(multiset);
+  ASSERT_TRUE(!comparisonMultiset(multiset, movemultiSet));
+  ASSERT_TRUE(comparisonMultiset(movemultiSet, copymultiSet));
+}
 
 TEST(Iterators, begin) {
   s21::multiset<int> multiset{1, 2, 3, 4};
