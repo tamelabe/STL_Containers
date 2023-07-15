@@ -8,33 +8,26 @@
 #include <map>
 
 // Constructors
-TEST(member_functions, base_constructor) {
+TEST(Map, base_constructor) {
   s21::map<int, int> map;
   ASSERT_TRUE(map.size() == 0);
 }
 
-TEST(member_functions, initializer_list) {
+TEST(Map, initializer_list) {
   s21::map<int, char> map{
-    std::pair<int, char> {4, 'a'},
-    std::pair<int, char> {2, 'b'},
-    std::pair<int, char> {3, 'c'},
-    std::pair<int, char> {7, 'd'}
-  };
+      std::pair<int, char>{4, 'a'}, std::pair<int, char>{2, 'b'},
+      std::pair<int, char>{3, 'c'}, std::pair<int, char>{7, 'd'}};
   ASSERT_TRUE(map.size() == 4);
   ASSERT_TRUE(map.at(4) == 'a');
   ASSERT_TRUE(map.at(7) == 'd');
 }
 
-TEST(member_functions, copy_constructor) {
+TEST(Map, copy_constructor) {
   s21::map<int, char> map{
-    std::pair<int, char> {5, 'a'},
-    std::pair<int, char> {3, 'b'},
-    std::pair<int, char> {7, 'c'},
-    std::pair<int, char> {2, 'd'},
-    std::pair<int, char> {4, 'e'},
-    std::pair<int, char> {6, 'f'},
-    std::pair<int, char> {8, 'g'}
-  };
+      std::pair<int, char>{5, 'a'}, std::pair<int, char>{3, 'b'},
+      std::pair<int, char>{7, 'c'}, std::pair<int, char>{2, 'd'},
+      std::pair<int, char>{4, 'e'}, std::pair<int, char>{6, 'f'},
+      std::pair<int, char>{8, 'g'}};
   s21::map<int, char> map2(map);
   ASSERT_TRUE(map2.size() == 7);
   ASSERT_TRUE(map2.at(5) == 'a');
@@ -42,14 +35,11 @@ TEST(member_functions, copy_constructor) {
   ASSERT_TRUE(map2.at(2) == 'd');
 }
 
-TEST(member_functions, move_constructor) {
+TEST(Map, move_constructor) {
   s21::map<int, char> map{
-    std::pair<int, char> {5, 'a'},
-    std::pair<int, char> {3, 'b'},
-    std::pair<int, char> {7, 'c'},
-    std::pair<int, char> {2, 'd'},
-    std::pair<int, char> {4, 'e'}
-  };
+      std::pair<int, char>{5, 'a'}, std::pair<int, char>{3, 'b'},
+      std::pair<int, char>{7, 'c'}, std::pair<int, char>{2, 'd'},
+      std::pair<int, char>{4, 'e'}};
   s21::map<int, char> map2(std::move(map));
   ASSERT_TRUE(map2.size() == 5);
   ASSERT_TRUE(map2.at(5) == 'a');
@@ -57,14 +47,11 @@ TEST(member_functions, move_constructor) {
   ASSERT_TRUE(map2.at(2) == 'd');
 }
 
-TEST(member_functions, move_operator) {
+TEST(Map, move_operator) {
   s21::map<int, char> map{
-    std::pair<int, char> {5, 'a'},
-    std::pair<int, char> {3, 'b'},
-    std::pair<int, char> {7, 'c'},
-    std::pair<int, char> {2, 'd'},
-    std::pair<int, char> {4, 'e'}
-  };
+      std::pair<int, char>{5, 'a'}, std::pair<int, char>{3, 'b'},
+      std::pair<int, char>{7, 'c'}, std::pair<int, char>{2, 'd'},
+      std::pair<int, char>{4, 'e'}};
   s21::map<int, char> map2 = std::move(map);
   ASSERT_TRUE(map2.size() == 5);
   ASSERT_TRUE(map2.at(5) == 'a');
@@ -72,14 +59,11 @@ TEST(member_functions, move_operator) {
   ASSERT_TRUE(map2.at(2) == 'd');
 }
 
-TEST(element_access, accessor_inserter_element_operator) {
+TEST(Map, accessor_inserter_element_operator) {
   s21::map<int, char> map{
-    std::pair<int, char> {5, 'a'},
-    std::pair<int, char> {3, 'b'},
-    std::pair<int, char> {7, 'c'},
-    std::pair<int, char> {2, 'd'},
-    std::pair<int, char> {4, 'e'}
-  };
+      std::pair<int, char>{5, 'a'}, std::pair<int, char>{3, 'b'},
+      std::pair<int, char>{7, 'c'}, std::pair<int, char>{2, 'd'},
+      std::pair<int, char>{4, 'e'}};
   ASSERT_TRUE(map.size() == 5);
   ASSERT_TRUE(map[5] == 'a');
   ASSERT_TRUE(map[7] == 'c');
@@ -88,51 +72,42 @@ TEST(element_access, accessor_inserter_element_operator) {
   ASSERT_TRUE(map[2] == 'g');
 }
 
-TEST(Iterators, begin) {
+TEST(Map, begin) {
   s21::map<int, char> map{
-    std::pair<int, char> {5, 'a'},
-    std::pair<int, char> {3, 'b'},
-    std::pair<int, char> {7, 'c'},
-    std::pair<int, char> {2, 'd'}
-  };
+      std::pair<int, char>{5, 'a'}, std::pair<int, char>{3, 'b'},
+      std::pair<int, char>{7, 'c'}, std::pair<int, char>{2, 'd'}};
   ASSERT_TRUE(map.begin().getNode()->key == 2);
 }
 
-TEST(Iterators, end) {
+TEST(Map, end) {
   s21::map<int, char> map{
-    std::pair<int, char> {5, 'a'},
-    std::pair<int, char> {3, 'b'},
-    std::pair<int, char> {7, 'c'},
-    std::pair<int, char> {2, 'd'}
-  };
+      std::pair<int, char>{5, 'a'}, std::pair<int, char>{3, 'b'},
+      std::pair<int, char>{7, 'c'}, std::pair<int, char>{2, 'd'}};
   ASSERT_TRUE(map.end().getNode() == nullptr);
 }
 
-TEST(Capacity, empty) {
+TEST(Map, empty) {
   s21::map<int, char> map;
   ASSERT_TRUE(map.empty() == true);
-  s21::map<int, char> map2{std::pair<int, char> {5, 'a'}};
+  s21::map<int, char> map2{std::pair<int, char>{5, 'a'}};
   ASSERT_TRUE(map2.empty() == false);
 }
 
-TEST(Capacity, max_size) {
+TEST(Map, max_size) {
   s21::map<int, char> map;
   ASSERT_TRUE(map.max_size() == TREE_MAX_SIZE);  // TODO: fix hardcode!
 }
 
 // Modifiers
-TEST(Modifiers, empty) {
+TEST(Map, clear) {
   s21::map<int, char> map{
-    std::pair<int, char> {5, 'a'},
-    std::pair<int, char> {3, 'b'},
-    std::pair<int, char> {7, 'c'},
-    std::pair<int, char> {2, 'd'}
-  };
+      std::pair<int, char>{5, 'a'}, std::pair<int, char>{3, 'b'},
+      std::pair<int, char>{7, 'c'}, std::pair<int, char>{2, 'd'}};
   map.clear();
   ASSERT_TRUE(map.size() == 0);
 }
 
-// TEST(Modifiers, insert_pair_max_size) {
+// TEST(Map, insert_pair_max_size) {
 //   s21::map<int, int> map;
 //   map.insert(std::make_pair(3, 10));
 //   map.insert(std::make_pair(4, 40));
@@ -140,17 +115,17 @@ TEST(Modifiers, empty) {
 //   map.insert(std::make_pair(6, 60));
 //   map.insert(std::make_pair(7, 70));
 //   ASSERT_TRUE(map.at(7) == 70);
-//   std::pair<s21::BTree<int, int>::iterator, bool> result = map.insert(std::make_pair(8, 80));
-//   ASSERT_TRUE(result.second == false);
+//   std::pair<s21::BTree<int, int>::iterator, bool> result =
+//   map.insert(std::make_pair(8, 80)); ASSERT_TRUE(result.second == false);
 // }
 
-TEST(Modifiers, insert_pair) {
+TEST(Map, insert_pair) {
   s21::map<int, int> map;
   map.insert(std::make_pair(3, 10));
   ASSERT_TRUE(map.at(3) == 10);
 }
 
-TEST(Modifiers, insert_key_value) {
+TEST(Map, insert_key_value) {
   s21::map<int, char> map;
   map.insert(3, 'a');
   map.insert(2, 'b');
@@ -158,7 +133,7 @@ TEST(Modifiers, insert_key_value) {
   ASSERT_TRUE(map.at(2) == 'b');
 }
 
-TEST(Modifiers, insert_or_assign_key_value) {
+TEST(Map, insert_or_assign_key_value) {
   s21::map<int, char> map;
   map.insert(3, 'a');
   ASSERT_TRUE(map.at(3) == 'a');
@@ -168,7 +143,7 @@ TEST(Modifiers, insert_or_assign_key_value) {
   ASSERT_TRUE(map.at(2) == 'G');
 }
 
-TEST(Modifiers, erase_no_child) {
+TEST(Map, erase_no_child) {
   s21::map<int, char> map;
   map.insert(7, 'a');
   map.insert(3, 'b');
@@ -177,7 +152,7 @@ TEST(Modifiers, erase_no_child) {
   ASSERT_FALSE(map.contains(3));
 }
 
-TEST(Modifiers, erase_one_child) {
+TEST(Map, erase_one_child) {
   s21::map<int, char> map;
   map.insert(7, 'a');
   map.insert(3, 'b');
@@ -189,7 +164,7 @@ TEST(Modifiers, erase_one_child) {
   ASSERT_TRUE(map.find(7).getNode()->left->key == 2);
 }
 
-TEST(Modifiers, erase_two_child) {
+TEST(Map, erase_two_child) {
   s21::map<int, char> map;
   map.insert(7, 'a');
   map.insert(3, 'b');
@@ -201,7 +176,7 @@ TEST(Modifiers, erase_two_child) {
   ASSERT_TRUE(map.contains(3) == false);
 }
 
-TEST(Modifiers, erase_two_child_2) {
+TEST(Map, erase_two_child_2) {
   s21::map<int, char> map;
   map.insert(8, 'a');
   map.insert(4, 'b');
@@ -220,22 +195,29 @@ TEST(Modifiers, erase_two_child_2) {
   ASSERT_TRUE(map.contains(4) == false);
 }
 
-TEST(Modifiers, merge) {
-  s21::map<int, char> s21_map{
-    {8, 'a'},
-    {4, 'b'},
-    {11, 'c'}
-  };
-  s21::map<int, char> s21_map2{
-    {1, 'd'},
-    {10, 'e'},
-    {11, 'f'}
-  };
+TEST(Map, merge) {
+  s21::map<int, char> s21_map{{8, 'a'}, {4, 'b'}, {11, 'c'}};
+  s21::map<int, char> s21_map2{{1, 'd'}, {10, 'e'}, {11, 'f'}};
   s21_map.merge(s21_map2);
   ASSERT_TRUE(s21_map.size() == 5);
 }
 
+TEST(Map, insert_many) {
+  s21::map<int, int> map;
+  auto result = map.insert_many(std::make_pair(3, 40), std::make_pair(5, 50),
+                                std::make_pair(10, 60), std::make_pair(16, 70));
+  ASSERT_EQ(map.size(), 4);
+  ASSERT_EQ(map.find(3).getNode()->value, 40);
+  ASSERT_EQ(map.find(5).getNode()->value, 50);
+  ASSERT_EQ(map.find(10).getNode()->value, 60);
+  ASSERT_EQ(map.find(16).getNode()->value, 70);
 
+  ASSERT_EQ(result.at(0).first.getNode()->value, 40);
+  ASSERT_EQ(result.at(1).first.getNode()->value, 50);
+  ASSERT_EQ(result.at(2).first.getNode()->value, 60);
+  ASSERT_EQ(result.at(3).first.getNode()->value, 70);
+  ASSERT_EQ(result.at(0).second, true);
+}
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);

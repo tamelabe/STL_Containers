@@ -17,9 +17,9 @@ limitations under the License.
 #define CPP2_S21_CONTAINERS_BINARY_TREE_H
 
 #include <iostream>
+#include <stack>
 #include <string>
 #include <utility>
-#include <stack>
 
 #include "Node.h"
 
@@ -27,8 +27,7 @@ namespace s21 {
 
 template <typename KT, typename VT = KT>
 class BTree {
- 
- public: 
+ public:
   using node_type = Node<KT, VT>;
 
   class iterator {
@@ -49,7 +48,7 @@ class BTree {
           current = current->left;
         }
         return *this;
-      } 
+      }
       Node<KT, VT>* prev = current;
       current = current->parent;
       while (current && current->right == prev) {
@@ -59,43 +58,74 @@ class BTree {
       return *this;
     }
 
-    VT& operator*() const {
-      return current->value;
-    }
+    VT& operator*() const { return current->value; }
 
     bool operator==(const iterator& other) const {
       return current == other.current;
     }
 
-    bool operator!=(const iterator& other) const {
-      return !(*this == other);
-    }
+    bool operator!=(const iterator& other) const { return !(*this == other); }
 
-    node_type* getNode() {
-      return current;
-    }
+    node_type* getNode() { return current; }
 
    private:
     node_type* current;
   };
-  // TODO: const_iterator
-  
-  BTree() : root(nullptr) {}
-  
-  iterator insert(KT key, VT value) {
-    return insert(root, key, value);
-  }
 
-  node_type *getRoot() {
-    return root;
-  }
+  class const_iterator {
+   public:
+    explicit const_iterator(Node<KT, VT>* node) : current(nullptr) {
+      if (node) {
+        current = node;
+      }
+    }
+
+    const_iterator& operator++() {
+      if (!current) {
+        return *this;
+      }
+      if (current->right) {
+        current = current->right;
+        while (current->left) {
+          current = current->left;
+        }
+        return *this;
+      }
+      Node<KT, VT>* prev = current;
+      current = current->parent;
+      while (current && current->right == prev) {
+        prev = current;
+        current = current->parent;
+      }
+      return *this;
+    }
+
+    VT& operator*() const { return current->value; }
+
+    bool operator==(const iterator& other) const {
+      return current == other.current;
+    }
+
+    bool operator!=(const iterator& other) const { return !(*this == other); }
+
+    node_type* getNode() { return current; }
+
+   private:
+    node_type* current;
+  };
+
+  BTree() : root(nullptr) {}
+
+  iterator insert(KT key, VT value) { return insert(root, key, value); }
+
+  node_type* getRoot() { return root; }
 
   VT* search(const KT& key) {
-    node_type *current = root;
+    node_type* current = root;
     while (current) {
       if (current->key == key) {
         return &current->value;
-      } 
+      }
       if (std::less<KT>{}(key, current->key)) {
         current = current->left;
       } else {
@@ -106,11 +136,11 @@ class BTree {
   }
 
   iterator searchNode(const KT& key) {
-    node_type *current = root;
+    node_type* current = root;
     while (current) {
       if (current->key == key) {
         return iterator(current);
-      } 
+      }
       if (std::less<KT>{}(key, current->key)) {
         current = current->left;
       } else {
@@ -136,9 +166,7 @@ class BTree {
     }
     // case 2
     if (node->hasOneChild()) {
-      node_type *successor = (node->left != nullptr) 
-        ? node->left 
-        : node->right;
+      node_type* successor = (node->left != nullptr) ? node->left : node->right;
       removeNode(successor, key);
     }
     // case 3
@@ -150,10 +178,10 @@ class BTree {
       }
     }
   }
-  
-  void destroy(node_type *node) {
+
+  void destroy(node_type* node) {
     if (!node) {
-        return;
+      return;
     }
     destroy(node->left);
     destroy(node->right);
@@ -165,43 +193,36 @@ class BTree {
     if (root == nullptr) {
       return iterator(root);
     }
-    node_type *current = root;
+    node_type* current = root;
     while (current->left) {
       current = current->left;
     }
     return iterator(current);
   }
 
-  iterator end() const {
-    return iterator(nullptr);
-  }
+  iterator end() const { return iterator(nullptr); }
 
-  void print(node_type *node) {
+  void print(node_type* node) {
     if (node == nullptr) {
       return;
     }
-    std::cout 
-      << "NODE: " 
-      << node->key 
-      << " value: " 
-      << node->value 
-      << " parent: " 
-      << ((node->parent != nullptr) ? node->parent->key : 0 ) 
-      << std::endl;
+    std::cout << "NODE: " << node->key << " value: " << node->value
+              << " parent: "
+              << ((node->parent != nullptr) ? node->parent->key : 0)
+              << std::endl;
     print(node->left);
     print(node->right);
   }
 
  private:
-  node_type *root;
+  node_type* root;
 
   void updateParent(node_type* node, node_type* successor) {
-    (node->key == node->parent->left->key) 
-      ? node->parent->left = successor
-      : node->parent->right = successor;
+    (node->key == node->parent->left->key) ? node->parent->left = successor
+                                           : node->parent->right = successor;
   }
 
-  iterator insert(node_type *node, KT key, VT value) {
+  iterator insert(node_type* node, KT key, VT value) {
     if (root == nullptr) {
       root = new node_type(key, value, *node);
       return iterator(root);

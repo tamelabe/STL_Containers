@@ -6,17 +6,18 @@
 #include <cstring>
 #include <iostream>
 
-// compare s21 array with std                                                       array
+// compare s21 array with std array
 template <class T, size_t N>
-bool compareWithStd(s21::array<T, N> &s21_array, std::array<T, N> &std_array) {
-  if (s21_array.size() != std_array.size() || s21_array.empty() != std_array.empty()) {
+bool compareWithStd(s21::array<T, N>& s21_arr, std::array<T, N>& std_arr) {
+  if (s21_arr.size() != std_arr.size() ||
+      s21_arr.empty() != std_arr.empty()) {
     return false;
   }
 
-  auto it1 = s21_array.begin();
-  auto it2 = std_array.begin();
-  
-  for (size_t i = 0; i < s21_array.size(); ++i, ++it1, ++it2) {
+  auto it1 = s21_arr.begin();
+  auto it2 = std_arr.begin();
+
+  for (size_t i = 0; i < s21_arr.size(); ++i, ++it1, ++it2) {
     if (*it1 != *it2) return false;
   }
 
@@ -25,7 +26,7 @@ bool compareWithStd(s21::array<T, N> &s21_array, std::array<T, N> &std_array) {
 
 // compare s21 arrays
 template <class T, size_t N>
-bool compareWithS21(s21::array<T, N> &array, s21::array<T, N> &array2) {
+bool compareWithS21(s21::array<T, N>& array, s21::array<T, N>& array2) {
   if (array.size() != array2.size() || array.empty() != array2.empty()) {
     return false;
   }
@@ -36,7 +37,7 @@ bool compareWithS21(s21::array<T, N> &array, s21::array<T, N> &array2) {
   for (size_t i = 0; i < array.size(); ++i, ++it1, ++it2) {
     if (*it1 != *it2) return false;
   }
-  
+
   return true;
 }
 
@@ -65,8 +66,8 @@ TEST(Array, Constructor_list__less_items) {
   EXPECT_TRUE(compareWithStd(s21_arr, std_arr));
 }
 
-// Здесь есть утечка в памяти, судя по всему это связано 
-// с особенностями работы GTest с исключениями 
+// Здесь есть утечка в памяти, судя по всему это связано
+// с особенностями работы GTest с исключениями
 // но тест корректно проверяет работу исключения
 // TEST(Array, Constructor_items_exception) {
 //   EXPECT_THROW((s21::array<int, 2>{1, 2, 3}), std::length_error);
@@ -119,8 +120,8 @@ TEST(Array, ElementAccess_at) {
   EXPECT_EQ(a, b);
 }
 
-// // Здесь есть утечка в памяти, судя по всему это связано 
-// // с особенностями работы GTest с исключениями 
+// // Здесь есть утечка в памяти, судя по всему это связано
+// // с особенностями работы GTest с исключениями
 // // но тест корректно проверяет работу исключения
 // TEST(Array, ElementAccess_at__exception) {
 //   s21::array<int, 3> arr{1, 2, 3};
@@ -135,8 +136,8 @@ TEST(Array, ElementAccess_front) {
   EXPECT_EQ(a, b);
 }
 
-// // Здесь есть утечка в памяти, судя по всему это связано 
-// // с особенностями работы GTest с исключениями 
+// // Здесь есть утечка в памяти, судя по всему это связано
+// // с особенностями работы GTest с исключениями
 // // но тест корректно проверяет работу исключения
 // TEST(ElementAccess, front_empty) {
 //   s21::array<int, 0> s21_arr;
@@ -151,8 +152,8 @@ TEST(Array, ElementAccess_back) {
   EXPECT_TRUE(a == b);
 }
 
-// // Здесь есть утечка в памяти, судя по всему это связано 
-// // с особенностями работы GTest с исключениями 
+// // Здесь есть утечка в памяти, судя по всему это связано
+// // с особенностями работы GTest с исключениями
 // // но тест корректно проверяет работу исключения
 // TEST(ElementAccess, back_empty) {
 //   s21::array<int, 0> arr;
@@ -190,7 +191,7 @@ TEST(Array, Capacity_size) {
   s21::array<int, 2> s21_arr{1, 2};
   std::array<int, 2> std_arr{1, 2};
   EXPECT_EQ(s21_arr.size(), std_arr.size());
-  
+
   s21::array<int, 4> s21_arr2{1, 2};
   std::array<int, 4> std_arr2{1, 2};
   EXPECT_EQ(s21_arr2.size(), std_arr2.size());

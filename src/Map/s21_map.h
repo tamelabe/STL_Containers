@@ -2,175 +2,250 @@
 #define CPP2_S21_CONTAINERS_S21_MAP_H_
 
 #include <initializer_list>
-#include <utility>
 #include <limits>
+#include <utility>
+#include <vector>
 
 #include "BTree.h"
 
 #define TREE_MAX_SIZE 1024
 
 namespace s21 {
-  
-template<typename KT, typename VT>
+
+template <typename KT, typename VT>
 class map {
   using difference_type = std::ptrdiff_t;
-  using key_type        = KT;
-  using mapped_type     = VT;
-  using value_type      = std::pair<const key_type, mapped_type>;
-  using reference       = value_type &;
+  using key_type = KT;
+  using mapped_type = VT;
+  using value_type = std::pair<const key_type, mapped_type>;
+  using reference = value_type &;
   using const_reference = const value_type &;
-  using tree_type       = s21::BTree<KT, VT>;
-  using iterator        = typename tree_type::iterator;
-  // using const_iterator  = typename tree_type::const_iterator;
-  using size_type       = size_t;
+  using tree_type = s21::BTree<KT, VT>;
+  using iterator = typename tree_type::iterator;
+  using const_iterator = typename tree_type::const_iterator;
+  using size_type = size_t;
 
  public:
-  //
-  map() : tree_(), size_(0) {}
+  map();
+  explicit map(std::initializer_list<value_type> const &);
+  map(const map &);
+  map(map &&);
+  ~map();
+  map &operator=(map &&);
+  VT &at(const KT &);
+  iterator find(const KT &);
+  VT &operator[](const KT &);
+  iterator begin();
+  iterator end();
+  bool empty();
+  size_type size();
+  size_type max_size() const noexcept;
+  void clear();
+  std::pair<iterator, bool> insert(const value_type &);
+  std::pair<iterator, bool> insert(const KT &, const VT &);
+  std::pair<iterator, bool> insert_or_assign(const KT &, const VT &);
+  void erase(iterator);
+  void swap(map &);
+  void merge(map &);
+  bool contains(const KT &);
 
-  //
-  explicit map(std::initializer_list<value_type> const &items) : tree_(), size_(0) {
-    for (auto item : items) {
-      tree_.insert(item.first, item.second);
-      size_++;
-    }
-  }
+  template <class... Args>
+  std::vector<std::pair<iterator, bool>> insert_many(Args &&...args);
 
-  //
-  map(const map &other) : size_(0) {
-    for (auto it = other.tree_.begin(); it != other.tree_.end(); ++it) {
-      tree_.insert(it.getNode()->key, *it);
-      size_++;
-    }
-  }
-
-  //
-  map(map &&other) : map() {
-    swap(other);
-  }
-
-  //
-  ~map() {
-    if (size_ > 0 && tree_.getRoot()) {
-      size_ = 0;
-      tree_.destroy(tree_.getRoot());
-    }
-  }
-
-  //
-  map& operator=(map &&m) {
-    swap(m);
-  }
-
-  //
-  VT& at(const KT& key) {
-    return *(tree_.search(key));
-  }
-
-  //
-  iterator find(const KT& key) {
-    return tree_.searchNode(key);
-  }
-
-  //
-  VT& operator[](const KT& key) {
-    return at(key);
-  }
-
-  //
-  iterator begin() {
-    return tree_.begin();
-  }
-
-  //
-  iterator end() {
-    return tree_.end();
-  }
-
-  //
-  bool empty() {
-    return size_ == 0;
-  }
-
-  //
-  size_type size() {
-    return size_;
-  }
-
-  //
-  size_type max_size() const noexcept {
-    return TREE_MAX_SIZE;  // TODO: 
-    // return std::numeric_limits<difference_type>::max() / (sizeof(Node<KT, VT>));
-  }
-
-  //
-  void clear() {
-    tree_.destroy(tree_.getRoot());
-    size_ = 0;
-  }
-
-  //
-  std::pair<iterator, bool> insert(const value_type& v) {
-    return insert(v.first, v.second);
-  }
-
-  std::pair<iterator, bool> insert(const KT& key, const VT& value) {
-    if (tree_.search(key) != nullptr) {
-      return std::pair<iterator, bool> {nullptr, false};
-    }
-    if (size_ >= TREE_MAX_SIZE) {
-      return std::pair<iterator, bool> {nullptr, false};
-    }
-    auto it = tree_.insert(key, value);
-    size_++;
-    return std::pair<iterator, bool> {it, true};
-  }
-
-  //
-  std::pair<iterator, bool> insert_or_assign(const KT& key, const VT& value) {
-    auto it = tree_.searchNode(key);
-    if (it.getNode() != nullptr) {
-      (*this)[key] = value;
-      return std::pair<iterator, bool> {it, true};
-    }
-    return insert(key, value);
-  }
-
-  //
-  void erase(iterator pos) {
-    auto node = pos.getNode();
-    tree_.removeNode(node, node->key);
-    size_--;
-  }
-
-  //
-  void swap(map &other) {
-    using std::swap;
-    swap(size_, other.size_);
-    swap(tree_, other.tree_);
-  }
-
-  //
-  void merge(map &other) {
-    for (auto it = other.tree_.begin(); it != other.tree_.end(); ++it) {
-      insert(it.getNode()->key, *it);
-    }
-  }
-
-  //
-  bool contains(const KT& key) {
-    return (tree_.search(key) != nullptr);
-  }
-
-  // helpers
-  void print_map() {
-    tree_.print(tree_.getRoot());
-  }
+  void print_map();
 
  private:
   s21::BTree<KT, VT> tree_;
   size_type size_;
 };
+
+// default constructor, creates empty map
+template <typename KT, typename VT>
+map<KT, VT>::map() : tree_(), size_(0) {}
+
+// initializer list constructor,
+// creates the map initizialized using std::initializer_list
+template <typename KT, typename VT>
+map<KT, VT>::map(std::initializer_list<value_type> const &items)
+    : tree_(), size_(0) {
+  for (auto item : items) {
+    tree_.insert(item.first, item.second);
+    size_++;
+  }
+}
+
+// copy constructor
+template <typename KT, typename VT>
+map<KT, VT>::map(const map &other) : size_(0) {
+  for (auto it = other.tree_.begin(); it != other.tree_.end(); ++it) {
+    tree_.insert(it.getNode()->key, *it);
+    size_++;
+  }
+}
+
+// move constructor
+template <typename KT, typename VT>
+map<KT, VT>::map(map &&other) : map() {
+  swap(other);
+}
+
+// destructor
+template <typename KT, typename VT>
+map<KT, VT>::~map() {
+  if (size_ > 0 && tree_.getRoot()) {
+    size_ = 0;
+    tree_.destroy(tree_.getRoot());
+  }
+}
+
+// assignment operator overload for moving object
+template <typename KT, typename VT>
+map<KT, VT> &map<KT, VT>::operator=(map &&m) {
+  swap(m);
+}
+
+// access specified element with bounds checking
+template <typename KT, typename VT>
+VT &map<KT, VT>::at(const KT &key) {
+  return *(tree_.search(key));
+}
+
+// find node by key
+template <typename KT, typename VT>
+typename map<KT, VT>::iterator map<KT, VT>::find(const KT &key) {
+  return tree_.searchNode(key);
+}
+
+// access or insert specified element
+template <typename KT, typename VT>
+VT &map<KT, VT>::operator[](const KT &key) {
+  return at(key);
+}
+
+// returns an iterator to the beginning
+template <typename KT, typename VT>
+typename s21::map<KT, VT>::iterator s21::map<KT, VT>::begin() {
+  return tree_.begin();
+}
+
+// returns an iterator to the end
+template <typename KT, typename VT>
+typename s21::map<KT, VT>::iterator s21::map<KT, VT>::end() {
+  return tree_.end();
+}
+
+// checks whether the container is empty
+template <typename KT, typename VT>
+bool s21::map<KT, VT>::empty() {
+  return size_ == 0;
+}
+
+// returns the number of elements
+template <typename KT, typename VT>
+typename s21::map<KT, VT>::size_type s21::map<KT, VT>::size() {
+  return size_;
+}
+
+// returns the maximum possible number of elements
+template <typename KT, typename VT>
+typename s21::map<KT, VT>::size_type s21::map<KT, VT>::max_size()
+    const noexcept {
+  return TREE_MAX_SIZE;  // TODO:
+  // return std::numeric_limits<difference_type>::max() / (sizeof(Node<KT,
+  // VT>));
+}
+
+// clears the contents
+template <typename KT, typename VT>
+void s21::map<KT, VT>::clear() {
+  tree_.destroy(tree_.getRoot());
+  size_ = 0;
+}
+
+// inserts node and returns iterator to where the element is in the container
+// and bool denoting whether the insertion took place
+template <typename KT, typename VT>
+std::pair<typename map<KT, VT>::iterator, bool> s21::map<KT, VT>::insert(
+    const value_type &v) {
+  return insert(v.first, v.second);
+}
+
+// inserts value by key and returns iterator to where the element is in the
+// container and bool denoting whether the insertion took place
+template <typename KT, typename VT>
+std::pair<typename map<KT, VT>::iterator, bool> s21::map<KT, VT>::insert(
+    const KT &key, const VT &value) {
+  if (tree_.search(key) != nullptr) {
+    return std::pair<iterator, bool>{nullptr, false};
+  }
+  if (size_ >= TREE_MAX_SIZE) {
+    return std::pair<iterator, bool>{nullptr, false};
+  }
+  auto it = tree_.insert(key, value);
+  size_++;
+  return std::pair<iterator, bool>{it, true};
+}
+
+// inserts an element or assigns to the current element if the key already
+// exists
+template <typename KT, typename VT>
+std::pair<typename map<KT, VT>::iterator, bool>
+s21::map<KT, VT>::insert_or_assign(const KT &key, const VT &value) {
+  auto it = tree_.searchNode(key);
+  if (it.getNode() != nullptr) {
+    (*this)[key] = value;
+    return std::pair<iterator, bool>{it, true};
+  }
+  return insert(key, value);
+}
+
+// erases element at pos
+template <typename KT, typename VT>
+void s21::map<KT, VT>::erase(iterator pos) {
+  auto node = pos.getNode();
+  tree_.removeNode(node, node->key);
+  size_--;
+}
+
+// swaps the contents
+template <typename KT, typename VT>
+void s21::map<KT, VT>::swap(map &other) {
+  using std::swap;
+  swap(size_, other.size_);
+  swap(tree_, other.tree_);
+}
+
+// splices nodes from another container
+template <typename KT, typename VT>
+void s21::map<KT, VT>::merge(map &other) {
+  for (auto it = other.tree_.begin(); it != other.tree_.end(); ++it) {
+    insert(it.getNode()->key, *it);
+  }
+}
+
+// checks if there is an element with key equivalent to key in the container
+template <typename KT, typename VT>
+bool s21::map<KT, VT>::contains(const KT &key) {
+  return (tree_.search(key) != nullptr);
+}
+
+// helpers
+template <typename KT, typename VT>
+void s21::map<KT, VT>::print_map() {
+  tree_.print(tree_.getRoot());
+}
+
+template <typename KT, typename VT>
+template <class... Args>
+std::vector<std::pair<typename map<KT, VT>::iterator, bool>>
+s21::map<KT, VT>::insert_many(Args &&...args) {
+  std::vector<std::pair<iterator, bool>> result;
+  for (auto &val : {args...}) {
+    result.push_back(insert(val.first, val.second));
+  }
+  return result;
+}
+
 }  // namespace s21
 
 #endif  // CPP2_S21_CONTAINERS_S21_MAP_H_
