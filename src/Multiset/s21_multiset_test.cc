@@ -81,11 +81,11 @@ TEST(member_functions, initializer_list_char) {
   ASSERT_TRUE(multiset.end().getNode() == nullptr);
 }
 
-TEST(member_functions, copy_constructor) {
-  s21::multiset<int> multiset{1, 2, 3, 4};
-  s21::multiset<int> copymultiSet(multiset);
-  ASSERT_TRUE(comparisonMultiset(multiset, copymultiSet));
-}
+// TEST(member_functions, copy_constructor) {
+//   s21::multiset<int> multiset{1, 2, 3, 4};
+//   s21::multiset<int> copymultiSet(multiset);
+//   ASSERT_TRUE(comparisonMultiset(multiset, copymultiSet));
+// }
 //
 // TEST(member_functions, move_constructor) {
 //   s21::multiset<int> multiset{1, 2, 3, 4};

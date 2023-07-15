@@ -3,14 +3,14 @@ FLAGS=-ggdb -std=c++17 -Wall -Werror -Wextra -lstdc++
 SET_TEST_SOURCE=s21_multiset_test.cc
 SET_TEST_OUTPUT=s21_multiset_test.o
 
-all: clean check set_test leaks
+all: clean check multiset_test leaks
 
 check:
 	cp ../../materials/linters/.clang-format . && clang-format -n *.cc *.h
 	# rm -f .clang-format
 	cppcheck --check-config --std=c++17 --language=c++ --enable=all --suppress=missingIncludeSystem *.cc *.h
 
-set_test: $(SET_TEST_SOURCE)
+multiset_test: $(SET_TEST_SOURCE)
 	@g++ $(FLAGS) --coverage $(SET_TEST_SOURCE) -o $(SET_TEST_OUTPUT) -lgtest --coverage
 	@./$(SET_TEST_OUTPUT)
 
