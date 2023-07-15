@@ -2,5 +2,6 @@
 #define CPP2_S21_CONTAINERS_1_SRC_S21_CONTAINERSPLUS_H_
 
 #include "./Array/s21_array.h"
+#include "./Multiset/s21_multiset.h"
 
 #endif  // CPP2_S21_CONTAINERS_1_SRC_S21_CONTAINERSPLUS_H_
