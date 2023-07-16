@@ -9,7 +9,6 @@
 
 // Constructors
 TEST(Vector, Constructor_base) {
-  std::vector<int> vec;
   s21::vector<int> vec;
   EXPECT_TRUE(vec.size() == 0 && vec.capacity() == 0);
   EXPECT_TRUE(vec.data() == nullptr);

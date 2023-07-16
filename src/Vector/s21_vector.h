@@ -3,6 +3,8 @@
 
 #include <initializer_list>
 #include <utility>
+#include <cstddef>
+#include <stdexcept>
 
 namespace s21 {
 template <class T>
