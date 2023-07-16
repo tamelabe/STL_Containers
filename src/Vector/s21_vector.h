@@ -1,10 +1,10 @@
 #ifndef CPP2_S21_CONTAINERS_1_SRC_VECTOR_S21_VECTOR_H_
 #define CPP2_S21_CONTAINERS_1_SRC_VECTOR_S21_VECTOR_H_
 
-#include <initializer_list>
-#include <utility>
 #include <cstddef>
+#include <initializer_list>
 #include <stdexcept>
+#include <utility>
 
 namespace s21 {
 template <class T>
@@ -21,41 +21,40 @@ class vector {
   using size_type = size_t;
 
   vector();
-  explicit vector(size_type n);
-  explicit vector(std::initializer_list<T> const &items);
-  vector(const vector &v);
-  vector(vector &&origin) noexcept;
-  vector<T> &operator=(std::initializer_list<value_type> const &items);
-  vector<T> &operator=(const vector<T> &origin);
-  vector<T> &operator=(vector<T> &&origin);
+  explicit vector(size_type);
+  explicit vector(std::initializer_list<T> const &);
+  vector(const vector &);
+  vector(vector &&) noexcept;
+  vector<T> &operator=(std::initializer_list<value_type> const &);
+  vector<T> &operator=(const vector<T> &);
+  vector<T> &operator=(vector<T> &&);
   ~vector();
-  reference at(size_type pos);
-  reference operator[](size_type pos);
+  reference at(size_type);
+  reference operator[](size_type);
   const_reference front();
   const_reference back();
   iterator data();
   iterator begin();
-  const_iterator begin() const noexcept;
   iterator end();
   bool empty();
   size_type size() const noexcept;
   size_type max_size() const noexcept;
-  void reserve(size_type n);
+  void reserve(size_type);
   size_type capacity() const noexcept;
   void shrink_to_fit();
   void clear() noexcept;
-  iterator insert(iterator pos, const_reference value);
-  void erase(iterator pos);
-  void push_back(const_reference value);
+  iterator insert(iterator, const_reference);
+  void erase(iterator);
+  void push_back(const_reference);
   void pop_back();
-  void swap(vector<T> &v);
+  void swap(vector<T> &);
   void printVector();
 
   template <class... Args>
-  iterator insert_many(const_iterator pos, Args &&...args);
+  iterator insert_many(const_iterator, Args &&...);
 
   template <class... Args>
-  void insert_many_back(Args &&...args);
+  void insert_many_back(Args &&...);
 
  private:
   size_type size_;
@@ -167,11 +166,11 @@ typename vector<T>::iterator vector<T>::begin() {
 }
 
 // returns an const iterator to the beginning
-template <class T>
-typename vector<T>::const_iterator vector<T>::begin() const noexcept {
-  const auto result = storage_;
-  return result;
-}
+// template <class T>
+// typename vector<T>::const_iterator vector<T>::begin() const noexcept {
+//   const auto result = storage_;
+//   return result;
+// }
 
 // returns an iterator to the end
 template <class T>
