@@ -40,18 +40,10 @@ class multiset {
   multiset(const multiset &s);
   multiset(multiset &&s);
   ~multiset();
-  reference operator=(std::initializer_list<value_type> const &items) {
-    swap(multiset<KT>(items));
-    return *this;
-  }
-  reference operator=(const multiset &s) {
-    swap(multiset<KT>(s));
-    return *this;
-  }
-  reference operator=(multiset &&s) {
-    swap(s);
-    return *this;
-  }
+
+  reference operator=(std::initializer_list<value_type> const &items);
+  reference operator=(const multiset &s);
+  reference operator=(multiset &&s);
 
   iterator begin();
   iterator end();
@@ -71,7 +63,7 @@ class multiset {
   bool contains(const KT &key);
 
  private:
-  s21::BTree<key_type, value_type> tree_;
+  tree_type tree_;
   size_type size_;
 };
 
@@ -125,6 +117,24 @@ typename s21::multiset<KT>::size_type s21::multiset<KT>::max_size() {
   return ((std::numeric_limits<size_type>::max() / 2) - sizeof(s21::BTree<KT>) -
           sizeof(s21::Node<KT>)) /
          sizeof(s21::Node<KT>);
+}
+
+template <typename KT>
+typename s21::multiset<KT>::reference s21::multiset<KT>::operator=(std::initializer_list<value_type> const &items) {
+  swap(multiset<KT>(items));
+  return *this;
+}
+
+template <typename KT>
+typename s21::multiset<KT>::reference s21::multiset<KT>::operator=(const multiset &s) {
+  swap(multiset<KT>(s));
+  return *this;
+}
+
+template <typename KT>
+typename s21::multiset<KT>::reference s21::multiset<KT>::operator=(multiset &&s) {
+  swap(s);
+  return *this;
 }
 
 // Method to find iterator to specific node
