@@ -12,7 +12,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/
+**/
 
 #ifndef CPP2_S21_CONTAINERS_S21_SET_H_
 #define CPP2_S21_CONTAINERS_S21_SET_H_
@@ -36,22 +36,13 @@ class set {
 
  public:
   set();
-  explicit set(std::initializer_list<value_type> const &items);
+  explicit set(std::initializer_list<value_type> const &);
   set(const set &s);
   set(set &&s);
   ~set();
-  reference operator=(std::initializer_list<value_type> const &items) {
-    swap(set<KT>(items));
-    return *this;
-  }
-  reference operator=(const set &s) {
-    swap(set<KT>(s));
-    return *this;
-  }
-  reference operator=(set &&s) {
-    swap(s);
-    return *this;
-  }
+  reference operator=(std::initializer_list<value_type> const &);
+  reference operator=(const set &);
+  reference operator=(set &&);
 
   iterator begin();
   iterator end();
@@ -71,7 +62,7 @@ class set {
   bool contains(const KT &key);
 
  private:
-  s21::BTree<key_type, value_type> tree_;
+  tree_type tree_;
   size_type size_;
 };
 
@@ -125,6 +116,24 @@ typename s21::set<KT>::size_type s21::set<KT>::max_size() {
   return ((std::numeric_limits<size_type>::max() / 2) - sizeof(s21::BTree<KT>) -
           sizeof(s21::Node<KT>)) /
          sizeof(s21::Node<KT>);
+}
+
+template <typename KT>
+typename s21::set<KT>::reference s21::set<KT>::operator=(std::initializer_list<value_type> const &items) {
+  swap(set<KT>(items));
+  return *this;
+}
+
+template <typename KT>
+typename s21::set<KT>::reference s21::set<KT>::operator=(const set &s) {
+  swap(set<KT>(s));
+  return *this;
+}
+
+template <typename KT>
+typename s21::set<KT>::reference s21::set<KT>::operator=(set &&s) {
+  swap(s);
+  return *this;
 }
 
 // Method to find iterator to specific node
