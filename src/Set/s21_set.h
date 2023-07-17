@@ -119,7 +119,8 @@ typename s21::set<KT>::size_type s21::set<KT>::max_size() {
 }
 
 template <typename KT>
-typename s21::set<KT>::reference s21::set<KT>::operator=(std::initializer_list<value_type> const &items) {
+typename s21::set<KT>::reference s21::set<KT>::operator=(
+    std::initializer_list<value_type> const &items) {
   swap(set<KT>(items));
   return *this;
 }

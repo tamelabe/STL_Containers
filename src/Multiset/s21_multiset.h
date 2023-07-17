@@ -120,19 +120,22 @@ typename s21::multiset<KT>::size_type s21::multiset<KT>::max_size() {
 }
 
 template <typename KT>
-typename s21::multiset<KT>::reference s21::multiset<KT>::operator=(std::initializer_list<value_type> const &items) {
+typename s21::multiset<KT>::reference s21::multiset<KT>::operator=(
+    std::initializer_list<value_type> const &items) {
   swap(multiset<KT>(items));
   return *this;
 }
 
 template <typename KT>
-typename s21::multiset<KT>::reference s21::multiset<KT>::operator=(const multiset &s) {
+typename s21::multiset<KT>::reference s21::multiset<KT>::operator=(
+    const multiset &s) {
   swap(multiset<KT>(s));
   return *this;
 }
 
 template <typename KT>
-typename s21::multiset<KT>::reference s21::multiset<KT>::operator=(multiset &&s) {
+typename s21::multiset<KT>::reference s21::multiset<KT>::operator=(
+    multiset &&s) {
   swap(s);
   return *this;
 }
