@@ -287,7 +287,7 @@ void vector<T>::erase(iterator pos) {
     if (ptr < pos) {
       tmp.storage_[i] = *ptr;
     } else {
-      tmp.storage_[i] = *(ptr + 1);
+      tmp.storage_[i] = *(++ptr);
     }
     ptr++;
     ++i;
