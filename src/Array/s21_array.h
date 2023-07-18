@@ -61,9 +61,7 @@ template <class T, size_t N>
 array<T, N>::array(std::initializer_list<value_type> const &items)
     : size_(N), data_(new T[N]{}) {
   size_type count = items.size();
-  if (count > size_) {
-    throw std::length_error{"Count of items is bigger than size."};
-  }
+  if (count > size_) throw std::length_error{"Too large count"};
   int index = 0;
   for (const T &item : items) {
     data_[index] = item;

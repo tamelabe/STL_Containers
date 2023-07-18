@@ -200,12 +200,8 @@ typename vector<T>::size_type vector<T>::max_size() const noexcept {
 // newely allocated array
 template <class T>
 void vector<T>::reserve(size_type n) {
-  if (n > MAX_VECTOR_SIZE) {
-    throw std::length_error{"Requesting size is larger than max_size."};
-  }
-  if (n <= capacity_) {
-    return;
-  }
+  if (n > MAX_VECTOR_SIZE) throw std::length_error{"too large size"};
+  if (n <= capacity_) return;
   s21::vector<T> tmp;
   tmp.reallocate(n, size_, storage_);
   tmp.swap(*this);

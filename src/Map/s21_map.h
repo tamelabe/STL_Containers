@@ -50,7 +50,6 @@ class map {
   template <class... Args>
   std::vector<std::pair<iterator, bool>> insert_many(Args &&...args);
 
-
  private:
   s21::BTree<KT, VT> tree_;
   size_type size_;
@@ -147,8 +146,7 @@ typename s21::map<KT, VT>::size_type s21::map<KT, VT>::size() {
 template <typename KT, typename VT>
 typename s21::map<KT, VT>::size_type s21::map<KT, VT>::max_size()
     const noexcept {
-   return std::numeric_limits<difference_type>::max() / (sizeof(Node<KT,
-   VT>));
+  return std::numeric_limits<difference_type>::max() / (sizeof(Node<KT, VT>));
 }
 
 // clears the contents

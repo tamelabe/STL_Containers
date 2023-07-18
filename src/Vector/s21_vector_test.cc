@@ -5,7 +5,6 @@
 #include <cstring>
 #include <vector>
 
-
 // Constructors
 TEST(Vector, Constructor_base) {
   s21::vector<int> vec;
