@@ -1,7 +1,7 @@
 #ifndef CPP2_S21_CONTAINERS_1_SRC_QUEUE_S21_QUEUE_H_
 #define CPP2_S21_CONTAINERS_1_SRC_QUEUE_S21_QUEUE_H_
 
-#include "../s21_containers.h"
+#include "../List/s21_list.h"
 
 namespace s21 {
 template <class T, class Container = s21::List<T>>
@@ -20,14 +20,8 @@ class Queue {
   Queue(Queue &&s) : container_(std::move(s.container_)) {}
   ~Queue() {}
 
-  Queue &operator=(const Queue &s) {
-    container_ = s.container_;
-    return *this;
-  }
-  Queue &operator=(Queue &&s) {
-    container_ = s.container_;
-    return *this;
-  }
+  Queue &operator=(const Queue &s);
+  Queue &operator=(Queue &&s);
 
   //  Queue Element access
   const_reference front() { return container_.front(); }
@@ -48,6 +42,18 @@ class Queue {
  private:
   Container container_;
 };
-}  // namespace s21
 
+template <class T, class Container>
+Queue<T, Container> &Queue<T, Container>::operator=(
+    const Queue<T, Container> &s) {
+  container_ = s.container_;
+  return *this;
+}
+
+template <class T, class Container>
+Queue<T, Container> &Queue<T, Container>::operator=(Queue<T, Container> &&s) {
+  container_ = std::move(s.container_);
+  return *this;
+}
+}  // namespace s21
 #endif  // CPP2_S21_CONTAINERS_1_SRC_QUEUE_S21_QUEUE_H_

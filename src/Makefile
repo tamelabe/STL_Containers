@@ -9,9 +9,9 @@ VG_FLAGS = CK_FORK=no valgrind --trace-children=yes --track-fds=yes --track-orig
 OS := $(shell uname -s)
 
 ifeq ($(OS), Darwin)
-all: clean check tests leaks gcov_report
+all: clean check test leaks gcov_report
 else ifeq ($(OS), Linux)
-all: clean check tests_linux leaks_linux gcov_report
+all: clean check test_linux leaks_linux gcov_report
 else
 all:
 	@echo "Unsupported operating system: $(OS)"
@@ -22,13 +22,13 @@ check:
 	find . -type f \( -name "*.cc" -o -name "*.h" \) -exec clang-format -n --style="Google" {} \;
 	rm -f .clang-format
 
-tests:
+test:
 	for TEST_SRC in $(shell find . -type f -name "*test.cc"); do \
 		base_name=$$(basename $${TEST_SRC%%.cc}); \
 		$(CC) $(CPPFLAGS)  $$TEST_SRC -o $$base_name.o $(TEST_FLAGS); \
 	done
 
-tests_linux:
+test_linux:
 	for TEST_SRC in $(shell find . -type f -name "*test.cc"); do \
 		base_name=$$(basename $${TEST_SRC%%.cc}); \
 		$(CC) $$TEST_SRC $(CPPFLAGS) $(TEST_FLAGS) -o $$base_name.o $(LINUX_FLAGS); \

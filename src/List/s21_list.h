@@ -18,6 +18,7 @@ class List {
   using difference_type = std::ptrdiff_t;
   using value_type = T;
   using size_type = std::size_t;
+  using reference = value_type &;
   using const_reference = const value_type &;
   using iterator = ListIterator;
   using const_iterator = ListConstIterator;
@@ -86,11 +87,11 @@ class List {
   void destroyNode(node_ptr node);
   void pushFirstNode(const_reference value);
   iterator sortCheck(iterator current, const iterator &end);
-  iterator insSubList(const_iterator pos, iterator first, iterator last);
+  iterator insertSubList(const_iterator pos, iterator first, iterator last);
   node_ptr mergeSort(node_ptr first);
   node_ptr splitList(node_ptr first);
   node_ptr mergeNodes(node_ptr first, node_ptr second);
-  void nodesPrevRepair();
+  void prevPointerRepair();
 };
 
 /**
@@ -376,7 +377,7 @@ void List<T>::merge(List &other) {
   while (node_oth != other.end()) {
     if (*node_ths > *node_oth || node_ths == end()) {
       iterator last_oth = sortCheck(node_oth, other.end());
-      node_oth = insSubList(node_ths, node_oth, last_oth);
+      node_oth = insertSubList(node_ths, node_oth, last_oth);
     } else {
       ++node_ths;
     }
@@ -395,7 +396,7 @@ void List<T>::splice(const_iterator pos, List &other) noexcept {
   if (&other == this || !other.size_) return;
   auto end = other.end();
   --end;
-  insSubList(pos, other.begin(), end);
+  insertSubList(pos, other.begin(), end);
   size_ += other.size_;
   other.initList();
 }
@@ -434,7 +435,7 @@ template <class T>
 void List<T>::sort() {
   if (!size_ || size_ == 1) return;
   begin_ = mergeSort(begin().node_);
-  nodesPrevRepair();
+  prevPointerRepair();
 }
 
 /**
@@ -507,7 +508,6 @@ typename List<T>::node_ptr List<T>::createNode(const node_ptr a_prev,
  * @brief Deallocator
  * @param mode false - deallocate all non fake nodes,
  *             true - fully deallocation
- * @param node - node to deallocate when mode 2 chosen
  */
 template <class T>
 void List<T>::deallocate(bool mode) {
@@ -563,8 +563,9 @@ typename List<T>::iterator List<T>::sortCheck(iterator current,
  * @return next iterator after last param
  */
 template <class T>
-typename List<T>::iterator List<T>::insSubList(const_iterator pos,
-                                               iterator first, iterator last) {
+typename List<T>::iterator List<T>::insertSubList(const_iterator pos,
+                                                  iterator first,
+                                                  iterator last) {
   iterator next = last;
   ++next;
   pos.node_->prev->next = first.node_;
@@ -631,7 +632,7 @@ typename List<T>::node_ptr List<T>::mergeNodes(node_ptr first,
  * @brief repairs prev pointer of the List (makes it double-linked)
  */
 template <class T>
-void List<T>::nodesPrevRepair() {
+void List<T>::prevPointerRepair() {
   for (auto iter = iterator(begin_); iter != end(); ++iter) {
     iter.node_->next->prev = iter.node_;
   }

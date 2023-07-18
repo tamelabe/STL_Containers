@@ -1,7 +1,7 @@
 #ifndef CPP2_S21_CONTAINERS_1_SRC_STACK_S21_STACK_H_
 #define CPP2_S21_CONTAINERS_1_SRC_STACK_S21_STACK_H_
 
-#include "../s21_containers.h"
+#include "../List/s21_list.h"
 
 namespace s21 {
 template <class T, class Container = s21::List<T>>
@@ -19,14 +19,8 @@ class Stack {
   Stack(Stack &&s) : container_(std::move(s.container_)) {}
   ~Stack() {}
 
-  Stack &operator=(const Stack &s) {
-    container_ = s.container_;
-    return *this;
-  }
-  Stack &operator=(Stack &&s) {
-    container_ = s.container_;
-    return *this;
-  }
+  Stack &operator=(const Stack &s);
+  Stack &operator=(Stack &&s);
   //  Stack Element access
   const_reference top() { return container_.back(); }
   //  Stack Capacity
@@ -45,6 +39,18 @@ class Stack {
  private:
   Container container_;
 };
-}  // namespace s21
 
+template <class T, class Container>
+Stack<T, Container> &Stack<T, Container>::operator=(
+    const Stack<T, Container> &s) {
+  container_ = s.container_;
+  return *this;
+}
+
+template <class T, class Container>
+Stack<T, Container> &Stack<T, Container>::operator=(Stack<T, Container> &&s) {
+  container_ = std::move(s.container_);
+  return *this;
+}
+}  // namespace s21
 #endif  // CPP2_S21_CONTAINERS_1_SRC_STACK_S21_STACK_H_
