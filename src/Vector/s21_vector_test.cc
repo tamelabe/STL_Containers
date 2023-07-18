@@ -1,11 +1,10 @@
 #include "s21_vector.h"
 
-#include <gtest/gtest-spi.h>
 #include <gtest/gtest.h>
 
 #include <cstring>
-#include <iostream>
 #include <vector>
+
 
 // Constructors
 TEST(Vector, Constructor_base) {

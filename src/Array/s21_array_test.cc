@@ -4,7 +4,6 @@
 
 #include <array>
 #include <cstring>
-#include <iostream>
 
 // compare s21 array with std array
 template <class T, size_t N>

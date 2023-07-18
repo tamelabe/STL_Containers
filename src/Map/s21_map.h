@@ -8,8 +8,6 @@
 
 #include "BTree.h"
 
-#define TREE_MAX_SIZE 1024
-
 namespace s21 {
 
 template <typename KT, typename VT>
@@ -52,7 +50,6 @@ class map {
   template <class... Args>
   std::vector<std::pair<iterator, bool>> insert_many(Args &&...args);
 
-  void print_map();
 
  private:
   s21::BTree<KT, VT> tree_;
@@ -150,9 +147,8 @@ typename s21::map<KT, VT>::size_type s21::map<KT, VT>::size() {
 template <typename KT, typename VT>
 typename s21::map<KT, VT>::size_type s21::map<KT, VT>::max_size()
     const noexcept {
-  return TREE_MAX_SIZE;  // TODO:
-  // return std::numeric_limits<difference_type>::max() / (sizeof(Node<KT,
-  // VT>));
+   return std::numeric_limits<difference_type>::max() / (sizeof(Node<KT,
+   VT>));
 }
 
 // clears the contents
@@ -175,10 +171,7 @@ std::pair<typename map<KT, VT>::iterator, bool> s21::map<KT, VT>::insert(
 template <typename KT, typename VT>
 std::pair<typename map<KT, VT>::iterator, bool> s21::map<KT, VT>::insert(
     const KT &key, const VT &value) {
-  if (tree_.search(key) != nullptr) {
-    return std::pair<iterator, bool>{nullptr, false};
-  }
-  if (size_ >= TREE_MAX_SIZE) {
+  if (tree_.search(key) || size_ >= max_size()) {
     return std::pair<iterator, bool>{nullptr, false};
   }
   auto it = tree_.insert(key, value);
@@ -227,12 +220,6 @@ void s21::map<KT, VT>::merge(map &other) {
 template <typename KT, typename VT>
 bool s21::map<KT, VT>::contains(const KT &key) {
   return (tree_.search(key) != nullptr);
-}
-
-// helpers
-template <typename KT, typename VT>
-void s21::map<KT, VT>::print_map() {
-  tree_.print(tree_.getRoot());
 }
 
 template <typename KT, typename VT>

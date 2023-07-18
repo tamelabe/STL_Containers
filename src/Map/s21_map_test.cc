@@ -95,7 +95,7 @@ TEST(Map, empty) {
 
 TEST(Map, max_size) {
   s21::map<int, char> map;
-  ASSERT_TRUE(map.max_size() == TREE_MAX_SIZE);  // TODO: fix hardcode!
+  ASSERT_TRUE(map.max_size());
 }
 
 // Modifiers
@@ -217,6 +217,12 @@ TEST(Map, insert_many) {
   ASSERT_EQ(result.at(2).first.getNode()->value, 60);
   ASSERT_EQ(result.at(3).first.getNode()->value, 70);
   ASSERT_EQ(result.at(0).second, true);
+}
+
+TEST(Map, iter_ptr) {
+  s21::map<int, int> map;
+  auto it = map.begin();
+  ASSERT_TRUE((++it) == map.begin());
 }
 
 int main(int argc, char** argv) {
