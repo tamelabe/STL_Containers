@@ -2,7 +2,6 @@
 #define CPP2_S21_CONTAINERS_SRC_S21_ARRAY_H_
 
 #include <initializer_list>
-#include <iostream>
 #include <limits>
 #include <utility>
 

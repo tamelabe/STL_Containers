@@ -2,7 +2,6 @@
 #define CPP2_S21_CONTAINERS_1_SRC_LIST_S21_LIST_H_
 
 #include <initializer_list>
-#include <iostream>
 #include <iterator>
 #include <limits>
 
@@ -52,13 +51,13 @@ class List {
   size_type max_size() const noexcept;
 
   // List Modifiers
-  void clear() noexcept;
+  void clear();
   iterator insert(iterator pos, const_reference value);
   void erase(iterator pos);
   void push_back(const_reference value);
-  void pop_back() noexcept;
+  void pop_back();
   void push_front(const_reference value);
-  void pop_front() noexcept;
+  void pop_front();
   void swap(List &other) noexcept;
   void merge(List &other);
   void splice(const_iterator pos, List &other) noexcept;
@@ -250,7 +249,7 @@ typename List<T>::size_type List<T>::max_size() const noexcept {
  * @brief clears the contents
  */
 template <class T>
-void List<T>::clear() noexcept {
+void List<T>::clear() {
   deallocate(false);
   initList();
 }
@@ -314,7 +313,7 @@ void List<T>::push_back(const_reference value) {
  * @brief removes the last element
  */
 template <class T>
-void List<T>::pop_back() noexcept {
+void List<T>::pop_back() {
   if (!end_->prev->data) return;
   node_ptr tmp = end_->prev;
   tmp->prev->next = end_;
@@ -343,7 +342,7 @@ void List<T>::push_front(const_reference value) {
  * @brief removes the first element
  */
 template <class T>
-void List<T>::pop_front() noexcept {
+void List<T>::pop_front() {
   if (!end_->prev->data) return;
   end_->next = begin_->next;
   begin_->next->prev = end_;

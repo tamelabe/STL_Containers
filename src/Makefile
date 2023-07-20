@@ -26,26 +26,28 @@ test:
 	for TEST_SRC in $(shell find . -type f -name "*test.cc"); do \
 		base_name=$$(basename $${TEST_SRC%%.cc}); \
 		$(CC) $(CPPFLAGS)  $$TEST_SRC -o $$base_name.o $(TEST_FLAGS); \
+		./$$base_name.o; \
 	done
 
 test_linux:
 	for TEST_SRC in $(shell find . -type f -name "*test.cc"); do \
 		base_name=$$(basename $${TEST_SRC%%.cc}); \
 		$(CC) $$TEST_SRC $(CPPFLAGS) $(TEST_FLAGS) -o $$base_name.o $(LINUX_FLAGS); \
+		./$$base_name.o; \
 	done
 
 leaks:
 	for file in $(shell find . -maxdepth 1 -type f -name "*.o"); do \
-   		base_name=$$(basename $$file); \
-        file_name=$$(echo $${base_name%_test.o} | tr '[:lower:]' '[:upper:]'); \
-   		leaks -atExit --  $$file > ./RESULT_$$file_name.txt; \
-    done
+		base_name=$$(basename $$file); \
+		file_name=$$(echo $${base_name%_test.o} | tr '[:lower:]' '[:upper:]'); \
+		leaks -atExit -- $$file > ./RESULT_$$file_name.txt; \
+	done
 
 leaks_linux:
 	for file in $(shell find . -maxdepth 1 -type f -name "*.o"); do \
-    		base_name=$$(basename $$file); \
-    		file_name=$$(echo $${base_name%_test.o} | tr '[:lower:]' '[:upper:]'); \
-    		$(VG_FLAGS) --log-file=RESULT_$$file_name.txt $$file; \
+    	base_name=$$(basename $$file); \
+    	file_name=$$(echo $${base_name%_test.o} | tr '[:lower:]' '[:upper:]'); \
+    	$(VG_FLAGS) --log-file=RESULT_$$file_name.txt $$file; \
     done
 
 gcov_report:

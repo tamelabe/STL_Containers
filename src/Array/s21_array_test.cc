@@ -11,14 +11,11 @@ bool compareWithStd(s21::array<T, N>& s21_arr, std::array<T, N>& std_arr) {
   if (s21_arr.size() != std_arr.size() || s21_arr.empty() != std_arr.empty()) {
     return false;
   }
-
   auto it1 = s21_arr.begin();
   auto it2 = std_arr.begin();
-
   for (size_t i = 0; i < s21_arr.size(); ++i, ++it1, ++it2) {
     if (*it1 != *it2) return false;
   }
-
   return true;
 }
 
@@ -64,12 +61,9 @@ TEST(Array, Constructor_list__less_items) {
   EXPECT_TRUE(compareWithStd(s21_arr, std_arr));
 }
 
-// Здесь есть утечка в памяти, судя по всему это связано
-// с особенностями работы GTest с исключениями
-// но тест корректно проверяет работу исключения
-// TEST(Array, Constructor_items_exception) {
-//   EXPECT_THROW((s21::array<int, 2>{1, 2, 3}), std::length_error);
-// }
+ TEST(Array, Constructor_items_exception) {
+   EXPECT_THROW((s21::array<int, 2>{1, 2, 3}), std::length_error);
+ }
 
 TEST(Array, Constructor_copy__integers) {
   s21::array<int, 3> arr{1, 2, 3};
@@ -118,13 +112,10 @@ TEST(Array, ElementAccess_at) {
   EXPECT_EQ(a, b);
 }
 
-// // Здесь есть утечка в памяти, судя по всему это связано
-// // с особенностями работы GTest с исключениями
-// // но тест корректно проверяет работу исключения
-// TEST(Array, ElementAccess_at__exception) {
-//   s21::array<int, 3> arr{1, 2, 3};
-//   EXPECT_THROW((arr.at(3)), std::out_of_range);
-// }
+ TEST(Array, ElementAccess_at__exception) {
+   s21::array<int, 3> arr{1, 2, 3};
+   EXPECT_THROW((arr.at(3)), std::out_of_range);
+ }
 
 TEST(Array, ElementAccess_front) {
   s21::array<int, 3> s21_arr{1, 2, 3};
@@ -134,13 +125,10 @@ TEST(Array, ElementAccess_front) {
   EXPECT_EQ(a, b);
 }
 
-// // Здесь есть утечка в памяти, судя по всему это связано
-// // с особенностями работы GTest с исключениями
-// // но тест корректно проверяет работу исключения
-// TEST(ElementAccess, front_empty) {
-//   s21::array<int, 0> s21_arr;
-//   EXPECT_THROW(s21_arr.front(), std::out_of_range);
-// }
+ TEST(ElementAccess, front_empty) {
+   s21::array<int, 0> s21_arr;
+   EXPECT_THROW(s21_arr.front(), std::out_of_range);
+ }
 
 TEST(Array, ElementAccess_back) {
   s21::array<int, 3> s21_arr{1, 2, 3};
@@ -150,13 +138,10 @@ TEST(Array, ElementAccess_back) {
   EXPECT_TRUE(a == b);
 }
 
-// // Здесь есть утечка в памяти, судя по всему это связано
-// // с особенностями работы GTest с исключениями
-// // но тест корректно проверяет работу исключения
-// TEST(ElementAccess, back_empty) {
-//   s21::array<int, 0> arr;
-//   EXPECT_THROW(arr.back(), std::out_of_range);
-// }
+ TEST(ElementAccess, back_empty) {
+   s21::array<int, 0> arr;
+   EXPECT_THROW(arr.back(), std::out_of_range);
+ }
 
 TEST(Array, ElementAccess_data) {
   s21::array<int, 3> s21_arr{1, 2, 3};
@@ -223,5 +208,8 @@ TEST(Array, Modifier_fill) {
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+#ifdef __APPLE__
+  free(__cxxabiv1::__cxa_get_globals());
+#endif
+  return RUN_ALL_TESTS();;
 }

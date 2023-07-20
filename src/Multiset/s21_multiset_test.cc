@@ -1,10 +1,8 @@
 #include "s21_multiset.h"
 
-#include <gtest/gtest-spi.h>
 #include <gtest/gtest.h>
 
 #include <cstring>
-#include <iostream>
 
 template <class T>
 bool comparisonMultiset(s21::multiset<T> &s21_multiset,
