@@ -55,6 +55,7 @@ class set {
 
   std::pair<iterator, bool> insert(const value_type &value);
   void erase(iterator pos);
+  void erase(const value_type &value);
   void swap(set &other);
   void merge(set &other);
 
@@ -184,6 +185,14 @@ std::pair<typename s21::set<KT>::iterator, bool> s21::set<KT>::insert(
 template <typename KT>
 void s21::set<KT>::erase(typename s21::set<KT>::iterator pos) {
   auto node = pos.getNode();
+  tree_.removeNode(node, node->key);
+  size_--;
+}
+
+// Delete one node by getting value
+template <typename KT>
+void s21::set<KT>::erase(const typename s21::set<KT>::value_type &value) {
+  auto node = this->find(value).getNode();
   tree_.removeNode(node, node->key);
   size_--;
 }

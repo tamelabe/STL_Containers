@@ -82,23 +82,34 @@ TEST(member_functions, initializer_list_char) {
 TEST(member_functions, copy_constructor) {
   s21::set<int> set{1, 2, 3, 4};
   s21::set<int> copySet(set);
+  std::set<int> stdset{1, 2, 3, 4};
+  std::set<int> stdcopySet(stdset);
   ASSERT_TRUE(comparisonSet(set, copySet));
+  ASSERT_TRUE(comparisonSet(copySet, stdcopySet));
 }
 
 TEST(member_functions, move_constructor) {
   s21::set<int> set{1, 2, 3, 4};
   s21::set<int> copySet(set);
   s21::set<int> moveSet(std::move(set));
+  std::set<int> stdset{1, 2, 3, 4};
+  std::set<int> stdcopySet(stdset);
+  std::set<int> stdmoveSet(std::move(stdset));
   ASSERT_TRUE(!comparisonSet(set, moveSet));
   ASSERT_TRUE(comparisonSet(moveSet, copySet));
+  ASSERT_TRUE(comparisonSet(moveSet, stdmoveSet));
 }
 
 TEST(member_functions, move_operator) {
   s21::set<int> set{1, 2, 3, 4};
   s21::set<int> copySet(set);
   s21::set<int> moveSet = std::move(set);
+  std::set<int> stdset{1, 2, 3, 4};
+  std::set<int> stdcopySet(stdset);
+  std::set<int> stdmoveSet = std::move(stdset);
   ASSERT_TRUE(!comparisonSet(set, moveSet));
   ASSERT_TRUE(comparisonSet(moveSet, copySet));
+  ASSERT_TRUE(comparisonSet(moveSet, stdmoveSet));
 }
 
 TEST(Iterators, begin) {
@@ -125,9 +136,10 @@ TEST(Capacity, empty) {
 
 TEST(Capacity, max_size) {
   s21::set<int> set;
+  size_t setsize = set.max_size();
   std::set<int> stdset;
-  ASSERT_TRUE(set.max_size() > 0);
-  ASSERT_TRUE(set.max_size() == 288230376151711742);
+  size_t stdsetsize = stdset.max_size();
+  ASSERT_TRUE(setsize >= stdsetsize);
 }
 
 // Modifiers
@@ -153,9 +165,9 @@ TEST(Modifiers, insert_key_value) {
   std::set<char> stdset;
   stdset.insert('a');
   stdset.insert('b');
-  ASSERT_TRUE(comparisonSet(set, stdset));
   ASSERT_TRUE(set.contains('a') == true);
   ASSERT_TRUE(set.contains('b') == true);
+  ASSERT_TRUE(comparisonSet(set, stdset));
 }
 
 TEST(Modifiers, insert_key_value_int) {
@@ -172,9 +184,14 @@ TEST(Modifiers, erase_no_child) {
   s21::set<int> set;
   set.insert(7);
   set.insert(3);
-  set.erase(set.find(3));
+  set.erase(3);
+  std::set<int> stdset;
+  stdset.insert(7);
+  stdset.insert(3);
+  stdset.erase(3);
   ASSERT_TRUE(set.size() == 1);
   ASSERT_FALSE(set.contains(3));
+  ASSERT_TRUE(comparisonSet(set, stdset));
 }
 
 TEST(Modifiers, erase_one_child) {
