@@ -1,10 +1,8 @@
 #include "s21_map.h"
 
-#include <gtest/gtest-spi.h>
 #include <gtest/gtest.h>
 
 #include <cstring>
-#include <iostream>
 #include <map>
 
 // Constructors

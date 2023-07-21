@@ -1,10 +1,8 @@
 #include "s21_set.h"
 
-#include <gtest/gtest-spi.h>
 #include <gtest/gtest.h>
 
 #include <cstring>
-#include <iostream>
 
 template <class T>
 bool comparisonSet(s21::set<T> &s21_set, s21::set<T> &s21_set2);
