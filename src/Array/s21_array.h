@@ -24,6 +24,7 @@ class Array {
   Array(const Array &);
   Array(Array &&) noexcept;
   ~Array();
+  Array &operator=(const Array &);
   Array &operator=(Array &&);
 
   // Array Element access
@@ -87,7 +88,14 @@ Array<T, N>::Array(Array &&origin) noexcept : Array() {
 template <class T, size_t N>
 Array<T, N> &Array<T, N>::operator=(Array<T, N> &&origin) {
   swap(origin);
-  origin.size_ = 0;
+  return *this;
+}
+
+// assignment operator overload for copying object
+template <class T, size_t N>
+Array<T, N> &Array<T, N>::operator=(const Array<T, N> &origin) {
+  for (size_type i = 0; i < size_; ++i)
+    data_[i] = origin.data_[i];
   return *this;
 }
 

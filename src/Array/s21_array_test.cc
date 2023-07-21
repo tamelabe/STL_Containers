@@ -93,12 +93,19 @@ TEST(Array, Constructor_move__strings) {
   EXPECT_TRUE(arr2.size() == 3);
 }
 
-TEST(Array, Assignment_operator_overload) {
+TEST(Array, Assignment_operator_move) {
   s21::Array<int, 3> arr{1, 2, 3};
   s21::Array<int, 3> arr2 = std::move(arr);
   s21::Array<int, 3> test_arr{1, 2, 3};
   EXPECT_TRUE(compareWithS21(arr2, test_arr));
   EXPECT_TRUE(arr2.size() == 3);
+}
+
+TEST(Array, Assignment_operator_copy) {
+s21::Array<int, 3> arr{1, 2, 3};
+s21::Array<int, 3> arr2 = arr;
+EXPECT_TRUE(compareWithS21(arr2, arr));
+EXPECT_TRUE(arr2.size() == arr.size());
 }
 
 TEST(Array, ElementAccess_at) {
