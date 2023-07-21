@@ -81,7 +81,6 @@ array<T, N>::array(const array &other) : size_(other.size_), data_(new T[N]{}) {
 template <class T, size_t N>
 array<T, N>::array(array &&origin) noexcept : array() {
   swap(origin);
-  origin.size_ = 0;
 }
 
 // assignment operator overload for moving object
@@ -108,7 +107,6 @@ typename array<T, N>::reference array<T, N>::at(size_type pos) {
 // access specified element
 template <class T, size_t N>
 typename array<T, N>::reference array<T, N>::operator[](size_type pos) {
-  if (pos >= size_) throw std::out_of_range{"Position is out of range."};
   return data_[pos];
 }
 

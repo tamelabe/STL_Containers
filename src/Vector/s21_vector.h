@@ -73,8 +73,7 @@ vector<T>::vector() : size_(0U), capacity_(0U), storage_(nullptr) {}
 // parameterized constructor, creates the vector of size n
 template <class T>
 vector<T>::vector(size_type n)
-    : size_(n), capacity_(n), storage_(new T[capacity_]) {
-  for (size_type i = 0; i < n; ++i) storage_[i] = T();
+    : size_(n), capacity_(n), storage_(new T[capacity_]{}) {
 }
 
 // initializer list constructor, creates vector initizialized using

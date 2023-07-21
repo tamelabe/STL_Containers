@@ -83,7 +83,6 @@ TEST(Array, Constructor_move__integers) {
   s21::array<int, 3> test_arr{1, 2, 3};
   EXPECT_TRUE(compareWithS21(arr2, test_arr));
   EXPECT_TRUE(arr2.size() == 3);
-  EXPECT_TRUE(arr.empty());
 }
 
 TEST(Array, Constructor_move__strings) {
@@ -92,7 +91,6 @@ TEST(Array, Constructor_move__strings) {
   s21::array<std::string, 3> test_arr{"abc", "xyz", "qwe"};
   EXPECT_TRUE(compareWithS21(arr2, test_arr));
   EXPECT_TRUE(arr2.size() == 3);
-  EXPECT_TRUE(arr.empty());
 }
 
 TEST(Array, Assignment_operator_overload) {
@@ -101,7 +99,6 @@ TEST(Array, Assignment_operator_overload) {
   s21::array<int, 3> test_arr{1, 2, 3};
   EXPECT_TRUE(compareWithS21(arr2, test_arr));
   EXPECT_TRUE(arr2.size() == 3);
-  EXPECT_TRUE(arr.empty());
 }
 
 TEST(Array, ElementAccess_at) {
