@@ -115,7 +115,12 @@ typename Map<KT, VT>::iterator Map<KT, VT>::find(const KT &key) {
 // access or insert specified element
 template <typename KT, typename VT>
 VT &Map<KT, VT>::operator[](const KT &key) {
-  return at(key);
+  VT* result = tree_.search(key);
+  if (result == nullptr) {
+    insert(key, VT());
+    result = &operator[](key);
+  }
+  return *result;
 }
 
 // returns an iterator to the beginning
