@@ -4,6 +4,7 @@
 #include <initializer_list>
 #include <iterator>
 #include <limits>
+#include <stdexcept>
 
 namespace s21 {
 template <class T>

@@ -3,6 +3,7 @@
 
 #include <initializer_list>
 #include <limits>
+#include <stdexcept>
 #include <utility>
 
 namespace s21 {
