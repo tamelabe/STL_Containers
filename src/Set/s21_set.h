@@ -8,7 +8,7 @@
 namespace s21 {
 
 template <typename KT>
-class set {
+class Set {
   using key_type = KT;
   using value_type = KT;
   using reference = value_type &;
@@ -19,14 +19,14 @@ class set {
   using size_type = size_t;
 
  public:
-  set();
-  explicit set(std::initializer_list<value_type> const &);
-  set(const set &s);
-  set(set &&s);
-  ~set();
+  Set();
+  explicit Set(std::initializer_list<value_type> const &);
+  Set(const Set &s);
+  Set(Set &&s);
+  ~Set();
   reference operator=(std::initializer_list<value_type> const &);
-  reference operator=(const set &);
-  reference operator=(set &&);
+  reference operator=(const Set &);
+  reference operator=(Set &&);
 
   iterator begin();
   iterator end();
@@ -40,8 +40,8 @@ class set {
   std::pair<iterator, bool> insert(const value_type &value);
   void erase(iterator pos);
   void erase(const value_type &value);
-  void swap(set &other);
-  void merge(set &other);
+  void swap(Set &other);
+  void merge(Set &other);
 
   iterator find(const KT &key);
   bool contains(const KT &key);
@@ -53,11 +53,11 @@ class set {
 
 // Default constructor
 template <typename KT>
-s21::set<KT>::set() : tree_(), size_(0) {}
+s21::Set<KT>::Set() : tree_(), size_(0) {}
 
 // Constructor for initializer list
 template <typename KT>
-s21::set<KT>::set(std::initializer_list<value_type> const &items)
+s21::Set<KT>::Set(std::initializer_list<value_type> const &items)
     : tree_(), size_(0) {
   for (auto item : items) {
     tree_.insert(item, item);
@@ -67,7 +67,7 @@ s21::set<KT>::set(std::initializer_list<value_type> const &items)
 
 // Copy constructor
 template <typename KT>
-s21::set<KT>::set(const set &other) : size_(0) {
+s21::Set<KT>::Set(const Set &other) : size_(0) {
   for (auto it = other.tree_.begin(); it != other.tree_.end(); ++it) {
     tree_.insert(it.getNode()->key, *it);
     size_++;
@@ -76,13 +76,13 @@ s21::set<KT>::set(const set &other) : size_(0) {
 
 // Move constructor
 template <typename KT>
-s21::set<KT>::set(set &&other) : set() {
+s21::Set<KT>::Set(Set &&other) : Set() {
   swap(other);
 }
 
 // Destructor
 template <typename KT>
-s21::set<KT>::~set() {
+s21::Set<KT>::~Set() {
   if (size_ > 0 && tree_.getRoot()) {
     size_ = 0;
     tree_.destroy(tree_.getRoot());
@@ -91,71 +91,71 @@ s21::set<KT>::~set() {
 
 // Getter size_
 template <typename KT>
-typename s21::set<KT>::size_type s21::set<KT>::size() {
+typename s21::Set<KT>::size_type s21::Set<KT>::size() {
   return size_;
 }
 
 // Getter maxsize
 template <typename KT>
-typename s21::set<KT>::size_type s21::set<KT>::max_size() {
+typename s21::Set<KT>::size_type s21::Set<KT>::max_size() {
   return ((std::numeric_limits<size_type>::max() / 2) - sizeof(s21::BTree<KT>) -
           sizeof(s21::Node<KT>)) /
          sizeof(s21::Node<KT>);
 }
 
 template <typename KT>
-typename s21::set<KT>::reference s21::set<KT>::operator=(
+typename s21::Set<KT>::reference s21::Set<KT>::operator=(
     std::initializer_list<value_type> const &items) {
-  swap(set<KT>(items));
+  swap(Set<KT>(items));
   return *this;
 }
 
 template <typename KT>
-typename s21::set<KT>::reference s21::set<KT>::operator=(const set &s) {
-  swap(set<KT>(s));
+typename s21::Set<KT>::reference s21::Set<KT>::operator=(const Set &s) {
+  swap(Set<KT>(s));
   return *this;
 }
 
 template <typename KT>
-typename s21::set<KT>::reference s21::set<KT>::operator=(set &&s) {
+typename s21::Set<KT>::reference s21::Set<KT>::operator=(Set &&s) {
   swap(s);
   return *this;
 }
 
 // Method to find iterator to specific node
 template <typename KT>
-typename s21::set<KT>::iterator s21::set<KT>::find(const KT &key) {
+typename s21::Set<KT>::iterator s21::Set<KT>::find(const KT &key) {
   return tree_.searchNode(key);
 }
 
 // Returns iterator to begin
 template <typename KT>
-typename s21::set<KT>::iterator s21::set<KT>::begin() {
+typename s21::Set<KT>::iterator s21::Set<KT>::begin() {
   return tree_.begin();
 }
 
 // Returns iterator after end node
 template <typename KT>
-typename s21::set<KT>::iterator s21::set<KT>::end() {
+typename s21::Set<KT>::iterator s21::Set<KT>::end() {
   return tree_.end();
 }
 
 // Method to check, is set empty
 template <typename KT>
-bool s21::set<KT>::empty() {
+bool s21::Set<KT>::empty() {
   return size_ == 0;
 }
 
-// Destroy the all set
+// Destroy the all Set
 template <typename KT>
-void s21::set<KT>::clear() {
+void s21::Set<KT>::clear() {
   tree_.destroy(tree_.getRoot());
   size_ = 0;
 }
 
 // Insert a new unique value into set
 template <typename KT>
-std::pair<typename s21::set<KT>::iterator, bool> s21::set<KT>::insert(
+std::pair<typename s21::Set<KT>::iterator, bool> s21::Set<KT>::insert(
     const KT &value) {
   if (tree_.search(value) != nullptr) {
     return std::pair<iterator, bool>{nullptr, false};
@@ -167,7 +167,7 @@ std::pair<typename s21::set<KT>::iterator, bool> s21::set<KT>::insert(
 
 // Delete one node by getting iterator
 template <typename KT>
-void s21::set<KT>::erase(typename s21::set<KT>::iterator pos) {
+void s21::Set<KT>::erase(typename s21::Set<KT>::iterator pos) {
   auto node = pos.getNode();
   tree_.removeNode(node, node->key);
   size_--;
@@ -175,7 +175,7 @@ void s21::set<KT>::erase(typename s21::set<KT>::iterator pos) {
 
 // Delete one node by getting value
 template <typename KT>
-void s21::set<KT>::erase(const typename s21::set<KT>::value_type &value) {
+void s21::Set<KT>::erase(const typename s21::Set<KT>::value_type &value) {
   auto node = this->find(value).getNode();
   tree_.removeNode(node, node->key);
   size_--;
@@ -183,7 +183,7 @@ void s21::set<KT>::erase(const typename s21::set<KT>::value_type &value) {
 
 // Swap two sets
 template <typename KT>
-void s21::set<KT>::swap(set &other) {
+void s21::Set<KT>::swap(Set &other) {
   using std::swap;
   swap(size_, other.size_);
   swap(tree_, other.tree_);
@@ -191,7 +191,7 @@ void s21::set<KT>::swap(set &other) {
 
 // Merge two sets
 template <typename KT>
-void s21::set<KT>::merge(set &other) {
+void s21::Set<KT>::merge(Set &other) {
   for (auto it = other.tree_.begin(); it != other.tree_.end(); ++it) {
     insert(it.getNode()->key);
   }
@@ -199,7 +199,7 @@ void s21::set<KT>::merge(set &other) {
 
 // Check is key containing in set
 template <typename KT>
-bool s21::set<KT>::contains(const KT &key) {
+bool s21::Set<KT>::contains(const KT &key) {
   return (tree_.search(key) != nullptr);
 }
 

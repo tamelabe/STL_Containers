@@ -8,7 +8,7 @@
 namespace s21 {
 
 template <typename KT>
-class multiset {
+class Multiset {
   using key_type = KT;
   using value_type = KT;
   using reference = value_type &;
@@ -19,15 +19,15 @@ class multiset {
   using size_type = size_t;
 
  public:
-  multiset();
-  explicit multiset(std::initializer_list<value_type> const &items);
-  multiset(const multiset &s);
-  multiset(multiset &&s);
-  ~multiset();
+  Multiset();
+  explicit Multiset(std::initializer_list<value_type> const &items);
+  Multiset(const Multiset &s);
+  Multiset(Multiset &&s);
+  ~Multiset();
 
   reference operator=(std::initializer_list<value_type> const &items);
-  reference operator=(const multiset &s);
-  reference operator=(multiset &&s);
+  reference operator=(const Multiset &s);
+  reference operator=(Multiset &&s);
 
   iterator begin();
   iterator end();
@@ -40,8 +40,8 @@ class multiset {
 
   std::pair<iterator, bool> insert(const value_type &value);
   void erase(iterator pos);
-  void swap(multiset &other);
-  void merge(multiset &other);
+  void swap(Multiset &other);
+  void merge(Multiset &other);
 
   iterator find(const KT &key);
   bool contains(const KT &key);
@@ -53,11 +53,11 @@ class multiset {
 
 // Default constructor
 template <typename KT>
-s21::multiset<KT>::multiset() : tree_(), size_(0) {}
+s21::Multiset<KT>::Multiset() : tree_(), size_(0) {}
 
 // Constructor for initializer list
 template <typename KT>
-s21::multiset<KT>::multiset(std::initializer_list<value_type> const &items)
+s21::Multiset<KT>::Multiset(std::initializer_list<value_type> const &items)
     : tree_(), size_(0) {
   for (auto item : items) {
     tree_.insert(item, item);
@@ -67,7 +67,7 @@ s21::multiset<KT>::multiset(std::initializer_list<value_type> const &items)
 
 // Copy constructor
 template <typename KT>
-s21::multiset<KT>::multiset(const multiset &other) : size_(0) {
+s21::Multiset<KT>::Multiset(const Multiset &other) : size_(0) {
   for (auto it = other.tree_.begin(); it != other.tree_.end(); ++it) {
     tree_.insert(it.getNode()->key, *it);
     size_++;
@@ -76,13 +76,13 @@ s21::multiset<KT>::multiset(const multiset &other) : size_(0) {
 
 // Move constructor
 template <typename KT>
-s21::multiset<KT>::multiset(multiset &&other) : multiset() {
+s21::Multiset<KT>::Multiset(Multiset &&other) : Multiset() {
   swap(other);
 }
 
 // Destructor
 template <typename KT>
-s21::multiset<KT>::~multiset() {
+s21::Multiset<KT>::~Multiset() {
   if (size_ > 0 && tree_.getRoot()) {
     size_ = 0;
     tree_.destroy(tree_.getRoot());
@@ -91,73 +91,73 @@ s21::multiset<KT>::~multiset() {
 
 // Getter size_
 template <typename KT>
-typename s21::multiset<KT>::size_type s21::multiset<KT>::size() {
+typename s21::Multiset<KT>::size_type s21::Multiset<KT>::size() {
   return size_;
 }
 
 // Getter maxsize
 template <typename KT>
-typename s21::multiset<KT>::size_type s21::multiset<KT>::max_size() {
+typename s21::Multiset<KT>::size_type s21::Multiset<KT>::max_size() {
   return ((std::numeric_limits<size_type>::max() / 2) - sizeof(s21::BTree<KT>) -
           sizeof(s21::Node<KT>)) /
          sizeof(s21::Node<KT>);
 }
 
 template <typename KT>
-typename s21::multiset<KT>::reference s21::multiset<KT>::operator=(
+typename s21::Multiset<KT>::reference s21::Multiset<KT>::operator=(
     std::initializer_list<value_type> const &items) {
-  swap(multiset<KT>(items));
+  swap(Multiset<KT>(items));
   return *this;
 }
 
 template <typename KT>
-typename s21::multiset<KT>::reference s21::multiset<KT>::operator=(
-    const multiset &s) {
-  swap(multiset<KT>(s));
+typename s21::Multiset<KT>::reference s21::Multiset<KT>::operator=(
+    const Multiset &s) {
+  swap(Multiset<KT>(s));
   return *this;
 }
 
 template <typename KT>
-typename s21::multiset<KT>::reference s21::multiset<KT>::operator=(
-    multiset &&s) {
+typename s21::Multiset<KT>::reference s21::Multiset<KT>::operator=(
+    Multiset &&s) {
   swap(s);
   return *this;
 }
 
 // Method to find iterator to specific node
 template <typename KT>
-typename s21::multiset<KT>::iterator s21::multiset<KT>::find(const KT &key) {
+typename s21::Multiset<KT>::iterator s21::Multiset<KT>::find(const KT &key) {
   return tree_.searchNode(key);
 }
 
 // Returns iterator to begin
 template <typename KT>
-typename s21::multiset<KT>::iterator s21::multiset<KT>::begin() {
+typename s21::Multiset<KT>::iterator s21::Multiset<KT>::begin() {
   return tree_.begin();
 }
 
 // Returns iterator after end node
 template <typename KT>
-typename s21::multiset<KT>::iterator s21::multiset<KT>::end() {
+typename s21::Multiset<KT>::iterator s21::Multiset<KT>::end() {
   return tree_.end();
 }
 
-// Method to check, is multiset empty
+// Method to check, is Multiset empty
 template <typename KT>
-bool s21::multiset<KT>::empty() {
+bool s21::Multiset<KT>::empty() {
   return size_ == 0;
 }
 
-// Destroy the all multiset
+// Destroy the all Multiset
 template <typename KT>
-void s21::multiset<KT>::clear() {
+void s21::Multiset<KT>::clear() {
   tree_.destroy(tree_.getRoot());
   size_ = 0;
 }
 
 // Insert a new value into multiset
 template <typename KT>
-std::pair<typename s21::multiset<KT>::iterator, bool> s21::multiset<KT>::insert(
+std::pair<typename s21::Multiset<KT>::iterator, bool> s21::Multiset<KT>::insert(
     const KT &value) {
   // if (tree_.search(value) != nullptr) {
   //   return std::pair<iterator, bool>{nullptr, false};
@@ -169,7 +169,7 @@ std::pair<typename s21::multiset<KT>::iterator, bool> s21::multiset<KT>::insert(
 
 // Delete one node by getting iterator
 template <typename KT>
-void s21::multiset<KT>::erase(typename s21::multiset<KT>::iterator pos) {
+void s21::Multiset<KT>::erase(typename s21::Multiset<KT>::iterator pos) {
   auto node = pos.getNode();
   tree_.removeNode(node, node->key);
   size_--;
@@ -177,7 +177,7 @@ void s21::multiset<KT>::erase(typename s21::multiset<KT>::iterator pos) {
 
 // Swap two multisets
 template <typename KT>
-void s21::multiset<KT>::swap(multiset &other) {
+void s21::Multiset<KT>::swap(Multiset &other) {
   using std::swap;
   swap(size_, other.size_);
   swap(tree_, other.tree_);
@@ -185,15 +185,15 @@ void s21::multiset<KT>::swap(multiset &other) {
 
 // Merge two multisets
 template <typename KT>
-void s21::multiset<KT>::merge(multiset &other) {
+void s21::Multiset<KT>::merge(Multiset &other) {
   for (auto it = other.tree_.begin(); it != other.tree_.end(); ++it) {
     insert(it.getNode()->key);
   }
 }
 
-// Check is key containing in multiset
+// Check is key containing in Multiset
 template <typename KT>
-bool s21::multiset<KT>::contains(const KT &key) {
+bool s21::Multiset<KT>::contains(const KT &key) {
   return (tree_.search(key) != nullptr);
 }
 

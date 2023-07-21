@@ -8,7 +8,7 @@
 
 namespace s21 {
 template <class T, size_t N>
-class array {
+class Array {
  public:
   // Aliases declaration
   using value_type = T;
@@ -19,12 +19,12 @@ class array {
   using size_type = size_t;
 
   // Array Member functions
-  array();
-  explicit array(std::initializer_list<value_type> const &);
-  array(const array &);
-  array(array &&) noexcept;
-  ~array();
-  array &operator=(array &&);
+  Array();
+  explicit Array(std::initializer_list<value_type> const &);
+  Array(const Array &);
+  Array(Array &&) noexcept;
+  ~Array();
+  Array &operator=(Array &&);
 
   // Array Element access
   reference at(size_type);
@@ -43,7 +43,7 @@ class array {
   size_type max_size() const noexcept;
 
   // Array Modifiers
-  void swap(array &);
+  void swap(Array &);
   void fill(const_reference);
 
  private:
@@ -53,12 +53,12 @@ class array {
 
 // default constructor, creates empty array
 template <class T, size_t N>
-array<T, N>::array() : size_(N), data_(new T[N]{}) {}
+Array<T, N>::Array() : size_(N), data_(new T[N]{}) {}
 
 // initializer list constructor,
-// creates array initizialized using std::initializer_list
+// creates Array initizialized using std::initializer_list
 template <class T, size_t N>
-array<T, N>::array(std::initializer_list<value_type> const &items)
+Array<T, N>::Array(std::initializer_list<value_type> const &items)
     : size_(N), data_(new T[N]{}) {
   size_type count = items.size();
   if (count > size_) throw std::length_error{"Too large count"};
@@ -71,7 +71,7 @@ array<T, N>::array(std::initializer_list<value_type> const &items)
 
 // copy constructor
 template <class T, size_t N>
-array<T, N>::array(const array &other) : size_(other.size_), data_(new T[N]{}) {
+Array<T, N>::Array(const Array &other) : size_(other.size_), data_(new T[N]{}) {
   for (size_type i = 0; i < size_; ++i) {
     data_[i] = other.data_[i];
   }
@@ -79,13 +79,13 @@ array<T, N>::array(const array &other) : size_(other.size_), data_(new T[N]{}) {
 
 // move constructor
 template <class T, size_t N>
-array<T, N>::array(array &&origin) noexcept : array() {
+Array<T, N>::Array(Array &&origin) noexcept : Array() {
   swap(origin);
 }
 
 // assignment operator overload for moving object
 template <class T, size_t N>
-array<T, N> &array<T, N>::operator=(array<T, N> &&origin) {
+Array<T, N> &Array<T, N>::operator=(Array<T, N> &&origin) {
   swap(origin);
   origin.size_ = 0;
   return *this;
@@ -93,76 +93,76 @@ array<T, N> &array<T, N>::operator=(array<T, N> &&origin) {
 
 // destructor
 template <class T, size_t N>
-array<T, N>::~array() {
+Array<T, N>::~Array() {
   delete[] data_;
 }
 
 // access specified element with bounds checking
 template <class T, size_t N>
-typename array<T, N>::reference array<T, N>::at(size_type pos) {
+typename Array<T, N>::reference Array<T, N>::at(size_type pos) {
   if (pos >= size_) throw std::out_of_range{"Position is out of range."};
   return data_[pos];
 }
 
 // access specified element
 template <class T, size_t N>
-typename array<T, N>::reference array<T, N>::operator[](size_type pos) {
+typename Array<T, N>::reference Array<T, N>::operator[](size_type pos) {
   return data_[pos];
 }
 
 // access the first element
 template <class T, size_t N>
-typename array<T, N>::const_reference array<T, N>::front() {
+typename Array<T, N>::const_reference Array<T, N>::front() {
   if (empty()) throw std::out_of_range{"Position is out of range."};
   return data_[0];
 }
 
 // access the last element
 template <class T, size_t N>
-typename array<T, N>::const_reference array<T, N>::back() {
+typename Array<T, N>::const_reference Array<T, N>::back() {
   if (empty()) throw std::out_of_range{"Position is out of range."};
   return data_[size_ - 1];
 }
 
-// direct access to the underlying array
+// direct access to the underlying Array
 template <class T, size_t N>
-typename array<T, N>::iterator array<T, N>::data() {
+typename Array<T, N>::iterator Array<T, N>::data() {
   return data_;
 }
 
 // returns an iterator to the beginning
 template <class T, size_t N>
-typename array<T, N>::iterator array<T, N>::begin() {
+typename Array<T, N>::iterator Array<T, N>::begin() {
   return data_;
 }
 
 // returns an iterator to the end
 template <class T, size_t N>
-typename array<T, N>::iterator array<T, N>::end() {
+typename Array<T, N>::iterator Array<T, N>::end() {
   return data_ + size_;
 }
 
 // checks whether the container is empty
 template <class T, size_t N>
-bool array<T, N>::empty() {
+bool Array<T, N>::empty() {
   return size_ == 0;
 }
 
 // returns the number of elements
 template <class T, size_t N>
-typename array<T, N>::size_type array<T, N>::size() const noexcept {
+typename Array<T, N>::size_type Array<T, N>::size() const noexcept {
   return size_;
 }
 
 // returns the maximum possible number of elements
 template <class T, size_t N>
-typename array<T, N>::size_type array<T, N>::max_size() const noexcept {
+typename Array<T, N>::size_type Array<T, N>::max_size() const noexcept {
   return size_;
 }
 
 // swaps the contents
 template <class T, size_t N>
-void array<T, N>::swap(s21::array<T, N> &v) {
+void Array<T, N>::swap(s21::Array<T, N> &v) {
   using std::swap;
   swap(size_, v.size_);
   swap(data_, v.data_);
@@ -170,7 +170,7 @@ void array<T, N>::swap(s21::array<T, N> &v) {
 
 // assigns the given value value to all elements in the container
 template <class T, size_t N>
-void array<T, N>::fill(const_reference value) {
+void Array<T, N>::fill(const_reference value) {
   for (size_type i = 0; i < size_; ++i) data_[i] = value;
 }
 

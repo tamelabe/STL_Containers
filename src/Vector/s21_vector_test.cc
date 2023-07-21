@@ -7,7 +7,7 @@
 
 // Constructors
 TEST(Vector, Constructor_base) {
-  s21::vector<int> s21_vec;
+  s21::Vector<int> s21_vec;
   std::vector<int> std_vec;
   EXPECT_EQ(s21_vec.size(), std_vec.size());
   EXPECT_EQ(s21_vec.capacity(), std_vec.capacity());
@@ -16,14 +16,14 @@ TEST(Vector, Constructor_base) {
 }
 
 TEST(Vector, Constructor_size_n) {
-  s21::vector<int> vec(2);
+  s21::Vector<int> vec(2);
   std::vector<int> vec1(2);
   EXPECT_TRUE(vec.capacity() == vec1.capacity());
   EXPECT_TRUE(vec.size() == vec1.size());
 }
 
 TEST(Vector, Constructor_items) {
-  s21::vector<int> vec{1, 2, 3, 4, 5};
+  s21::Vector<int> vec{1, 2, 3, 4, 5};
   std::vector<int> vec1{1, 2, 3, 4, 5};
   EXPECT_TRUE(vec.capacity() == vec1.capacity());
   EXPECT_TRUE(vec.size() == vec1.size());
@@ -33,8 +33,8 @@ TEST(Vector, Constructor_items) {
 }
 
 TEST(Vector, Constructor_copy) {
-  s21::vector<int> vec{1, 2, 3};
-  s21::vector<int> vec2(vec);
+  s21::Vector<int> vec{1, 2, 3};
+  s21::Vector<int> vec2(vec);
   std::vector<int> std_vec{1, 2, 3};
   std::vector<int> std_vec2(std_vec);
 
@@ -49,8 +49,8 @@ TEST(Vector, Constructor_copy) {
 }
 
 TEST(Vector, Constructor_move) {
-  s21::vector<int> vec{1, 2, 3};
-  s21::vector<int> vec2(std::move(vec));
+  s21::Vector<int> vec{1, 2, 3};
+  s21::Vector<int> vec2(std::move(vec));
   std::vector<int> std_vec{1, 2, 3};
   std::vector<int> std_vec2(std::move(std_vec));
 
@@ -64,8 +64,8 @@ TEST(Vector, Constructor_move) {
 
 // Overloads
 TEST(Vector, OperatorOverload_move) {
-  s21::vector<int> vec{1, 2, 3};
-  s21::vector<int> vec2 = std::move(vec);
+  s21::Vector<int> vec{1, 2, 3};
+  s21::Vector<int> vec2 = std::move(vec);
   std::vector<int> std_vec{1, 2, 3};
   std::vector<int> std_vec2 = std::move(std_vec);
 
@@ -78,8 +78,8 @@ TEST(Vector, OperatorOverload_move) {
 }
 
 TEST(Vector, OperatorOverload_copy) {
-  s21::vector<int> vec{1, 2, 3};
-  s21::vector<int> vec2 = vec;
+  s21::Vector<int> vec{1, 2, 3};
+  s21::Vector<int> vec2 = vec;
   std::vector<int> std_vec{1, 2, 3};
   std::vector<int> std_vec2 = std_vec;
 
@@ -92,38 +92,38 @@ TEST(Vector, OperatorOverload_copy) {
 
 // Element access
 TEST(Vector, ElementAccess_at) {
-  s21::vector<int> vec{1, 2, 3};
+  s21::Vector<int> vec{1, 2, 3};
   std::vector<int> std_vec{1, 2, 3};
   EXPECT_EQ(vec.at(2), std_vec.at(2));
 }
 
 TEST(Vector, ElementAccess_at_operator) {
-  s21::vector<int> vec{1, 2, 3};
+  s21::Vector<int> vec{1, 2, 3};
   std::vector<int> std_vec{1, 2, 3};
   EXPECT_EQ(vec[2], std_vec[2]);
 }
 
 TEST(Vector, ElementAccess_front) {
-  s21::vector<int> vec{1, 2, 3};
+  s21::Vector<int> vec{1, 2, 3};
   std::vector<int> std_vec{1, 2, 3};
   EXPECT_EQ(vec.front(), std_vec.front());
 }
 
 TEST(Vector, ElementAccess_back) {
-  s21::vector<int> vec{1, 2, 3};
+  s21::Vector<int> vec{1, 2, 3};
   std::vector<int> std_vec{1, 2, 3};
   EXPECT_EQ(vec.back(), std_vec.back());
 }
 
 // Iterators
 TEST(Vector, Iterator_begin) {
-  s21::vector<int> vec{1, 2, 3};
+  s21::Vector<int> vec{1, 2, 3};
   std::vector<int> std_vec{1, 2, 3};
   EXPECT_EQ(*vec.begin(), *std_vec.begin());
 }
 
 TEST(Vector, Iterator_end) {
-  s21::vector<int> vec{1, 2, 3};
+  s21::Vector<int> vec{1, 2, 3};
   int* a = vec.end();
   int* b = vec.begin();
   std::advance(b, 3);
@@ -132,32 +132,32 @@ TEST(Vector, Iterator_end) {
 
 // Capacity
 TEST(Vector, Capacity_empty) {
-  s21::vector<int> vec;
-  s21::vector<int> vec2{1, 2};
+  s21::Vector<int> vec;
+  s21::Vector<int> vec2{1, 2};
   EXPECT_TRUE(vec.empty());
   EXPECT_FALSE(vec2.empty());
 }
 
 TEST(Vector, Capacity_size) {
-  s21::vector<int> vec{1, 2};
+  s21::Vector<int> vec{1, 2};
   std::vector<int> std_vec{1, 2};
   EXPECT_EQ(vec.size(), std_vec.size());
 }
 
 TEST(Vector, Capacity_max_size) {
-  s21::vector<int> vec;
+  s21::Vector<int> vec;
   std::vector<int> std_vec;
   EXPECT_EQ(vec.max_size(), std_vec.max_size());
 }
 
 TEST(Vector, Capacity_capacity) {
-  s21::vector<int> vec{1, 2, 3};
+  s21::Vector<int> vec{1, 2, 3};
   std::vector<int> std_vec{1, 2, 3};
   EXPECT_EQ(vec.capacity(), std_vec.capacity());
 }
 
 TEST(Vector, Capacity_reserve) {
-  s21::vector<int> vec{1, 2, 3};
+  s21::Vector<int> vec{1, 2, 3};
   vec.reserve(5);
   std::vector<int> std_vec{1, 2, 3};
   std_vec.reserve(5);
@@ -169,7 +169,7 @@ TEST(Vector, Capacity_reserve) {
 }
 
 TEST(Vector, Capacity_shrink_to_fit) {
-  s21::vector<int> vec{1, 2, 3};
+  s21::Vector<int> vec{1, 2, 3};
   vec.reserve(5);
   std::vector<int> std_vec{1, 2, 3};
   std_vec.reserve(5);
@@ -185,7 +185,7 @@ TEST(Vector, Capacity_shrink_to_fit) {
 
 // Modifier
 TEST(Vector, Modifier_clear) {
-  s21::vector<int> vec{1, 2, 3};
+  s21::Vector<int> vec{1, 2, 3};
   std::vector<int> std_vec{1, 2, 3};
   vec.clear();
   std_vec.clear();
@@ -194,10 +194,10 @@ TEST(Vector, Modifier_clear) {
 }
 
 TEST(Vector, Modifier_insert) {
-  s21::vector<int> vec{100, 200, 300};
+  s21::Vector<int> vec{100, 200, 300};
   std::vector<int> std_vec{100, 200, 300};
   EXPECT_TRUE(vec.size() == std_vec.size());
-  s21::vector<int>::iterator it = vec.insert(vec.begin() + 1, 777);
+  s21::Vector<int>::iterator it = vec.insert(vec.begin() + 1, 777);
   std::vector<int>::iterator std_it = std_vec.insert(std_vec.begin() + 1, 777);
   EXPECT_TRUE(vec.size() == std_vec.size());
   EXPECT_TRUE(*it == *std_it);
@@ -205,7 +205,7 @@ TEST(Vector, Modifier_insert) {
 }
 
 TEST(Vector, Modifier_erase) {
-  s21::vector<int> vec{100, 200, 300};
+  s21::Vector<int> vec{100, 200, 300};
   std::vector<int> std_vec{100, 200, 300};
   EXPECT_TRUE(vec.size() == std_vec.size());
   auto iter = vec.begin();
@@ -218,7 +218,7 @@ TEST(Vector, Modifier_erase) {
 }
 
 TEST(Vector, Modifier_push_back) {
-  s21::vector<int> vec{100, 200, 300};
+  s21::Vector<int> vec{100, 200, 300};
   std::vector<int> std_vec{100, 200, 300};
   EXPECT_TRUE(vec.size() == std_vec.size());
   vec.push_back(777);
@@ -231,7 +231,7 @@ TEST(Vector, Modifier_push_back) {
 }
 
 TEST(Vector, Modifier_pop_back) {
-  s21::vector<int> vec{100, 200, 300};
+  s21::Vector<int> vec{100, 200, 300};
   std::vector<int> std_vec{100, 200, 300};
   EXPECT_TRUE(vec.size() == std_vec.size());
   vec.pop_back();
@@ -242,8 +242,8 @@ TEST(Vector, Modifier_pop_back) {
 }
 
 TEST(Vector, Modifier_swap) {
-  s21::vector<int> vec{100, 200, 300};
-  s21::vector<int> vec2{1000, 2000, 3000};
+  s21::Vector<int> vec{100, 200, 300};
+  s21::Vector<int> vec2{1000, 2000, 3000};
   std::vector<int> std_vec{100, 200, 300};
   std::vector<int> std_vec2{1000, 2000, 3000};
   vec.swap(vec2);
@@ -258,8 +258,8 @@ TEST(Vector, Modifier_swap) {
 
 // Bonus
 TEST(Vector, insert_many) {
-  s21::vector<int> vec{100, 200, 300};
-  s21::vector<int>::const_iterator it = vec.begin() + 1;
+  s21::Vector<int> vec{100, 200, 300};
+  s21::Vector<int>::const_iterator it = vec.begin() + 1;
   auto res = vec.insert_many(it, 777, 666, 555);
   EXPECT_TRUE(vec.size() == 6);
   EXPECT_TRUE(*res == 555);
@@ -267,7 +267,7 @@ TEST(Vector, insert_many) {
 }
 
 TEST(Vector, insert_many_back) {
-  s21::vector<int> vec{100, 200, 300};
+  s21::Vector<int> vec{100, 200, 300};
   vec.insert_many_back(777, 666, 555);
   EXPECT_TRUE(vec.size() == 6);
   EXPECT_TRUE(vec.back() == 555);
