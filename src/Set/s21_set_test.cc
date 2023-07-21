@@ -9,7 +9,7 @@ template <class T>
 bool comparisonSet(s21::Set<T> &s21_set, std::set<T> &std_set);
 
 // Constructors
-TEST(member_functions, base_constructor_int) {
+TEST(Set, base_constructor_int) {
   s21::Set<int> set;
   std::set<int> stdset;
   ASSERT_TRUE(comparisonSet(set, stdset));
@@ -18,7 +18,7 @@ TEST(member_functions, base_constructor_int) {
   ASSERT_TRUE(set.end().getNode() == nullptr);
 }
 
-TEST(member_functions, base_constructor_char) {
+TEST(Set, base_constructor_char) {
   s21::Set<char> set;
   std::set<char> stdset;
   ASSERT_TRUE(comparisonSet(set, stdset));
@@ -27,7 +27,7 @@ TEST(member_functions, base_constructor_char) {
   ASSERT_TRUE(set.end().getNode() == nullptr);
 }
 
-TEST(member_functions, initializer_list_one_element_char) {
+TEST(Set, initializer_list_one_element_char) {
   s21::Set<char> set{'a'};
   std::set<char> stdset{'a'};
   ASSERT_TRUE(comparisonSet(set, stdset));
@@ -37,7 +37,7 @@ TEST(member_functions, initializer_list_one_element_char) {
   std::set<int> set2{1};
 }
 
-TEST(member_functions, initializer_list_one_element_double) {
+TEST(Set, initializer_list_one_element_double) {
   s21::Set<double> set{1.0};
   std::set<double> stdset{1.0};
   std::set<double> std_another_set{2.0};
@@ -48,7 +48,7 @@ TEST(member_functions, initializer_list_one_element_double) {
   ASSERT_TRUE(set.end().getNode() == nullptr);
 }
 
-TEST(member_functions, initializer_list_std_pair) {
+TEST(Set, initializer_list_std_pair) {
   s21::Set<std::pair<int, int>> set{std::make_pair(1, 2)};
   std::set<std::pair<int, int>> stdset{std::make_pair(1, 2)};
   ASSERT_TRUE(comparisonSet(set, stdset));
@@ -58,7 +58,7 @@ TEST(member_functions, initializer_list_std_pair) {
   ASSERT_TRUE(set.end().getNode() == nullptr);
 }
 
-TEST(member_functions, initializer_list_int) {
+TEST(Set, initializer_list_int) {
   s21::Set<int> set{1, 2, 3, 4};
   std::set<int> stdset{1, 2, 3, 4};
   ASSERT_TRUE(comparisonSet(set, stdset));
@@ -67,7 +67,7 @@ TEST(member_functions, initializer_list_int) {
   ASSERT_TRUE(set.end().getNode() == nullptr);
 }
 
-TEST(member_functions, initializer_list_char) {
+TEST(Set, initializer_list_char) {
   s21::Set<char> set{'a', 'b', 'c', 'd'};
   std::set<char> stdset{'a', 'b', 'c', 'd'};
   comparisonSet(set, stdset);
@@ -76,7 +76,7 @@ TEST(member_functions, initializer_list_char) {
   ASSERT_TRUE(set.end().getNode() == nullptr);
 }
 
-TEST(member_functions, copy_constructor) {
+TEST(Set, copy_constructor) {
   s21::Set<int> set{1, 2, 3, 4};
   s21::Set<int> copySet(set);
   std::set<int> stdset{1, 2, 3, 4};
@@ -85,7 +85,7 @@ TEST(member_functions, copy_constructor) {
   ASSERT_TRUE(comparisonSet(copySet, stdcopySet));
 }
 
-TEST(member_functions, move_constructor) {
+TEST(Set, move_constructor) {
   s21::Set<int> set{1, 2, 3, 4};
   s21::Set<int> copySet(set);
   s21::Set<int> moveSet(std::move(set));
@@ -97,7 +97,7 @@ TEST(member_functions, move_constructor) {
   ASSERT_TRUE(comparisonSet(moveSet, stdmoveSet));
 }
 
-TEST(member_functions, move_operator) {
+TEST(Set, move_operator) {
   s21::Set<int> set{1, 2, 3, 4};
   s21::Set<int> copySet(set);
   s21::Set<int> moveSet = std::move(set);
@@ -109,20 +109,20 @@ TEST(member_functions, move_operator) {
   ASSERT_TRUE(comparisonSet(moveSet, stdmoveSet));
 }
 
-TEST(Iterators, begin) {
+TEST(Set, begin) {
   s21::Set<int> set{1, 2, 3, 4};
   std::set<int> stdset{1, 2, 3, 4};
   ASSERT_TRUE(*set.begin() == *stdset.begin());
   ASSERT_TRUE(set.begin().getNode()->key == 1);
 }
 
-TEST(Iterators, end) {
+TEST(Set, end) {
   s21::Set<int> set{1, 2, 3, 4};
   std::set<int> stdset{1, 2, 3, 4};
   ASSERT_TRUE(set.end().getNode() == nullptr);
 }
 
-TEST(Capacity, empty) {
+TEST(Set, empty) {
   s21::Set<int> set;
   std::set<int> stdset;
   ASSERT_TRUE(set.empty() == stdset.empty());
@@ -131,7 +131,7 @@ TEST(Capacity, empty) {
   ASSERT_TRUE(set2.empty() == stdset2.empty());
 }
 
-TEST(Capacity, max_size) {
+TEST(Set, max_size) {
   s21::Set<int> set;
   size_t setsize = set.max_size();
   std::set<int> stdset;
@@ -140,7 +140,7 @@ TEST(Capacity, max_size) {
 }
 
 // Modifiers
-TEST(Modifiers, empty) {
+TEST(Set, clear) {
   s21::Set<int> set{1, 2, 3, 4};
   set.clear();
   std::set<int> stdset{1, 2, 3, 4};
@@ -149,13 +149,13 @@ TEST(Modifiers, empty) {
   ASSERT_TRUE(set.size() == 0);
 }
 
-TEST(Modifiers, insert_pair) {
+TEST(Set, insert_pair) {
   s21::Set<std::pair<int, int>> set;
   set.insert(std::make_pair(3, 10));
   ASSERT_TRUE(set.contains(std::make_pair(3, 10)) == true);
 }
 
-TEST(Modifiers, insert_key_value) {
+TEST(Set, insert_key_value) {
   s21::Set<char> set;
   set.insert('b');
   set.insert('a');
@@ -167,7 +167,7 @@ TEST(Modifiers, insert_key_value) {
   ASSERT_TRUE(comparisonSet(set, stdset));
 }
 
-TEST(Modifiers, insert_key_value_int) {
+TEST(Set, insert_key_value_int) {
   s21::Set<int> set;
   set.insert(1);
   set.insert(2);
@@ -177,7 +177,7 @@ TEST(Modifiers, insert_key_value_int) {
   ASSERT_TRUE(comparisonSet(set, stdset));
 }
 
-TEST(Modifiers, erase_no_child) {
+TEST(Set, erase_no_child) {
   s21::Set<int> set;
   set.insert(7);
   set.insert(3);
@@ -191,7 +191,7 @@ TEST(Modifiers, erase_no_child) {
   ASSERT_TRUE(comparisonSet(set, stdset));
 }
 
-TEST(Modifiers, erase_one_child) {
+TEST(Set, erase_one_child) {
   s21::Set<int> set;
   set.insert(7);
   set.insert(3);
@@ -203,7 +203,7 @@ TEST(Modifiers, erase_one_child) {
   ASSERT_TRUE(set.find(7).getNode()->left->key == 2);
 }
 
-TEST(Modifiers, erase_two_child) {
+TEST(Set, erase_two_child) {
   s21::Set<int> set;
   set.insert(7);
   set.insert(3);
@@ -215,7 +215,7 @@ TEST(Modifiers, erase_two_child) {
   ASSERT_TRUE(set.contains(3) == false);
 }
 
-TEST(Modifiers, erase_two_child_2) {
+TEST(Set, erase_two_child_2) {
   s21::Set<int> set;
   set.insert(8);
   set.insert(4);
@@ -234,7 +234,7 @@ TEST(Modifiers, erase_two_child_2) {
   ASSERT_TRUE(set.contains(4) == false);
 }
 
-TEST(Modifiers, merge) {
+TEST(Set, merge) {
   s21::Set<int> set{8, 4, 11};
   s21::Set<int> set1{1, 10, 11};
   set.merge(set1);
