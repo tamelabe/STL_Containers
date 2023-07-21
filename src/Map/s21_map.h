@@ -36,7 +36,7 @@ class Map {
   iterator begin();
   iterator end();
   bool empty();
-  size_type size();
+  size_type size() noexcept;
   size_type max_size() const noexcept;
   void clear();
   std::pair<iterator, bool> insert(const value_type &);
