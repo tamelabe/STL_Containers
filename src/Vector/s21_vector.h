@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <initializer_list>
+#include <limits>
 #include <stdexcept>
 #include <utility>
 
@@ -13,6 +14,7 @@ class vector {
   class VectorConstIterator;
 
  public:
+  using difference_type = std::ptrdiff_t;
   using value_type = T;
   using reference = T &;
   using const_reference = const T &;
@@ -60,7 +62,6 @@ class vector {
   size_type size_;
   size_type capacity_;
   iterator storage_;
-  const unsigned MAX_VECTOR_SIZE = 1073741824U;  // 1GB
 
   void reallocate(size_type capacity, size_type size, const iterator storage);
 };
@@ -193,14 +194,14 @@ typename vector<T>::size_type vector<T>::size() const noexcept {
 // returns the maximum possible number of elements
 template <class T>
 typename vector<T>::size_type vector<T>::max_size() const noexcept {
-  return MAX_VECTOR_SIZE;
+  return std::numeric_limits<difference_type>::max() / (sizeof(value_type));
 }
 
 // allocate storage of size elements and copies current array elements to a
 // newely allocated array
 template <class T>
 void vector<T>::reserve(size_type n) {
-  if (n > MAX_VECTOR_SIZE) throw std::length_error{"too large size"};
+  if (n > max_size()) throw std::length_error{"too large size"};
   if (n <= capacity_) return;
   s21::vector<T> tmp;
   tmp.reallocate(n, size_, storage_);

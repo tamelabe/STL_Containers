@@ -186,18 +186,6 @@ class BTree {
 
   iterator end() const { return iterator(nullptr); }
 
-  void print(node_type* node) {
-    if (node == nullptr) {
-      return;
-    }
-    std::cout << "NODE: " << node->key << " value: " << node->value
-              << " parent: "
-              << ((node->parent != nullptr) ? node->parent->key : 0)
-              << std::endl;
-    print(node->left);
-    print(node->right);
-  }
-
  private:
   node_type* root;
 
