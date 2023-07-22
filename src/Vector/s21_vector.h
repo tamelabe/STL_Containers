@@ -73,8 +73,7 @@ Vector<T>::Vector() : size_(0U), capacity_(0U), storage_(nullptr) {}
 // Parameterized constructor, creates the vector of size n
 template <class T>
 Vector<T>::Vector(size_type n)
-    : size_(n), capacity_(n), storage_(new T[capacity_]{}) {
-}
+    : size_(n), capacity_(n), storage_(new T[capacity_]{}) {}
 
 // Initializer list constructor, creates vector initizialized using
 // std::initializer_list
@@ -292,7 +291,7 @@ void Vector<T>::erase(iterator pos) {
 template <class T>
 void Vector<T>::push_back(const_reference value) {
   if (size_ + 1 > capacity_) {
-    reserve(capacity_ * 2); // Increase capacity if needed
+    reserve(capacity_ * 2);  // Increase capacity if needed
   }
   storage_[size_] = value;
   ++size_;

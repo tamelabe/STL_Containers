@@ -115,7 +115,7 @@ typename Map<KT, VT>::iterator Map<KT, VT>::find(const KT &key) {
 // Access or insert specified element
 template <typename KT, typename VT>
 VT &Map<KT, VT>::operator[](const KT &key) {
-  VT* result = tree_.search(key);
+  VT *result = tree_.search(key);
   if (result == nullptr) {
     insert(key, VT());
     result = &operator[](key);
@@ -143,7 +143,7 @@ bool s21::Map<KT, VT>::empty() {
 
 // Returns the number of elements
 template <typename KT, typename VT>
-typename s21::Map<KT, VT>::size_type s21::Map<KT, VT>::size() {
+typename s21::Map<KT, VT>::size_type s21::Map<KT, VT>::size() noexcept {
   return size_;
 }
 

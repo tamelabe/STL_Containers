@@ -61,9 +61,9 @@ TEST(Array, Constructor_list__less_items) {
   EXPECT_TRUE(compareWithStd(s21_arr, std_arr));
 }
 
- TEST(Array, Constructor_items_exception) {
-   EXPECT_THROW((s21::Array<int, 2>{1, 2, 3}), std::length_error);
- }
+TEST(Array, Constructor_items_exception) {
+  EXPECT_THROW((s21::Array<int, 2>{1, 2, 3}), std::length_error);
+}
 
 TEST(Array, Constructor_copy__integers) {
   s21::Array<int, 3> arr{1, 2, 3};
@@ -102,10 +102,10 @@ TEST(Array, Assignment_operator_move) {
 }
 
 TEST(Array, Assignment_operator_copy) {
-s21::Array<int, 3> arr{1, 2, 3};
-s21::Array<int, 3> arr2 = arr;
-EXPECT_TRUE(compareWithS21(arr2, arr));
-EXPECT_TRUE(arr2.size() == arr.size());
+  s21::Array<int, 3> arr{1, 2, 3};
+  s21::Array<int, 3> arr2 = arr;
+  EXPECT_TRUE(compareWithS21(arr2, arr));
+  EXPECT_TRUE(arr2.size() == arr.size());
 }
 
 TEST(Array, ElementAccess_at) {
@@ -116,10 +116,10 @@ TEST(Array, ElementAccess_at) {
   EXPECT_EQ(a, b);
 }
 
- TEST(Array, ElementAccess_at__exception) {
-   s21::Array<int, 3> arr{1, 2, 3};
-   EXPECT_THROW((arr.at(3)), std::out_of_range);
- }
+TEST(Array, ElementAccess_at__exception) {
+  s21::Array<int, 3> arr{1, 2, 3};
+  EXPECT_THROW((arr.at(3)), std::out_of_range);
+}
 
 TEST(Array, ElementAccess_front) {
   s21::Array<int, 3> s21_arr{1, 2, 3};
@@ -129,10 +129,10 @@ TEST(Array, ElementAccess_front) {
   EXPECT_EQ(a, b);
 }
 
- TEST(ElementAccess, front_empty) {
-   s21::Array<int, 0> s21_arr;
-   EXPECT_THROW(s21_arr.front(), std::out_of_range);
- }
+TEST(Array, front_empty) {
+  s21::Array<int, 0> s21_arr;
+  EXPECT_THROW(s21_arr.front(), std::out_of_range);
+}
 
 TEST(Array, ElementAccess_back) {
   s21::Array<int, 3> s21_arr{1, 2, 3};
@@ -142,10 +142,10 @@ TEST(Array, ElementAccess_back) {
   EXPECT_TRUE(a == b);
 }
 
- TEST(ElementAccess, back_empty) {
-   s21::Array<int, 0> arr;
-   EXPECT_THROW(arr.back(), std::out_of_range);
- }
+TEST(Array, back_empty) {
+  s21::Array<int, 0> arr;
+  EXPECT_THROW(arr.back(), std::out_of_range);
+}
 
 TEST(Array, ElementAccess_data) {
   s21::Array<int, 3> s21_arr{1, 2, 3};
@@ -215,5 +215,5 @@ int main(int argc, char** argv) {
 #ifdef __APPLE__
   free(__cxxabiv1::__cxa_get_globals());
 #endif
-  return RUN_ALL_TESTS();;
+  return RUN_ALL_TESTS();
 }

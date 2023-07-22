@@ -200,6 +200,12 @@ TEST(Map, merge) {
   ASSERT_TRUE(s21_map.size() == 5);
 }
 
+TEST(Map, braces_empty) {
+  s21::Map<int, char> s21_map{{8, 'a'}, {4, 'b'}, {11, 'c'}};
+  std::map<int, char> std_map{{8, 'a'}, {4, 'b'}, {11, 'c'}};
+  EXPECT_EQ(s21_map[0], std_map[0]);
+}
+
 TEST(Map, insert_many) {
   s21::Map<int, int> map;
   auto result = map.insert_many(std::make_pair(3, 40), std::make_pair(5, 50),

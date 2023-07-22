@@ -12,7 +12,6 @@ TEST(Vector, Constructor_base) {
   EXPECT_EQ(s21_vec.size(), std_vec.size());
   EXPECT_EQ(s21_vec.capacity(), std_vec.capacity());
   EXPECT_EQ(s21_vec.data(), std_vec.data());
-
 }
 
 TEST(Vector, Constructor_size_n) {

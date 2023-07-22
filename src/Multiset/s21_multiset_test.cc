@@ -1,8 +1,8 @@
 #include "s21_multiset.h"
 
 #include <gtest/gtest.h>
-
 #include <cstring>
+#include <set>
 
 template <class T>
 bool comparisonMultiset(s21::Multiset<T> &s21_multiset,
@@ -12,7 +12,7 @@ bool comparisonMultiset(s21::Multiset<T> &s21_multiset,
                         std::multiset<T> &stl_multiset);
 
 // Constructors
-TEST(member_functions, base_constructor_int) {
+TEST(Multiset, base_constructor_int) {
   s21::Multiset<int> multiset;
   std::multiset<int> stdmultiset;
   ASSERT_TRUE(comparisonMultiset(multiset, stdmultiset));
@@ -21,7 +21,7 @@ TEST(member_functions, base_constructor_int) {
   ASSERT_TRUE(multiset.end().getNode() == nullptr);
 }
 
-TEST(member_functions, base_constructor_char) {
+TEST(Multiset, base_constructor_char) {
   s21::Multiset<char> multiset;
   std::multiset<char> stdmultiset;
   ASSERT_TRUE(comparisonMultiset(multiset, stdmultiset));
@@ -30,7 +30,7 @@ TEST(member_functions, base_constructor_char) {
   ASSERT_TRUE(multiset.end().getNode() == nullptr);
 }
 
-TEST(member_functions, initializer_list_one_element_char) {
+TEST(Multiset, initializer_list_one_element_char) {
   s21::Multiset<char> multiset{'a'};
   std::multiset<char> stdmultiset{'a'};
   ASSERT_TRUE(comparisonMultiset(multiset, stdmultiset));
@@ -40,7 +40,7 @@ TEST(member_functions, initializer_list_one_element_char) {
   std::multiset<int> multiset2{1};
 }
 
-TEST(member_functions, initializer_list_one_element_double) {
+TEST(Multiset, initializer_list_one_element_double) {
   s21::Multiset<double> multiset{1.0};
   std::multiset<double> stdmultiset{1.0};
   std::multiset<double> std_another_multiset{2.0};
@@ -51,7 +51,7 @@ TEST(member_functions, initializer_list_one_element_double) {
   ASSERT_TRUE(multiset.end().getNode() == nullptr);
 }
 
-TEST(member_functions, initializer_list_std_pair) {
+TEST(Multiset, initializer_list_std_pair) {
   s21::Multiset<std::pair<int, int>> multiset{std::make_pair(1, 2)};
   std::multiset<std::pair<int, int>> stdmultiset{std::make_pair(1, 2)};
   ASSERT_TRUE(comparisonMultiset(multiset, stdmultiset));
@@ -61,7 +61,7 @@ TEST(member_functions, initializer_list_std_pair) {
   ASSERT_TRUE(multiset.end().getNode() == nullptr);
 }
 
-TEST(member_functions, initializer_list_int) {
+TEST(Multiset, initializer_list_int) {
   s21::Multiset<int> multiset{1, 2, 3, 4};
   std::multiset<int> stdmultiset{1, 2, 3, 4};
   ASSERT_TRUE(comparisonMultiset(multiset, stdmultiset));
@@ -70,7 +70,7 @@ TEST(member_functions, initializer_list_int) {
   ASSERT_TRUE(multiset.end().getNode() == nullptr);
 }
 
-TEST(member_functions, initializer_list_char) {
+TEST(Multiset, initializer_list_char) {
   s21::Multiset<char> multiset{'a', 'b', 'c', 'd'};
   std::multiset<char> stdmultiset{'a', 'b', 'c', 'd'};
   comparisonMultiset(multiset, stdmultiset);
@@ -79,13 +79,13 @@ TEST(member_functions, initializer_list_char) {
   ASSERT_TRUE(multiset.end().getNode() == nullptr);
 }
 
-TEST(member_functions, copy_constructor) {
+TEST(Multiset, copy_constructor) {
   s21::Multiset<int> multiset{1, 2, 3, 4};
   s21::Multiset<int> copymultiSet(multiset);
   ASSERT_TRUE(comparisonMultiset(multiset, copymultiSet));
 }
 
-TEST(member_functions, move_constructor) {
+TEST(Multiset, move_constructor) {
   s21::Multiset<int> multiset{1, 2, 3, 4};
   s21::Multiset<int> copymultiSet(multiset);
   s21::Multiset<int> movemultiSet(std::move(multiset));
@@ -93,7 +93,7 @@ TEST(member_functions, move_constructor) {
   ASSERT_TRUE(comparisonMultiset(movemultiSet, copymultiSet));
 }
 
-TEST(member_functions, move_operator) {
+TEST(Multiset, move_operator) {
   s21::Multiset<int> multiset{1, 2, 3, 4};
   s21::Multiset<int> copymultiSet(multiset);
   s21::Multiset<int> movemultiSet = std::move(multiset);
@@ -101,20 +101,20 @@ TEST(member_functions, move_operator) {
   ASSERT_TRUE(comparisonMultiset(movemultiSet, copymultiSet));
 }
 
-TEST(Iterators, begin) {
+TEST(Multiset, begin) {
   s21::Multiset<int> multiset{1, 2, 3, 4};
   std::multiset<int> stdmultiset{1, 2, 3, 4};
   ASSERT_TRUE(*multiset.begin() == *stdmultiset.begin());
   ASSERT_TRUE(multiset.begin().getNode()->key == 1);
 }
 
-TEST(Iterators, end) {
+TEST(Multiset, end) {
   s21::Multiset<int> multiset{1, 2, 3, 4};
   std::multiset<int> stdmultiset{1, 2, 3, 4};
   ASSERT_TRUE(multiset.end().getNode() == nullptr);
 }
 
-TEST(Capacity, empty) {
+TEST(Multiset, empty) {
   s21::Multiset<int> multiset;
   std::multiset<int> stdmultiset;
   ASSERT_TRUE(multiset.empty() == stdmultiset.empty());
@@ -123,15 +123,15 @@ TEST(Capacity, empty) {
   ASSERT_TRUE(multiset2.empty() == stdmultiset2.empty());
 }
 
-TEST(Capacity, max_size) {
+TEST(Multiset, max_size) {
   s21::Multiset<int> multiset;
   std::multiset<int> stdmultiset;
   ASSERT_TRUE(multiset.max_size() > 0);
   ASSERT_TRUE(multiset.max_size() == 288230376151711742);
 }
 
-// Modifiers
-TEST(Modifiers, empty) {
+// Multiset
+TEST(Multiset, clear) {
   s21::Multiset<int> multiset{1, 2, 3, 4};
   multiset.clear();
   std::multiset<int> stdmultiset{1, 2, 3, 4};
@@ -140,13 +140,13 @@ TEST(Modifiers, empty) {
   ASSERT_TRUE(multiset.size() == 0);
 }
 
-TEST(Modifiers, insert_pair) {
+TEST(Multiset, insert_pair) {
   s21::Multiset<std::pair<int, int>> multiset;
   multiset.insert(std::make_pair(3, 10));
   ASSERT_TRUE(multiset.contains(std::make_pair(3, 10)) == true);
 }
 
-TEST(Modifiers, insert_key_value) {
+TEST(Multiset, insert_key_value) {
   s21::Multiset<char> multiset;
   multiset.insert('b');
   multiset.insert('a');
@@ -158,7 +158,7 @@ TEST(Modifiers, insert_key_value) {
   ASSERT_TRUE(multiset.contains('b') == true);
 }
 
-TEST(Modifiers, insert_key_value_int) {
+TEST(Multiset, insert_key_value_int) {
   s21::Multiset<int> multiset;
   multiset.insert(1);
   multiset.insert(2);
@@ -168,7 +168,7 @@ TEST(Modifiers, insert_key_value_int) {
   ASSERT_TRUE(comparisonMultiset(multiset, stdmultiset));
 }
 
-TEST(Modifiers, erase_no_child) {
+TEST(Multiset, erase_no_child) {
   s21::Multiset<int> multiset;
   multiset.insert(7);
   multiset.insert(3);
@@ -177,7 +177,7 @@ TEST(Modifiers, erase_no_child) {
   ASSERT_FALSE(multiset.contains(3));
 }
 
-TEST(Modifiers, erase_one_child) {
+TEST(Multiset, erase_one_child) {
   s21::Multiset<int> multiset;
   multiset.insert(7);
   multiset.insert(3);
@@ -189,7 +189,7 @@ TEST(Modifiers, erase_one_child) {
   ASSERT_TRUE(multiset.find(7).getNode()->left->key == 2);
 }
 
-TEST(Modifiers, erase_two_child) {
+TEST(Multiset, erase_two_child) {
   s21::Multiset<int> multiset;
   multiset.insert(7);
   multiset.insert(3);
@@ -201,7 +201,7 @@ TEST(Modifiers, erase_two_child) {
   ASSERT_TRUE(multiset.contains(3) == false);
 }
 
-TEST(Modifiers, erase_two_child_2) {
+TEST(Multiset, erase_two_child_2) {
   s21::Multiset<int> multiset;
   multiset.insert(8);
   multiset.insert(4);
@@ -220,7 +220,7 @@ TEST(Modifiers, erase_two_child_2) {
   ASSERT_TRUE(multiset.contains(4) == false);
 }
 
-TEST(Modifiers, merge) {
+TEST(Multiset, merge) {
   s21::Multiset<int> multiset{8, 4, 11};
   s21::Multiset<int> multiset1{1, 10, 11};
   multiset.merge(multiset1);

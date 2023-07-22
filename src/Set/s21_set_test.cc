@@ -1,6 +1,7 @@
 #include "s21_set.h"
 
 #include <gtest/gtest.h>
+
 #include <cstring>
 
 template <class T>

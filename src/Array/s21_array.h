@@ -95,8 +95,7 @@ Array<T, N> &Array<T, N>::operator=(Array<T, N> &&origin) {
 // Assignment operator overload for copying object
 template <class T, size_t N>
 Array<T, N> &Array<T, N>::operator=(const Array<T, N> &origin) {
-  for (size_type i = 0; i < size_; ++i)
-    data_[i] = origin.data_[i];
+  for (size_type i = 0; i < size_; ++i) data_[i] = origin.data_[i];
   return *this;
 }
 
