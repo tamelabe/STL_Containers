@@ -1,5 +1,5 @@
-#ifndef CPP2_S21_CONTAINERS_S21_MAP_H_
-#define CPP2_S21_CONTAINERS_S21_MAP_H_
+#ifndef CPP2_S21_CONTAINERS_1_SRC_MAP_S21_MAP_H_
+#define CPP2_S21_CONTAINERS_1_SRC_MAP_S21_MAP_H_
 
 #include <initializer_list>
 #include <limits>
@@ -55,11 +55,11 @@ class Map {
   size_type size_;
 };
 
-// default constructor, creates empty Map
+// Default constructor, creates empty Map
 template <typename KT, typename VT>
 Map<KT, VT>::Map() : tree_(), size_(0) {}
 
-// initializer list constructor,
+// Initializer list constructor,
 // creates the Map initizialized using std::initializer_list
 template <typename KT, typename VT>
 Map<KT, VT>::Map(std::initializer_list<value_type> const &items)
@@ -70,7 +70,7 @@ Map<KT, VT>::Map(std::initializer_list<value_type> const &items)
   }
 }
 
-// copy constructor
+// Copy constructor
 template <typename KT, typename VT>
 Map<KT, VT>::Map(const Map &other) : size_(0) {
   for (auto it = other.tree_.begin(); it != other.tree_.end(); ++it) {
@@ -79,13 +79,13 @@ Map<KT, VT>::Map(const Map &other) : size_(0) {
   }
 }
 
-// move constructor
+// Move constructor
 template <typename KT, typename VT>
 Map<KT, VT>::Map(Map &&other) : Map() {
   swap(other);
 }
 
-// destructor
+// Destructor
 template <typename KT, typename VT>
 Map<KT, VT>::~Map() {
   if (size_ > 0 && tree_.getRoot()) {
@@ -94,25 +94,25 @@ Map<KT, VT>::~Map() {
   }
 }
 
-// assignment operator overload for moving object
+// Assignment operator overload for moving object
 template <typename KT, typename VT>
 Map<KT, VT> &Map<KT, VT>::operator=(Map &&m) {
   swap(m);
 }
 
-// access specified element with bounds checking
+// Access specified element with bounds checking
 template <typename KT, typename VT>
 VT &Map<KT, VT>::at(const KT &key) {
   return *(tree_.search(key));
 }
 
-// find node by key
+// Find node by key
 template <typename KT, typename VT>
 typename Map<KT, VT>::iterator Map<KT, VT>::find(const KT &key) {
   return tree_.searchNode(key);
 }
 
-// access or insert specified element
+// Access or insert specified element
 template <typename KT, typename VT>
 VT &Map<KT, VT>::operator[](const KT &key) {
   VT* result = tree_.search(key);
@@ -123,45 +123,45 @@ VT &Map<KT, VT>::operator[](const KT &key) {
   return *result;
 }
 
-// returns an iterator to the beginning
+// Returns an iterator to the beginning
 template <typename KT, typename VT>
 typename s21::Map<KT, VT>::iterator s21::Map<KT, VT>::begin() {
   return tree_.begin();
 }
 
-// returns an iterator to the end
+// Returns an iterator to the end
 template <typename KT, typename VT>
 typename s21::Map<KT, VT>::iterator s21::Map<KT, VT>::end() {
   return tree_.end();
 }
 
-// checks whether the container is empty
+// Checks whether the container is empty
 template <typename KT, typename VT>
 bool s21::Map<KT, VT>::empty() {
   return size_ == 0;
 }
 
-// returns the number of elements
+// Returns the number of elements
 template <typename KT, typename VT>
 typename s21::Map<KT, VT>::size_type s21::Map<KT, VT>::size() {
   return size_;
 }
 
-// returns the maximum possible number of elements
+// Returns the maximum possible number of elements
 template <typename KT, typename VT>
 typename s21::Map<KT, VT>::size_type s21::Map<KT, VT>::max_size()
     const noexcept {
   return std::numeric_limits<difference_type>::max() / (sizeof(Node<KT, VT>));
 }
 
-// clears the contents
+// Clears the contents
 template <typename KT, typename VT>
 void s21::Map<KT, VT>::clear() {
   tree_.destroy(tree_.getRoot());
   size_ = 0;
 }
 
-// inserts node and returns iterator to where the element is in the container
+// Inserts node and returns iterator to where the element is in the container
 // and bool denoting whether the insertion took place
 template <typename KT, typename VT>
 std::pair<typename Map<KT, VT>::iterator, bool> s21::Map<KT, VT>::insert(
@@ -169,7 +169,7 @@ std::pair<typename Map<KT, VT>::iterator, bool> s21::Map<KT, VT>::insert(
   return insert(v.first, v.second);
 }
 
-// inserts value by key and returns iterator to where the element is in the
+// Inserts value by key and returns iterator to where the element is in the
 // container and bool denoting whether the insertion took place
 template <typename KT, typename VT>
 std::pair<typename Map<KT, VT>::iterator, bool> s21::Map<KT, VT>::insert(
@@ -182,7 +182,7 @@ std::pair<typename Map<KT, VT>::iterator, bool> s21::Map<KT, VT>::insert(
   return std::pair<iterator, bool>{it, true};
 }
 
-// inserts an element or assigns to the current element if the key already
+// Inserts an element or assigns to the current element if the key already
 // exists
 template <typename KT, typename VT>
 std::pair<typename Map<KT, VT>::iterator, bool>
@@ -195,7 +195,7 @@ s21::Map<KT, VT>::insert_or_assign(const KT &key, const VT &value) {
   return insert(key, value);
 }
 
-// erases element at pos
+// Erases element at pos
 template <typename KT, typename VT>
 void s21::Map<KT, VT>::erase(iterator pos) {
   auto node = pos.getNode();
@@ -203,7 +203,7 @@ void s21::Map<KT, VT>::erase(iterator pos) {
   size_--;
 }
 
-// swaps the contents
+// Swaps the contents
 template <typename KT, typename VT>
 void s21::Map<KT, VT>::swap(Map &other) {
   using std::swap;
@@ -211,7 +211,7 @@ void s21::Map<KT, VT>::swap(Map &other) {
   swap(tree_, other.tree_);
 }
 
-// splices nodes from another container
+// Splices nodes from another container
 template <typename KT, typename VT>
 void s21::Map<KT, VT>::merge(Map &other) {
   for (auto it = other.tree_.begin(); it != other.tree_.end(); ++it) {
@@ -219,7 +219,7 @@ void s21::Map<KT, VT>::merge(Map &other) {
   }
 }
 
-// checks if there is an element with key equivalent to key in the container
+// Checks if there is an element with key equivalent to key in the container
 template <typename KT, typename VT>
 bool s21::Map<KT, VT>::contains(const KT &key) {
   return (tree_.search(key) != nullptr);
@@ -238,4 +238,4 @@ s21::Map<KT, VT>::insert_many(Args &&...args) {
 
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_S21_MAP_H_
+#endif  // CPP2_S21_CONTAINERS_1_SRC_MAP_S21_MAP_H_

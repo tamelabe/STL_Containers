@@ -7,6 +7,7 @@
 #include <stdexcept>
 
 namespace s21 {
+
 template <class T>
 class List {
   struct Node;
@@ -94,55 +95,39 @@ class List {
   void prevPointerRepair();
 };
 
-/**
- * @brief default constructor, creates empty List and "fake" node
- */
+// Default constructor, creates empty List and "fake" node
 template <class T>
 List<T>::List() : begin_(nullptr), end_(new Node), size_(0) {
   initList();
 }
 
-/**
- * @brief parameterized constructor
- * @param creates the List of size n
- */
+// Parameterized constructor, creates the List of size n
 template <class T>
 List<T>::List(size_type n) : List() {
   for (size_type i = 0; i < n; ++i) push_back(value_type{});
 }
 
-/**
- * @brief initializer List constructor, creates List initizialized using
- * std::initializer_list
- * @param items
- */
+// Initializer List constructor,
+// creates List initizialized using std::initializer_list
 template <class T>
 List<T>::List(std::initializer_list<value_type> const &items) : List() {
   for (auto i = items.begin(); i < items.end(); ++i) push_back(*i);
 }
 
-/**
- * @brief copy constructor
- * @param l - List to copy
- */
+// Copy constructor
 template <class T>
 List<T>::List(const List &l) : List() {
   for (auto i = l.begin(); i != l.end(); ++i) push_back(*i);
 }
 
-/**
- * @brief move constructor
- * @param l - rvalue reference
- */
+// Move constructor
 template <class T>
 List<T>::List(List &&l) : begin_(l.begin_), end_(l.end_), size_(l.size_) {
   l.begin_ = l.end_ = nullptr;
   l.size_ = 0;
 }
 
-/**
- * @brief destructor
- */
+// Destructor
 template <class T>
 List<T>::~List() {
   deallocate(true);
@@ -166,102 +151,73 @@ List<T> &List<T>::operator=(List<T> &&l) {
   return *this;
 }
 
-/**
- * @brief Returns a reference to the first element in the container.
- * @return reference to the first element
- */
+// Returns a reference to the first element in the container
 template <class T>
 typename List<T>::const_reference List<T>::front() {
   if (begin_ == end_) throw std::out_of_range("List is empty");
   return *(begin_->data);
 }
 
-/**
- * @brief Returns a reference to the last element in the container.
- * @return reference to the last element.
- */
+// Returns a reference to the last element in the container
 template <class T>
 typename List<T>::const_reference List<T>::back() {
   if (begin_ == end_) throw std::out_of_range("List is empty");
   return *(end_->prev->data);
 }
 
-/**
- * @brief returns an iterator to the beginning
- */
+// Returns an iterator to the beginning
 template <class T>
 typename List<T>::iterator List<T>::begin() noexcept {
   return iterator(end_->next);
 }
 
-/**
- * @brief returns an const iterator to the beginning
- */
+// Returns a const iterator to the beginning
 template <class T>
 typename List<T>::const_iterator List<T>::begin() const noexcept {
   return const_iterator(end_->next);
 }
 
-/**
- * @brief returns an iterator to the end (next from the last element)
- */
+// Returns an iterator to the end (next from the last element)
 template <class T>
 typename List<T>::iterator List<T>::end() noexcept {
   return iterator(end_);
 }
 
-/**
- * @brief returns an const iterator to the end (next from the last element)
- */
+// Returns a const iterator to the end (next from the last element)
 template <class T>
 typename List<T>::const_iterator List<T>::end() const noexcept {
   return const_iterator(end_);
 }
 
-/**
- * @brief Checks if the container has no elements
- * @return true if the container is empty, false otherwise
- */
+// Checks if the container has no elements
 template <class T>
 bool List<T>::empty() const noexcept {
   return begin_ == end_;
 }
 
-/**
- * @brief The number of elements in the container.
- * @return the number of elements
- */
+// The number of elements in the container.
 template <class T>
 typename List<T>::size_type List<T>::size() const noexcept {
   return size_;
 }
 
-/**
- * @brief Returns the maximum number of elements the container is able to hold
- * due to system or library implementation limitations
- * @return Maximum number of elements.
- */
+// Returns the maximum number of elements the container is able to
+// hold due to system or library implementation limitations
 template <class T>
 typename List<T>::size_type List<T>::max_size() const noexcept {
   return std::numeric_limits<difference_type>::max() / (sizeof(node));
 }
 
-/**
- * @brief clears the contents
- */
+// Clears the contents
 template <class T>
 void List<T>::clear() {
   deallocate(false);
   initList();
 }
 
-/**
- * @brief inserts element into concrete pos and returns the iterator that
- * points to the new element
- * @param pos position of iterator to push new element
- * @param value value to push in data field
- * @return iterator that points to the new element
- */
+// Inserts element into concrete pos and returns the iterator that
+// points to the new element.
+// Returns iterator that points to the new element
 template <class T>
 typename List<T>::iterator List<T>::insert(iterator pos,
                                            const_reference value) {
@@ -278,10 +234,7 @@ typename List<T>::iterator List<T>::insert(iterator pos,
   return ret_iter;
 }
 
-/**
- * @brief erases element at pos
- * @param pos - position of iterator
- */
+// Erases element at pos
 template <class T>
 void List<T>::erase(iterator pos) {
   if (!pos.node_->data) return;
@@ -295,10 +248,7 @@ void List<T>::erase(iterator pos) {
   }
 }
 
-/**
- * @brief adds an element to the end
- * @param value additional element
- */
+// Adds an element to the end
 template <class T>
 void List<T>::push_back(const_reference value) {
   if (end_ == begin_) {
@@ -310,9 +260,7 @@ void List<T>::push_back(const_reference value) {
   }
 }
 
-/**
- * @brief removes the last element
- */
+// Removes the last element
 template <class T>
 void List<T>::pop_back() {
   if (!end_->prev->data) return;
@@ -323,10 +271,7 @@ void List<T>::pop_back() {
   begin_ = end_->next;
 }
 
-/**
- * @brief adds an element to the head
- * @param value additional element
- */
+// Adds an element to the head
 template <class T>
 void List<T>::push_front(const_reference value) {
   if (end_ == begin_) {
@@ -339,9 +284,7 @@ void List<T>::push_front(const_reference value) {
   }
 }
 
-/**
- * @brief removes the first element
- */
+// Removes the first element
 template <class T>
 void List<T>::pop_front() {
   if (!end_->prev->data) return;
@@ -351,9 +294,7 @@ void List<T>::pop_front() {
   begin_ = end_->next;
 }
 
-/**
- * @brief swaps the contents
- */
+// Swaps the contents
 template <class T>
 void List<T>::swap(List &other) noexcept {
   std::swap(begin_, other.begin_);
@@ -361,10 +302,7 @@ void List<T>::swap(List &other) noexcept {
   std::swap(size_, other.size_);
 }
 
-/**
- * @brief Merges two sorted lists into one
- * @param other - another container to merge
- */
+// Merges two sorted lists into one
 template <class T>
 void List<T>::merge(List &other) {
   if (&other == this || !other.size_) return;
@@ -386,11 +324,7 @@ void List<T>::merge(List &other) {
   other.initList();
 }
 
-/**
- * @brief Transfers elements from one List to another.
- * @param pos element before which the content will be inserted
- * @param other another container to transfer the content from
- */
+// Transfers elements from one List to another.
 template <class T>
 void List<T>::splice(const_iterator pos, List &other) noexcept {
   if (&other == this || !other.size_) return;
@@ -401,9 +335,7 @@ void List<T>::splice(const_iterator pos, List &other) noexcept {
   other.initList();
 }
 
-/**
- * @brief Reverses the order of the elements in the container.
- */
+// Reverses the order of the elements in the container.
 template <class T>
 void List<T>::reverse() noexcept {
   if (!size_) return;
@@ -416,9 +348,7 @@ void List<T>::reverse() noexcept {
   begin_ = end_->next;
 }
 
-/**
- * @brief Removes all consecutive duplicate elements from the container
- */
+// Removes all consecutive duplicate elements from the container
 template <class T>
 void List<T>::unique() {
   auto i = begin(), temp = i;
@@ -428,9 +358,7 @@ void List<T>::unique() {
   }
 }
 
-/**
- * @brief Merge Sort algorithm based onion brand principle
- */
+// Merge Sort algorithm based onion brand principle
 template <class T>
 void List<T>::sort() {
   if (!size_ || size_ == 1) return;
@@ -438,41 +366,30 @@ void List<T>::sort() {
   prevPointerRepair();
 }
 
-/**
- * @brief inserts new elements into the container directly before pos
- * @tparam Args Parameter pack
- * @param pos iterator position
- * @param args variadic template parameter
- * @return iterator for last inserted elem
- */
+// Inserts new elements into the container directly before pos.
+// Returns iterator for last inserted element
 template <class T>
 template <class... Args>
 typename List<T>::iterator List<T>::insert_many(const_iterator pos,
                                                 Args &&...args) {
   auto iter = begin();
-  /**
-   * (); - lambda expression
-   * [&] - type of capture (by reference)
-   * {} - body of lambda expression
-   * () - declares function parameters
-   * ... - template parameter pack expansion operator
-   */
+  // (); - lambda expression
+  // [&] - type of capture (by reference)
+  // {}  - body of lambda expression
+  // ()  - declares function parameters
+  // ... - template parameter pack expansion operator
   ([&] { iter = insert(pos, std::forward<T>(args)); }(), ...);
   return iter;
 }
 
-/**
- * @brief appends new elements to the end of the container
- */
+// Appends new elements to the end of the container
 template <class T>
 template <class... Args>
 void List<T>::insert_many_back(Args &&...args) {
   ([&] { push_back(std::forward<T>(args)); }(), ...);
 }
 
-/**
- * @brief appends new elements to the top of the container
- */
+// Appends new elements to the top of the container
 template <class T>
 template <class... Args>
 void List<T>::insert_many_front(Args &&...args) {
@@ -480,9 +397,8 @@ void List<T>::insert_many_front(Args &&...args) {
 }
 
 // Private
-/**
- * @brief Create connection of empty List nodes from end_ to begin_
- */
+
+// Create connection of empty List nodes from end_ to begin_
 template <class T>
 void List<T>::initList() {
   end_->next = end_;
@@ -491,6 +407,7 @@ void List<T>::initList() {
   size_ = 0;
 }
 
+// Creates new node
 template <class T>
 typename List<T>::node_ptr List<T>::createNode(const node_ptr a_prev,
                                                const node_ptr a_next,
@@ -504,11 +421,9 @@ typename List<T>::node_ptr List<T>::createNode(const node_ptr a_prev,
   return new_node;
 }
 
-/**
- * @brief Deallocator
- * @param mode false - deallocate all non fake nodes,
- *             true - fully deallocation
- */
+// Deallocator
+// mode false - deallocate all non fake nodes,
+//      true - fully deallocation
 template <class T>
 void List<T>::deallocate(bool mode) {
   if (!end_) return;
@@ -516,9 +431,7 @@ void List<T>::deallocate(bool mode) {
   if (mode) delete end_;
 }
 
-/**
- * Deallocator for separate node
- */
+// Deallocator for separate node
 template <class T>
 void List<T>::destroyNode(node_ptr node) {
   delete node->data;
@@ -526,10 +439,7 @@ void List<T>::destroyNode(node_ptr node) {
   --size_;
 }
 
-/**
- * @brief Using when pushing node in empty List
- * @param value pushing value in data_ field
- */
+// Using when pushing node in empty List
 template <class T>
 void List<T>::pushFirstNode(const_reference value) {
   node_ptr new_node = createNode(end_, end_, value);
@@ -537,12 +447,8 @@ void List<T>::pushFirstNode(const_reference value) {
   begin_ = new_node;
 }
 
-/**
- * @brief Checks for descending sequence
- * @param current current iterator position
- * @param end end of List
- * @return last desc sequence iterator
- */
+// Checks for descending sequence.
+// Return last desc sequence iterator
 template <class T>
 typename List<T>::iterator List<T>::sortCheck(iterator current,
                                               const iterator &end) {
@@ -554,14 +460,9 @@ typename List<T>::iterator List<T>::sortCheck(iterator current,
   return current;
 }
 
-/**
- * @brief Inserts sublist between given iterators inclusive into main List
- * BEFORE given position
- * @param pos iterator position of main List
- * @param first iterator that defines first point of sublist
- * @param last iterator that defines last point of sublist
- * @return next iterator after last param
- */
+// Inserts sublist between given iterators inclusive into main List
+// before given position
+// Returns next iterator after last param
 template <class T>
 typename List<T>::iterator List<T>::insertSubList(const_iterator pos,
                                                   iterator first,
@@ -576,11 +477,8 @@ typename List<T>::iterator List<T>::insertSubList(const_iterator pos,
   return next;
 }
 
-/**
- * @brief main sort recursive function (via mergeSort method)
- * @param first - first node of the List or sublist
- * @return sorted single-linked List
- */
+// Main sort recursive function (via mergeSort method)
+// Returns sorted single-linked List
 template <class T>
 typename List<T>::node_ptr List<T>::mergeSort(node_ptr first) {
   if (first->next == end_ || first == end_) return first;
@@ -590,12 +488,8 @@ typename List<T>::node_ptr List<T>::mergeSort(node_ptr first) {
   return mergeNodes(first, second);
 }
 
-/**
- * @brief divides List to two separate List
- * (first = N / 2, sec = N / 2 + N % 2)
- * @param first first node of the List or sublist
- * @return first node of the second List
- */
+// Divides List to two separate List (first = N / 2, sec = N / 2 + N % 2)
+// Returns first node of the second List
 template <class T>
 typename List<T>::node_ptr List<T>::splitList(node_ptr first) {
   node_ptr second = first;
@@ -608,12 +502,8 @@ typename List<T>::node_ptr List<T>::splitList(node_ptr first) {
   return sec_begin;
 }
 
-/**
- * @brief recursively merges sublists to single-linked asc. ordered List
- * @param first - first node of first sublist
- * @param second - first node of second sublist
- * @return merged or existing List
- */
+// Recursively merges sublists to single-linked asc ordered List
+// Returns merged or existing List
 template <class T>
 typename List<T>::node_ptr List<T>::mergeNodes(node_ptr first,
                                                node_ptr second) {
@@ -628,9 +518,7 @@ typename List<T>::node_ptr List<T>::mergeNodes(node_ptr first,
   }
 }
 
-/**
- * @brief repairs prev pointer of the List (makes it double-linked)
- */
+// Repairs prev pointer of the List (makes it double-linked)
 template <class T>
 void List<T>::prevPointerRepair() {
   for (auto iter = iterator(begin_); iter != end(); ++iter) {
@@ -669,45 +557,36 @@ class List<T>::ListIterator {
   }
 
   node_ptr getNode() const { return node_; }
-  /**
-   * gets the element pointed to by the iterator
-   */
+
+  // Gets the element pointed to by the iterator
   reference operator*() const { return *(node_->data); }
-  /**
-   * two iterators are not equal if they point to different elements
-   */
+
+  // Two iterators are not equal if they point to different elements
   bool operator!=(const ListIterator &other) { return node_ != other.node_; }
-  /**
-   * two iterators are equal if they point to the same element
-   */
+
+  // Two iterators are equal if they point to the same element
   bool operator==(const ListIterator &other) { return node_ == other.node_; }
-  /**
-   * moves the iterator forward to the next element
-   * @return incremented value
-   */
+
+  // Moves the iterator forward to the next element
   ListIterator operator++() {
     node_ = node_->next;
     return *this;
   }
-  /**
-   * @return original value
-   */
+
+  // Original value
   ListIterator operator++(int) {
     ListIterator tmp = *this;
     node_ = node_->next;
     return tmp;
   }
-  /**
-   * moves the iterator backwards to the previous element
-   * @return decremented value
-   */
+
+  // Moves the iterator backwards to the previous element
   ListIterator operator--() {
     node_ = node_->prev;
     return *this;
   }
-  /**
-   * @return original value
-   */
+
+  // Returns original value
   ListIterator operator--(int) {
     ListIterator tmp = *this;
     node_ = node_->prev;
@@ -778,4 +657,5 @@ class List<T>::ListConstIterator {
 };
 
 }  // namespace s21
+
 #endif  // CPP2_S21_CONTAINERS_1_SRC_LIST_S21_LIST_H_

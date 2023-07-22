@@ -4,6 +4,7 @@
 #include "../List/s21_list.h"
 
 namespace s21 {
+
 template <class T, class Container = s21::List<T>>
 class Queue {
  public:
@@ -23,17 +24,17 @@ class Queue {
   Queue &operator=(const Queue &s);
   Queue &operator=(Queue &&s);
 
-  //  Queue Element access
+  // Queue Element access
   const_reference front() { return container_.front(); }
   const_reference back() { return container_.back(); }
-  //  Queue Capacity
+  // Queue Capacity
   bool empty() { return container_.empty(); }
   size_type size() { return container_.size(); }
-  //  Queue Modifiers
+  // Queue Modifiers
   void push(const_reference value) { container_.push_back(value); }
   void pop() { return container_.pop_front(); }
   void swap(Queue &other) { container_.swap(other.container_); }
-  //  Queue bonus
+  // Queue bonus
   template <class... Args>
   void insert_many_back(Args &&...args) {
     container_.insert_many_back(std::forward<Args>(args)...);
@@ -55,5 +56,7 @@ Queue<T, Container> &Queue<T, Container>::operator=(Queue<T, Container> &&s) {
   container_ = std::move(s.container_);
   return *this;
 }
+
 }  // namespace s21
+
 #endif  // CPP2_S21_CONTAINERS_1_SRC_QUEUE_S21_QUEUE_H_

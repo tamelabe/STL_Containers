@@ -5,7 +5,7 @@
 #include <array>
 #include <cstring>
 
-// compare s21 array with std array
+// Compare s21 array with std array
 template <class T, size_t N>
 bool compareWithStd(s21::Array<T, N>& s21_arr, std::array<T, N>& std_arr) {
   if (s21_arr.size() != std_arr.size() || s21_arr.empty() != std_arr.empty()) {
@@ -19,7 +19,7 @@ bool compareWithStd(s21::Array<T, N>& s21_arr, std::array<T, N>& std_arr) {
   return true;
 }
 
-// compare s21 arrays
+// Compare s21 arrays
 template <class T, size_t N>
 bool compareWithS21(s21::Array<T, N>& array, s21::Array<T, N>& array2) {
   if (array.size() != array2.size() || array.empty() != array2.empty()) {

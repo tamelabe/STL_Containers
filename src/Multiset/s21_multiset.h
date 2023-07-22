@@ -1,5 +1,5 @@
-#ifndef CPP2_S21_CONTAINERS_S21_MULTISET_H_
-#define CPP2_S21_CONTAINERS_S21_MULTISET_H_
+#ifdef CPP2_S21_CONTAINERS_1_SRC_MULTISET_S21_MULTISET_H_
+#define CPP2_S21_CONTAINERS_1_SRC_MULTISET_S21_MULTISET_H_
 
 #include <limits>
 
@@ -159,9 +159,6 @@ void s21::Multiset<KT>::clear() {
 template <typename KT>
 std::pair<typename s21::Multiset<KT>::iterator, bool> s21::Multiset<KT>::insert(
     const KT &value) {
-  // if (tree_.search(value) != nullptr) {
-  //   return std::pair<iterator, bool>{nullptr, false};
-  // }
   auto it = tree_.insert(value, value);
   size_++;
   return std::pair<iterator, bool>{it, true};
@@ -199,5 +196,4 @@ bool s21::Multiset<KT>::contains(const KT &key) {
 
 }  // namespace s21
 
-// mintimir izvrachenec - on lubit VIM
-#endif  // CPP2_S21_CONTAINERS_S21_MULTISET_H_
+#endif  // CPP2_S21_CONTAINERS_1_SRC_MULTISET_S21_MULTISET_H_

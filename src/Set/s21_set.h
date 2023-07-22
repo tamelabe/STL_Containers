@@ -1,5 +1,5 @@
-#ifndef CPP2_S21_CONTAINERS_S21_SET_H_
-#define CPP2_S21_CONTAINERS_S21_SET_H_
+#ifndef CPP2_S21_CONTAINERS_SRC_SET_S21_SET_H_
+#define CPP2_S21_CONTAINERS_SRC_SET_S21_SET_H_
 
 #include <limits>
 
@@ -205,5 +205,4 @@ bool s21::Set<KT>::contains(const KT &key) {
 
 }  // namespace s21
 
-// mintimir izvrachenec - on lubit VIM
-#endif  // CPP2_S21_CONTAINERS_S21_SET_H_
+#endif  // CPP2_S21_CONTAINERS_SRC_SET_S21_SET_H_

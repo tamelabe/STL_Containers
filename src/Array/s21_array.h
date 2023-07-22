@@ -1,5 +1,5 @@
-#ifndef CPP2_S21_CONTAINERS_SRC_S21_ARRAY_H_
-#define CPP2_S21_CONTAINERS_SRC_S21_ARRAY_H_
+#ifndef CPP2_S21_CONTAINERS_1_SRC_ARRAY_S21_ARRAY_H_
+#define CPP2_S21_CONTAINERS_1_SRC_ARRAY_S21_ARRAY_H_
 
 #include <initializer_list>
 #include <limits>
@@ -7,6 +7,7 @@
 #include <utility>
 
 namespace s21 {
+
 template <class T, size_t N>
 class Array {
  public:
@@ -52,11 +53,11 @@ class Array {
   iterator data_;
 };
 
-// default constructor, creates empty array
+// Default constructor, creates empty array
 template <class T, size_t N>
 Array<T, N>::Array() : size_(N), data_(new T[N]{}) {}
 
-// initializer list constructor,
+// Initializer list constructor,
 // creates Array initizialized using std::initializer_list
 template <class T, size_t N>
 Array<T, N>::Array(std::initializer_list<value_type> const &items)
@@ -70,7 +71,7 @@ Array<T, N>::Array(std::initializer_list<value_type> const &items)
   }
 }
 
-// copy constructor
+// Copy constructor
 template <class T, size_t N>
 Array<T, N>::Array(const Array &other) : size_(other.size_), data_(new T[N]{}) {
   for (size_type i = 0; i < size_; ++i) {
@@ -78,20 +79,20 @@ Array<T, N>::Array(const Array &other) : size_(other.size_), data_(new T[N]{}) {
   }
 }
 
-// move constructor
+// Move constructor
 template <class T, size_t N>
 Array<T, N>::Array(Array &&origin) noexcept : Array() {
   swap(origin);
 }
 
-// assignment operator overload for moving object
+// Assignment operator overload for moving object
 template <class T, size_t N>
 Array<T, N> &Array<T, N>::operator=(Array<T, N> &&origin) {
   swap(origin);
   return *this;
 }
 
-// assignment operator overload for copying object
+// Assignment operator overload for copying object
 template <class T, size_t N>
 Array<T, N> &Array<T, N>::operator=(const Array<T, N> &origin) {
   for (size_type i = 0; i < size_; ++i)
@@ -99,76 +100,76 @@ Array<T, N> &Array<T, N>::operator=(const Array<T, N> &origin) {
   return *this;
 }
 
-// destructor
+// Destructor
 template <class T, size_t N>
 Array<T, N>::~Array() {
   delete[] data_;
 }
 
-// access specified element with bounds checking
+// Access specified element with bounds checking
 template <class T, size_t N>
 typename Array<T, N>::reference Array<T, N>::at(size_type pos) {
   if (pos >= size_) throw std::out_of_range{"Position is out of range."};
   return data_[pos];
 }
 
-// access specified element
+// Access specified element
 template <class T, size_t N>
 typename Array<T, N>::reference Array<T, N>::operator[](size_type pos) {
   return data_[pos];
 }
 
-// access the first element
+// Access the first element
 template <class T, size_t N>
 typename Array<T, N>::const_reference Array<T, N>::front() {
   if (empty()) throw std::out_of_range{"Position is out of range."};
   return data_[0];
 }
 
-// access the last element
+// Access the last element
 template <class T, size_t N>
 typename Array<T, N>::const_reference Array<T, N>::back() {
   if (empty()) throw std::out_of_range{"Position is out of range."};
   return data_[size_ - 1];
 }
 
-// direct access to the underlying Array
+// Direct access to the underlying Array
 template <class T, size_t N>
 typename Array<T, N>::iterator Array<T, N>::data() {
   return data_;
 }
 
-// returns an iterator to the beginning
+// Returns an iterator to the beginning
 template <class T, size_t N>
 typename Array<T, N>::iterator Array<T, N>::begin() {
   return data_;
 }
 
-// returns an iterator to the end
+// Returns an iterator to the end
 template <class T, size_t N>
 typename Array<T, N>::iterator Array<T, N>::end() {
   return data_ + size_;
 }
 
-// checks whether the container is empty
+// Checks whether the container is empty
 template <class T, size_t N>
 bool Array<T, N>::empty() {
   return size_ == 0;
 }
 
-// returns the number of elements
+// Returns the number of elements
 template <class T, size_t N>
 typename Array<T, N>::size_type Array<T, N>::size() const noexcept {
   return size_;
 }
 
-// returns the maximum possible number of elements
+// Returns the maximum possible number of elements
 template <class T, size_t N>
 typename Array<T, N>::size_type Array<T, N>::max_size() const noexcept {
   return size_;
 }
 
-// swaps the contents
+// Swaps the contents
 template <class T, size_t N>
 void Array<T, N>::swap(s21::Array<T, N> &v) {
   using std::swap;
@@ -176,11 +177,12 @@ void Array<T, N>::swap(s21::Array<T, N> &v) {
   swap(data_, v.data_);
 }
 
-// assigns the given value value to all elements in the container
+// Assigns the given value value to all elements in the container
 template <class T, size_t N>
 void Array<T, N>::fill(const_reference value) {
   for (size_type i = 0; i < size_; ++i) data_[i] = value;
 }
 
 }  // namespace s21
-#endif  // CPP2_S21_CONTAINERS_SRC_S21_VECTOR_H_
+
+#endif  // CPP2_S21_CONTAINERS_1_SRC_ARRAY_S21_ARRAY_H_

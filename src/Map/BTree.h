@@ -1,5 +1,5 @@
-#ifndef CPP2_S21_CONTAINERS_BINARY_TREE_H
-#define CPP2_S21_CONTAINERS_BINARY_TREE_H
+#ifndef CPP2_S21_CONTAINERS_1_SRC_MAP_BINARY_TREE_H_
+#define CPP2_S21_CONTAINERS_1_SRC_MAP_BINARY_TREE_H_
 
 #include <stack>
 #include <string>
@@ -138,7 +138,7 @@ class BTree {
     if (node == nullptr) {
       return;
     }
-    // case 1
+    // Сase 1
     if (node->hasNoChild()) {
       if (node->key != key) {
         auto dNode = searchNode(key).getNode();
@@ -148,12 +148,12 @@ class BTree {
       delete node;
       return;
     }
-    // case 2
+    // Сase 2
     if (node->hasOneChild()) {
       node_type* successor = (node->left != nullptr) ? node->left : node->right;
       removeNode(successor, key);
     }
-    // case 3
+    // Сase 3
     if (node->hasTwoChild()) {
       if (node->key > key) {
         removeNode(node->left, key);
@@ -216,7 +216,6 @@ class BTree {
     }
   }
 };
-
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_S21_TREE_H
+#endif  // CPP2_S21_CONTAINERS_1_SRC_MAP_BINARY_TREE_H_
