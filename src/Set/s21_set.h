@@ -110,10 +110,14 @@ typename s21::Set<KT>::reference s21::Set<KT>::operator=(
   return *this;
 }
 
+// Assignment operator overload for copy object
 template <typename KT>
 typename s21::Set<KT>::reference s21::Set<KT>::operator=(const Set &s) {
   if (this == &s) return *this;
-  swap(Set<KT>(s));
+  for (auto it = s.tree_.begin(); it != s.tree_.end(); ++it) {
+    tree_.insert(it.getNode()->key, *it);
+    size_++;
+  }
   return *this;
 }
 

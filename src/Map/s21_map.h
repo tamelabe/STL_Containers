@@ -29,6 +29,7 @@ class Map {
   Map(const Map &);
   Map(Map &&);
   ~Map();
+  Map &operator=(const Map &);
   Map &operator=(Map &&);
   VT &at(const KT &);
   iterator find(const KT &);
@@ -92,6 +93,17 @@ Map<KT, VT>::~Map() {
     size_ = 0;
     tree_.destroy(tree_.getRoot());
   }
+}
+
+// Assignment operator overload for copy object
+template <typename KT, typename VT>
+Map<KT, VT> &Map<KT, VT>::operator=(const Map &m) {
+  if (this == &m) return *this;
+  for (auto it = m.tree_.begin(); it != m.tree_.end(); ++it) {
+    tree_.insert(it.getNode()->key, *it);
+    size_++;
+  }
+  return *this;
 }
 
 // Assignment operator overload for moving object
