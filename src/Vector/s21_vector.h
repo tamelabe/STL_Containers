@@ -110,6 +110,7 @@ Vector<T> &Vector<T>::operator=(
 // Assignment operator overload for copy object
 template <class T>
 Vector<T> &Vector<T>::operator=(const Vector<T> &origin) {
+  if (this == &origin) return *this;
   swap(Vector<T>(origin));
   return *this;
 }
@@ -117,6 +118,7 @@ Vector<T> &Vector<T>::operator=(const Vector<T> &origin) {
 // Assignment operator overload for moving object
 template <class T>
 Vector<T> &Vector<T>::operator=(Vector<T> &&origin) {
+  if (this == &origin) return *this;
   swap(origin);
   return *this;
 }

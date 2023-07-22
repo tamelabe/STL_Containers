@@ -112,12 +112,14 @@ typename Multiset<KT>::reference Multiset<KT>::operator=(
 
 template <typename KT>
 typename Multiset<KT>::reference Multiset<KT>::operator=(const Multiset &s) {
+  if (this == &s) return *this;
   swap(Multiset<KT>(s));
   return *this;
 }
 
 template <typename KT>
 typename Multiset<KT>::reference Multiset<KT>::operator=(Multiset &&s) {
+  if (this == &s) return *this;
   swap(s);
   return *this;
 }

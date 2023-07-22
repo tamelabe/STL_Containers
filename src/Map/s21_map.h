@@ -97,6 +97,7 @@ Map<KT, VT>::~Map() {
 // Assignment operator overload for moving object
 template <typename KT, typename VT>
 Map<KT, VT> &Map<KT, VT>::operator=(Map &&m) {
+  if (this == &m) return *this;
   swap(m);
 }
 

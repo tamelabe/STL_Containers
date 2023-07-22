@@ -88,6 +88,7 @@ Array<T, N>::Array(Array &&origin) noexcept : Array() {
 // Assignment operator overload for moving object
 template <class T, size_t N>
 Array<T, N> &Array<T, N>::operator=(Array<T, N> &&origin) {
+  if (this == &origin) return *this;
   swap(origin);
   return *this;
 }
@@ -95,6 +96,7 @@ Array<T, N> &Array<T, N>::operator=(Array<T, N> &&origin) {
 // Assignment operator overload for copying object
 template <class T, size_t N>
 Array<T, N> &Array<T, N>::operator=(const Array<T, N> &origin) {
+  if (this == &origin) return *this;
   for (size_type i = 0; i < size_; ++i) data_[i] = origin.data_[i];
   return *this;
 }

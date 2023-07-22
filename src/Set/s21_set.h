@@ -112,12 +112,14 @@ typename s21::Set<KT>::reference s21::Set<KT>::operator=(
 
 template <typename KT>
 typename s21::Set<KT>::reference s21::Set<KT>::operator=(const Set &s) {
+  if (this == &s) return *this;
   swap(Set<KT>(s));
   return *this;
 }
 
 template <typename KT>
 typename s21::Set<KT>::reference s21::Set<KT>::operator=(Set &&s) {
+  if (this == &s) return *this;
   swap(s);
   return *this;
 }
