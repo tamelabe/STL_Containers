@@ -290,19 +290,11 @@ void Vector<T>::erase(iterator pos) {
 // adds an element to the end
 template <class T>
 void Vector<T>::push_back(const_reference value) {
-  s21::Vector<T> tmp(size_ + 1);
-  iterator ptr = begin();
-  size_type i = 0;
-  while (ptr <= end()) {
-    if (ptr == end()) {
-      tmp.storage_[i] = value;
-    } else {
-      tmp.storage_[i] = *ptr;
-    }
-    ptr++;
-    ++i;
+  if (size_ + 1 > capacity_) {
+    reserve(capacity_ * 2); // Increase capacity if needed
   }
-  tmp.swap(*this);
+  storage_[size_] = value;
+  ++size_;
 }
 
 // removes the last element
