@@ -105,18 +105,6 @@ TEST(Map, clear) {
   ASSERT_TRUE(map.size() == 0);
 }
 
-// TEST(Map, insert_pair_max_size) {
-//   s21::Map<int, int> map;
-//   map.insert(std::make_pair(3, 10));
-//   map.insert(std::make_pair(4, 40));
-//   map.insert(std::make_pair(5, 50));
-//   map.insert(std::make_pair(6, 60));
-//   map.insert(std::make_pair(7, 70));
-//   ASSERT_TRUE(map.at(7) == 70);
-//   std::pair<s21::BTree<int, int>::iterator, bool> result =
-//   map.insert(std::make_pair(8, 80)); ASSERT_TRUE(result.second == false);
-// }
-
 TEST(Map, insert_pair) {
   s21::Map<int, int> map;
   map.insert(std::make_pair(3, 10));
