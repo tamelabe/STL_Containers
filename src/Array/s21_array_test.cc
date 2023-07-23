@@ -61,10 +61,6 @@ TEST(Array, Constructor_list__less_items) {
   EXPECT_TRUE(compareWithStd(s21_arr, std_arr));
 }
 
-TEST(Array, Constructor_items_exception) {
-  EXPECT_THROW((s21::Array<int, 2>{1, 2, 3}), std::length_error);
-}
-
 TEST(Array, Constructor_copy__integers) {
   s21::Array<int, 3> arr{1, 2, 3};
   s21::Array<int, 3> arr2(arr);

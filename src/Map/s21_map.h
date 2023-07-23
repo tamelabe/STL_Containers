@@ -1,5 +1,5 @@
-#ifndef CPP2_S21_CONTAINERS_1_SRC_MAP_S21_MAP_H_
-#define CPP2_S21_CONTAINERS_1_SRC_MAP_S21_MAP_H_
+#ifndef CPP2_S21_CONTAINERS_SRC_MAP_S21_MAP_H_
+#define CPP2_S21_CONTAINERS_SRC_MAP_S21_MAP_H_
 
 #include <initializer_list>
 #include <limits>
@@ -251,4 +251,4 @@ s21::Map<KT, VT>::insert_many(Args &&...args) {
 
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_1_SRC_MAP_S21_MAP_H_
+#endif  // CPP2_S21_CONTAINERS_SRC_MAP_S21_MAP_H_

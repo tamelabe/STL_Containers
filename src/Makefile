@@ -1,7 +1,7 @@
 .PHONY : clean check tests leaks tests_linux leaks_linux gcov_report
 
 CC = gcc
-CPPFLAGS = -ggdb -std=c++17 -pedantic -Wall -Werror -Wextra -lstdc++
+CPPFLAGS = -ggdb -std=c++17 -fsanitize=leak -pedantic -Wall -Werror -Wextra -lstdc++
 TEST_FLAGS = -lgtest --coverage
 LINUX_FLAGS = -lrt -lpthread -lm -lsubunit
 VG_FLAGS = CK_FORK=no valgrind --trace-children=yes --track-fds=yes --track-origins=yes --leak-check=full --show-leak-kinds=all --verbose
