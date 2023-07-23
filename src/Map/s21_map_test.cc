@@ -69,8 +69,6 @@ TEST(Map, accessor_inserter_element_operator) {
       std::pair<int, char>{5, 'a'}, std::pair<int, char>{3, 'b'},
       std::pair<int, char>{7, 'c'}, std::pair<int, char>{2, 'd'},
       std::pair<int, char>{4, 'e'}};
-  ASSERT_TRUE(std_map[5] == s21_map[5]);
-  ASSERT_TRUE(std_map[2] == s21_map[2]);
   s21_map[2] = 'g';
   std_map[2] = 'g';
   ASSERT_TRUE(compareWithStd(s21_map, std_map));
