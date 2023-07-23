@@ -7,8 +7,9 @@
 
 // Constructors
 TEST(Map, base_constructor) {
-  s21::Map<int, int> map;
-  ASSERT_TRUE(map.size() == 0);
+  s21::Map<int, int> s21_map;
+  std::map<int, int> std_map;
+  ASSERT_TRUE(s21_map.size() == std_map.size());
 }
 
 TEST(Map, initializer_list) {
