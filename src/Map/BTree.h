@@ -206,6 +206,8 @@ class BTree<KT, VT>::iterator {
   bool operator!=(const iterator& other) const { return !(*this == other); }
 
   node_type* getNode() { return current; }
+  KT& first() { return current->key; }
+  VT& second() { return current->value; }
 
  private:
   node_type* current;
@@ -249,6 +251,8 @@ class BTree<KT, VT>::const_iterator {
   bool operator!=(const iterator& other) const { return !(*this == other); }
 
   node_type* getNode() { return current; }
+  KT& first() { return current->key; }
+  VT& second() { return current->value; }
 
  private:
   node_type* current;
