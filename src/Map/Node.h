@@ -1,5 +1,5 @@
-#ifndef CPP2_S21_CONTAINERS_1_SRC_MAP_NODE_H_
-#define CPP2_S21_CONTAINERS_1_SRC_MAP_NODE_H_
+#ifndef CPP2_S21_CONTAINERS_SRC_MAP_NODE_H_
+#define CPP2_S21_CONTAINERS_SRC_MAP_NODE_H_
 
 #include <utility>
 
@@ -64,4 +64,4 @@ class Node {
 };
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_1_SRC_MAP_NODE_H_
+#endif  // CPP2_S21_CONTAINERS_SRC_MAP_NODE_H_

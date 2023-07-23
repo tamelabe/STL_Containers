@@ -1,5 +1,5 @@
-#ifndef CPP2_S21_CONTAINERS_1_SRC_MAP_BINARY_TREE_H_
-#define CPP2_S21_CONTAINERS_1_SRC_MAP_BINARY_TREE_H_
+#ifndef CPP2_S21_CONTAINERS_SRC_MAP_BINARY_TREE_H_
+#define CPP2_S21_CONTAINERS_SRC_MAP_BINARY_TREE_H_
 
 #include <stack>
 #include <string>
@@ -260,4 +260,4 @@ class BTree<KT, VT>::const_iterator {
 
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_1_SRC_MAP_BINARY_TREE_H_
+#endif  // CPP2_S21_CONTAINERS_SRC_MAP_BINARY_TREE_H_

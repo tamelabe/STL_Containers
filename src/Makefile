@@ -52,6 +52,7 @@ leaks_linux:
 
 gcov_report:
 	lcov -t "test" -o s21_test.info -c -d ./ --no-external
+	#lcov -t "test" -o s21_test.info -c -d ./ --no-external --ignore-errors mismatch
 	genhtml ./s21_test.info --output-directory ./report/
 	open ./report/index.html
 

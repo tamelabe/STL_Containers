@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CPP2_S21_CONTAINERS_1_SRC_S21_CONTAINERSPLUS_H_
-#define CPP2_S21_CONTAINERS_1_SRC_S21_CONTAINERSPLUS_H_
+#ifndef CPP2_S21_CONTAINERS_SRC_S21_CONTAINERSPLUS_H_
+#define CPP2_S21_CONTAINERS_SRC_S21_CONTAINERSPLUS_H_
 
 #include "./Array/s21_array.h"
 #include "./Multiset/s21_multiset.h"
 
-#endif  // CPP2_S21_CONTAINERS_1_SRC_S21_CONTAINERSPLUS_H_
+#endif  // CPP2_S21_CONTAINERS_SRC_S21_CONTAINERSPLUS_H_

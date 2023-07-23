@@ -1,5 +1,5 @@
-#ifndef CPP2_S21_CONTAINERS_1_SRC_STACK_S21_STACK_H_
-#define CPP2_S21_CONTAINERS_1_SRC_STACK_S21_STACK_H_
+#ifndef CPP2_S21_CONTAINERS_SRC_STACK_S21_STACK_H_
+#define CPP2_S21_CONTAINERS_SRC_STACK_S21_STACK_H_
 
 #include "../List/s21_list.h"
 
@@ -61,4 +61,4 @@ Stack<T, Container> &Stack<T, Container>::operator=(Stack<T, Container> &&s) {
 
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_1_SRC_STACK_S21_STACK_H_
+#endif  // CPP2_S21_CONTAINERS_SRC_STACK_S21_STACK_H_

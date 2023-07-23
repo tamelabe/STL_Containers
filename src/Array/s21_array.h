@@ -1,5 +1,5 @@
-#ifndef CPP2_S21_CONTAINERS_1_SRC_ARRAY_S21_ARRAY_H_
-#define CPP2_S21_CONTAINERS_1_SRC_ARRAY_S21_ARRAY_H_
+#ifndef CPP2_S21_CONTAINERS_SRC_ARRAY_S21_ARRAY_H_
+#define CPP2_S21_CONTAINERS_SRC_ARRAY_S21_ARRAY_H_
 
 #include <initializer_list>
 #include <limits>
@@ -186,4 +186,4 @@ void Array<T, N>::fill(const_reference value) {
 
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_1_SRC_ARRAY_S21_ARRAY_H_
+#endif  // CPP2_S21_CONTAINERS_SRC_ARRAY_S21_ARRAY_H_

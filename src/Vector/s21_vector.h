@@ -1,5 +1,5 @@
-#ifndef CPP2_S21_CONTAINERS_1_SRC_VECTOR_S21_VECTOR_H_
-#define CPP2_S21_CONTAINERS_1_SRC_VECTOR_S21_VECTOR_H_
+#ifndef CPP2_S21_CONTAINERS_SRC_VECTOR_S21_VECTOR_H_
+#define CPP2_S21_CONTAINERS_SRC_VECTOR_S21_VECTOR_H_
 
 #include <cstddef>
 #include <initializer_list>
@@ -328,4 +328,4 @@ void Vector<T>::reallocate(size_type capacity, size_type size,
 
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_1_SRC_VECTOR_S21_VECTOR_H_
+#endif  // CPP2_S21_CONTAINERS_SRC_VECTOR_S21_VECTOR_H_

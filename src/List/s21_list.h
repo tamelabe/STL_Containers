@@ -1,5 +1,5 @@
-#ifndef CPP2_S21_CONTAINERS_1_SRC_LIST_S21_LIST_H_
-#define CPP2_S21_CONTAINERS_1_SRC_LIST_S21_LIST_H_
+#ifndef CPP2_S21_CONTAINERS_SRC_LIST_S21_LIST_H_
+#define CPP2_S21_CONTAINERS_SRC_LIST_S21_LIST_H_
 
 #include <initializer_list>
 #include <iterator>
@@ -658,4 +658,4 @@ class List<T>::ListConstIterator {
 
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_1_SRC_LIST_S21_LIST_H_
+#endif  // CPP2_S21_CONTAINERS_SRC_LIST_S21_LIST_H_

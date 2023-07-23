@@ -1,5 +1,5 @@
-#ifndef CPP2_S21_CONTAINERS_1_SRC_QUEUE_S21_QUEUE_H_
-#define CPP2_S21_CONTAINERS_1_SRC_QUEUE_S21_QUEUE_H_
+#ifndef CPP2_S21_CONTAINERS_SRC_QUEUE_S21_QUEUE_H_
+#define CPP2_S21_CONTAINERS_SRC_QUEUE_S21_QUEUE_H_
 
 #include "../List/s21_list.h"
 
@@ -59,4 +59,4 @@ Queue<T, Container> &Queue<T, Container>::operator=(Queue<T, Container> &&s) {
 
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_1_SRC_QUEUE_S21_QUEUE_H_
+#endif  // CPP2_S21_CONTAINERS_SRC_QUEUE_S21_QUEUE_H_
